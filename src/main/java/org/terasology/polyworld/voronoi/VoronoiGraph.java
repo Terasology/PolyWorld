@@ -39,7 +39,7 @@ public abstract class VoronoiGraph {
         startAngle = r.nextDouble() * 2 * Math.PI;
         dipAngle = r.nextDouble() * 2 * Math.PI;
         dipWidth = r.nextDouble() * .5 + .2;
-        bounds = v.get_plotBounds();
+        bounds = v.getPlotBounds();
         for (int i = 0; i < numLloydRelaxations; i++) {
             List<Vector2d> points = v.siteCoords();
             for (Vector2d p : points) {
@@ -55,7 +55,7 @@ public abstract class VoronoiGraph {
                 p.setX(x);
                 p.setY(y);
             }
-            v = new Voronoi(points, v.get_plotBounds());
+            v = new Voronoi(points, v.getPlotBounds());
         }
         buildGraph(v);
         improveCorners();
@@ -74,13 +74,9 @@ public abstract class VoronoiGraph {
         assignBiomes();
     }
 
-    abstract protected Enum getBiome(Center p);
+    abstract protected Biome getBiome(Center p);
 
-    abstract protected Color getColor(Enum biome);
-
-    public Center getCenterOf(int x, int y) {
-        return centers.get(img.getRGB(x, y) & 0xffffff);
-    }
+    abstract protected Color getColor(Biome biome);
 
     private void improveCorners() {
         Vector2d[] newP = new Vector2d[corners.size()];

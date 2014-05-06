@@ -4,14 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.Vector2d;
 
 /**
  * TestDriver.java
@@ -23,7 +21,7 @@ public class TestDriver {
     public static void main(String[] args) {
         final int width = 650;
         final int height = 350;
-        final int numSites = 4000;
+        final int numSites = 100;
         final long seed = System.nanoTime();
         final Random r = new Random();
         System.out.println("seed: " + seed);
@@ -34,17 +32,19 @@ public class TestDriver {
         //assemble the voronoi strucutre into a usable graph object representing a map
         final TestGraphImpl graph = new TestGraphImpl(v, 2, r);
 
-        final BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
-        Graphics2D g = img.createGraphics();
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, width, height);
+        final BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = img.createGraphics();
+        g2.setColor(Color.PINK);
+        g2.fillRect(0, 0, width, height);
 
-        graph.paint(g);
+        graph.paint(g2);
 
         final JFrame frame = new JFrame() {
+            private static final long serialVersionUID = -1290616722309726306L;
+
             @Override
             public void paint(Graphics g) {
-                g.drawImage(img, 25, 35, null);
+                g.drawImage(img, 0, 0, null);
             }
         };
         frame.setTitle("java fortune");

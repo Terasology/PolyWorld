@@ -20,7 +20,7 @@ public class Center {
     public boolean border, ocean, water, coast;
     public double elevation;
     public double moisture;
-    public Enum biome;
+    public Biome biome;
     public double area;
 
     public Center() {
