@@ -2,7 +2,7 @@ package org.terasology.polyworld.voronoi;
 
 import java.util.ArrayList;
 
-import org.terasology.math.geom.Point;
+import org.terasology.math.geom.Vector2d;
 
 /**
  * Corner.java
@@ -14,7 +14,7 @@ public class Corner {
     public ArrayList<Center> touches = new ArrayList(); //good
     public ArrayList<Corner> adjacent = new ArrayList(); //good
     public ArrayList<Edge> protrudes = new ArrayList();
-    public Point loc;
+    public Vector2d loc;
     public int index;
     public boolean border;
     public double elevation;

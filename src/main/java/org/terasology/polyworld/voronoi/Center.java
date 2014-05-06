@@ -3,7 +3,7 @@ package org.terasology.polyworld.voronoi;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.terasology.math.geom.Point;
+import org.terasology.math.geom.Vector2d;
 
 /**
  * Center.java
@@ -13,7 +13,7 @@ import org.terasology.math.geom.Point;
 public class Center {
 
     public int index;
-    public Point loc;
+    public Vector2d loc;
     public final List<Corner> corners = new ArrayList<>();//good
     public final List<Center> neighbors = new ArrayList<>();//good
     public final List<Edge> borders = new ArrayList<>();
@@ -26,7 +26,7 @@ public class Center {
     public Center() {
     }
 
-    public Center(Point loc) {
+    public Center(Vector2d loc) {
         this.loc = loc;
     }
 }

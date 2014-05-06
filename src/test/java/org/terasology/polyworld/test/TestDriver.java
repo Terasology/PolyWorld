@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.Point;
+import org.terasology.math.geom.Vector2d;
 
 /**
  * TestDriver.java
