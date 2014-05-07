@@ -1,12 +1,28 @@
+/*
+ * Copyright 2014 MovingBlocks
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.terasology.polyworld.voronoi;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,20 +41,27 @@ import org.terasology.math.geom.Rect2d;
  */
 public abstract class VoronoiGraph {
 
-    final private List<Edge> edges = new ArrayList<>();
-    final private List<Corner> corners = new ArrayList<>();
-    final private List<Center> centers = new ArrayList<>();
-    final private Rect2d bounds;
-    final private Random r;
-    private BufferedImage img;
-    protected Color OCEAN, RIVER, LAKE, BEACH;
+    private static final double ISLAND_FACTOR = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
 
-    public VoronoiGraph(Voronoi v, int numLloydRelaxations, Random r) {
+    private final List<Edge> edges = new ArrayList<>();
+    private final List<Corner> corners = new ArrayList<>();
+    private final List<Center> centers = new ArrayList<>();
+    private final Rect2d bounds;
+    private final Random r;
+
+    private final int bumps;
+    private final double startAngle;
+    private final double dipAngle;
+    private final double dipWidth;
+    
+    public VoronoiGraph(Voronoi ov, int numLloydRelaxations, Random r) {
         this.r = r;
         bumps = r.nextInt(5) + 1;
         startAngle = r.nextDouble() * 2 * Math.PI;
         dipAngle = r.nextDouble() * 2 * Math.PI;
         dipWidth = r.nextDouble() * .5 + .2;
+        Voronoi v = ov;
+
         bounds = v.getPlotBounds();
         for (int i = 0; i < numLloydRelaxations; i++) {
             List<Vector2d> points = v.siteCoords();
@@ -74,9 +97,9 @@ public abstract class VoronoiGraph {
         assignBiomes();
     }
 
-    abstract protected Biome getBiome(Center p);
+    protected abstract Biome getBiome(Center p);
 
-    abstract protected Color getColor(Biome biome);
+    protected abstract Color getColor(Biome biome);
 
     private void improveCorners() {
         Vector2d[] newP = new Vector2d[corners.size()];
@@ -125,7 +148,11 @@ public abstract class VoronoiGraph {
     }
 
     private static boolean liesOnAxes(Rect2d r, Vector2d p) {
-        return closeEnough(p.getX(), r.minX(), 1) || closeEnough(p.getY(), r.minY(), 1) || closeEnough(p.getX(), r.maxX(), 1) || closeEnough(p.getY(), r.maxY(), 1);
+        int diff = 1;
+        return closeEnough(p.getX(), r.minX(), diff) 
+            || closeEnough(p.getY(), r.minY(), diff) 
+            || closeEnough(p.getX(), r.maxX(), diff)
+            || closeEnough(p.getY(), r.maxY(), diff);
     }
 
     private static boolean closeEnough(double d1, double d2, double diff) {
@@ -205,8 +232,10 @@ public abstract class VoronoiGraph {
                     y[1] = (int) edgeCorner1.loc.getY();
 
                     //determine which corner this is
-                    x[2] = (int) ((closeEnough(edgeCorner1.loc.getX(), bounds.minX(), 1) || closeEnough(edgeCorner2.loc.getX(), bounds.minX(), .5)) ? bounds.minX() : bounds.maxX());
-                    y[2] = (int) ((closeEnough(edgeCorner1.loc.getY(), bounds.minY(), 1) || closeEnough(edgeCorner2.loc.getY(), bounds.minY(), .5)) ? bounds.minY() : bounds.maxY());
+                    x[2] = (int) ((closeEnough(edgeCorner1.loc.getX(), bounds.minX(), 1) 
+                                || closeEnough(edgeCorner2.loc.getX(), bounds.minX(), .5)) ? bounds.minX() : bounds.maxX());
+                    y[2] = (int) ((closeEnough(edgeCorner1.loc.getY(), bounds.minY(), 1) 
+                                || closeEnough(edgeCorner2.loc.getY(), bounds.minY(), .5)) ? bounds.minY() : bounds.maxY());
 
                     x[3] = (int) edgeCorner2.loc.getX();
                     y[3] = (int) edgeCorner2.loc.getY();
@@ -225,7 +254,7 @@ public abstract class VoronoiGraph {
             }
             if (drawRivers && e.river > 0) {
                 g.setStroke(new BasicStroke(1 + (int) Math.sqrt(e.river * 2)));
-                g.setColor(RIVER);
+                g.setColor(getRiverColor());
                 g.drawLine((int) e.v0.loc.getX(), (int) e.v0.loc.getY(), (int) e.v1.loc.getX(), (int) e.v1.loc.getY());
             }
         }
@@ -360,7 +389,7 @@ public abstract class VoronoiGraph {
     }
     
     private void assignCornerElevations() {
-        LinkedList<Corner> queue = new LinkedList<>();
+        Deque<Corner> queue = new LinkedList<>();
         for (Corner c : corners) {
             c.water = isWater(c.loc);
             if (c.border) {
@@ -385,17 +414,11 @@ public abstract class VoronoiGraph {
             }
         }
     }
-    double[][] noise;
-    double ISLAND_FACTOR = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
-    final int bumps;
-    final double startAngle;
-    final double dipAngle;
-    final double dipWidth;
 
     //only the radial implementation of amitp's map generation
     //TODO implement more island shapes
-    private boolean isWater(Vector2d p) {
-        p = new Vector2d(2 * (p.getX() / bounds.width() - 0.5), 2 * (p.getY() / bounds.height() - 0.5));
+    private boolean isWater(Vector2d p2) {
+        Vector2d p = new Vector2d(2 * (p2.getX() / bounds.width() - 0.5), 2 * (p2.getY() / bounds.height() - 0.5));
 
         double angle = Math.atan2(p.getY(), p.getX());
         double length = 0.5 * (Math.max(Math.abs(p.getX()), Math.abs(p.getY())) + p.length());
@@ -405,7 +428,8 @@ public abstract class VoronoiGraph {
         if (Math.abs(angle - dipAngle) < dipWidth
                 || Math.abs(angle - dipAngle + 2 * Math.PI) < dipWidth
                 || Math.abs(angle - dipAngle - 2 * Math.PI) < dipWidth) {
-            r1 = r2 = 0.2;
+            r1 = 0.2;
+            r2 = 0.2;
         }
         return !(length < r1 || (length > r1 * ISLAND_FACTOR && length < r2));
 
@@ -425,13 +449,15 @@ public abstract class VoronoiGraph {
     }
 
     private void assignOceanCoastAndLand() {
-        LinkedList<Center> queue = new LinkedList<>();
+        Deque<Center> queue = new LinkedList<>();
         final double waterThreshold = .3;
         for (final Center center : centers) {
             int numWater = 0;
             for (final Corner c : center.corners) {
                 if (c.border) {
-                    center.border = center.water = center.ocean = true;
+                    center.border = true;
+                    center.water = true;
+                    center.ocean = true;
                     queue.add(center);
                 }
                 if (c.water) {
@@ -495,10 +521,10 @@ public abstract class VoronoiGraph {
             }
         });
 
-        final double SCALE_FACTOR = 1.1;
+        final double scaleFactor = 1.1;
         for (int i = 0; i < landCorners.size(); i++) {
             double y = (double) i / landCorners.size();
-            double x = Math.sqrt(SCALE_FACTOR) - Math.sqrt(SCALE_FACTOR * (1 - y));
+            double x = Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y));
             x = Math.min(x, 1);
             landCorners.get(i).elevation = x;
         }
@@ -566,7 +592,7 @@ public abstract class VoronoiGraph {
     }
 
     private void assignCornerMoisture() {
-        LinkedList<Corner> queue = new LinkedList<>();
+        Deque<Corner> queue = new LinkedList<>();
         for (Corner c : corners) {
             if ((c.water || c.river > 0) && !c.ocean) {
                 c.moisture = c.river > 0 ? Math.min(3.0, (0.2 * c.river)) : 1.0;
@@ -626,5 +652,13 @@ public abstract class VoronoiGraph {
         for (Center center : centers) {
             center.biome = getBiome(center);
         }
+    }
+
+    /**
+     * @return
+     */
+    protected Color getRiverColor() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
