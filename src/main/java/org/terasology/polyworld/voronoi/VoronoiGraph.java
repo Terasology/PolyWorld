@@ -19,6 +19,10 @@ package org.terasology.polyworld.voronoi;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.geom.Area;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -135,16 +139,16 @@ public abstract class VoronoiGraph {
         return null;
     }
 
-    private void drawTriangle(Graphics2D g, Corner c1, Corner c2, Center center) {
-        int[] x = new int[3];
-        int[] y = new int[3];
-        x[0] = (int) center.loc.getX();
-        y[0] = (int) center.loc.getY();
-        x[1] = (int) c1.loc.getX();
-        y[1] = (int) c1.loc.getY();
-        x[2] = (int) c2.loc.getX();
-        y[2] = (int) c2.loc.getY();
-        g.fillPolygon(x, y, 3);
+    private void drawPoly(Graphics2D g, List<Corner> pts) {
+        int[] x = new int[pts.size()];
+        int[] y = new int[pts.size()];
+        
+        for (int i = 0; i < pts.size(); i++) {
+            x[i] = (int) pts.get(i).loc.getX();
+            y[i] = (int) pts.get(i).loc.getY();
+        }
+        
+        g.fillPolygon(x, y, pts.size());
     }
 
     private static boolean liesOnAxes(Rect2d r, Vector2d p) {
@@ -160,11 +164,11 @@ public abstract class VoronoiGraph {
     }
 
     public void paint(Graphics2D g) {
-        paint(g, true, true, false, false, false, true);
+        paint(g, true, true, false, false, false);
     }
 
     //also records the area of each voronoi cell
-    public void paint(Graphics2D g, boolean drawBiomes, boolean drawRivers, boolean drawSites, boolean drawCorners, boolean drawDelaunay, boolean drawVoronoi) {
+    public void paint(Graphics2D g, boolean drawBiomes, boolean drawRivers, boolean drawSites, boolean drawCorners, boolean drawDelaunay) {
         final int numSites = centers.size();
 
         Color[] defaultColors = null;
@@ -176,74 +180,30 @@ public abstract class VoronoiGraph {
         }
 
         //draw via triangles
-        for (Center c : centers) {
+        for (final Center c : centers) {
             g.setColor(drawBiomes ? getColor(c.biome) : defaultColors[c.index]);
 
-            //only used if Center c is on the edge of the graph. allows for completely filling in the outer polygons
-            Corner edgeCorner1 = null;
-            Corner edgeCorner2 = null;
-            c.area = 0;
-            for (Center n : c.neighbors) {
-                Edge e = edgeWithCenters(c, n);
+            List<Corner> pts = new ArrayList<>(c.corners);
+            Collections.sort(pts, new Comparator<Corner>() {
 
-                if (e.v0 == null) {
-                    //outermost voronoi edges aren't stored in the graph
-                    continue;
-                }
+                @Override
+                public int compare(Corner o0, Corner o1) {
+                    Vector2d a = new Vector2d(o0.loc).sub(c.loc).normalize();
+                    Vector2d b = new Vector2d(o1.loc).sub(c.loc).normalize();
 
-                //find a corner on the exterior of the graph
-                //if this Edge e has one, then it must have two,
-                //finding these two corners will give us the missing
-                //triangle to render. this special triangle is handled
-                //outside this for loop
-                Corner cornerWithOneAdjacent = e.v0.border ? e.v0 : e.v1;
-                if (cornerWithOneAdjacent.border) {
-                    if (edgeCorner1 == null) {
-                        edgeCorner1 = cornerWithOneAdjacent;
-                    } else {
-                        edgeCorner2 = cornerWithOneAdjacent;
+                    if (a.y() > 0) { //a between 0 and 180
+                        if (b.y() < 0)  //b between 180 and 360
+                            return -1;
+                        return a.x() < b.x() ? 1 : -1; 
+                    } else { // a between 180 and 360
+                        if (b.y() > 0) //b between 0 and 180
+                            return 1;
+                        return a.x() > b.x() ? 1 : -1;
                     }
                 }
-
-                drawTriangle(g, e.v0, e.v1, c);
-                c.area += Math.abs(c.loc.getX() * (e.v0.loc.getY() - e.v1.loc.getY())
-                        + e.v0.loc.getX() * (e.v1.loc.getY() - c.loc.getY())
-                        + e.v1.loc.getX() * (c.loc.getY() - e.v0.loc.getY())) / 2;
-            }
-
-            //handle the missing triangle
-            if (edgeCorner2 != null) {
-                //if these two outer corners are NOT on the same exterior edge of the graph,
-                //then we actually must render a polygon (w/ 4 points) and take into consideration
-                //one of the four corners (either 0,0 or 0,height or width,0 or width,height)
-                //note: the 'missing polygon' may have more than just 4 points. this
-                //is common when the number of sites are quite low (less than 5), but not a problem
-                //with a more useful number of sites. 
-                //TODO: find a way to fix this
-
-                if (closeEnough(edgeCorner1.loc.getX(), edgeCorner2.loc.getX(), 1)) {
-                    drawTriangle(g, edgeCorner1, edgeCorner2, c);
-                } else {
-                    int[] x = new int[4];
-                    int[] y = new int[4];
-                    x[0] = (int) c.loc.getX();
-                    y[0] = (int) c.loc.getY();
-                    x[1] = (int) edgeCorner1.loc.getX();
-                    y[1] = (int) edgeCorner1.loc.getY();
-
-                    //determine which corner this is
-                    x[2] = (int) ((closeEnough(edgeCorner1.loc.getX(), bounds.minX(), 1) 
-                                || closeEnough(edgeCorner2.loc.getX(), bounds.minX(), .5)) ? bounds.minX() : bounds.maxX());
-                    y[2] = (int) ((closeEnough(edgeCorner1.loc.getY(), bounds.minY(), 1) 
-                                || closeEnough(edgeCorner2.loc.getY(), bounds.minY(), .5)) ? bounds.minY() : bounds.maxY());
-
-                    x[3] = (int) edgeCorner2.loc.getX();
-                    y[3] = (int) edgeCorner2.loc.getY();
-
-                    g.fillPolygon(x, y, 4);
-                    c.area += 0; //TODO: area of polygon given vertices
-                }
-            }
+            });
+            
+            drawPoly(g, pts);
         }
 
         for (Edge e : edges) {
@@ -353,6 +313,60 @@ public abstract class VoronoiGraph {
                 addToCenterList(edge.v1.touches, edge.d0);
                 addToCenterList(edge.v1.touches, edge.d1);
             }
+        }
+        
+        // add corners
+        for (Center center : centers) {
+            boolean onLeft = false;
+            boolean onRight = false;
+            boolean onTop = false;
+            boolean onBottom = false;
+            
+            int diff = 1;
+            for (Corner corner : center.corners) {
+                Vector2d p = corner.loc;
+                onLeft |= closeEnough(p.getX(), bounds.minX(), diff);
+                onTop |= closeEnough(p.getY(), bounds.minY(), diff); 
+                onRight |= closeEnough(p.getX(), bounds.maxX(), diff);
+                onBottom |= closeEnough(p.getY(), bounds.maxY(), diff);
+            }
+            
+            if (onLeft && onTop) {
+                Corner c = new Corner();
+                c.loc = new Vector2d(bounds.minX(), bounds.minY());
+                c.border = true;
+                c.index = corners.size();
+                corners.add(c);
+                center.corners.add(c);
+            }
+
+            if (onLeft && onBottom) {
+                Corner c = new Corner();
+                c.loc = new Vector2d(bounds.minX(), bounds.maxY());
+                c.border = true;
+                c.index = corners.size();
+                corners.add(c);
+                center.corners.add(c);
+            }
+
+            if (onRight && onTop) {
+                Corner c = new Corner();
+                c.loc = new Vector2d(bounds.maxX(), bounds.minY());
+                c.border = true;
+                c.index = corners.size();
+                corners.add(c);
+                center.corners.add(c);
+            }
+
+            if (onRight && onBottom) {
+                Corner c = new Corner();
+                c.loc = new Vector2d(bounds.maxX(), bounds.maxY());
+                c.border = true;
+                c.index = corners.size();
+                corners.add(c);
+                center.corners.add(c);
+            }
+
         }
     }
 

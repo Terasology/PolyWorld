@@ -39,9 +39,9 @@ final class TestDriver {
     }
 
     public static void main(String[] args) {
-        final int width = 1650;
-        final int height = 750;
-        final int numSites = 3000;
+        final int width = 1024;
+        final int height = 1024;
+        final int numSites = 5000;
         final long seed = 92070987606126L; // System.nanoTime();
 
         final Random r = new Random(seed);
@@ -53,23 +53,20 @@ final class TestDriver {
         //assemble the voronoi strucutre into a usable graph object representing a map
         final TestGraphImpl graph = new TestGraphImpl(v, 2, r);
 
-        final BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = img.createGraphics();
-        g2.setColor(Color.CYAN);
-        g2.fillRect(0, 0, width, height);
-        
 //        g2.scale(5.0, 5);
 //        g2.translate(-280, -690);
 
-
-        graph.paint(g2);
 
         final JFrame frame = new JFrame() {
             private static final long serialVersionUID = -1290616722309726306L;
 
             @Override
             public void paint(Graphics g) {
-                g.drawImage(img, 10, 40, null);
+                g.setColor(Color.CYAN);
+                g.translate(10, 40);
+                g.fillRect(0, 0, width, height);
+
+                graph.paint((Graphics2D) g);
             }
         };
         frame.setTitle("java fortune");

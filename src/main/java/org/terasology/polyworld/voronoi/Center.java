@@ -40,7 +40,6 @@ public class Center {
     public double elevation;
     public double moisture;
     public Biome biome;
-    public double area;
 
     public Center() {
     }
