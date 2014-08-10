@@ -17,9 +17,14 @@
 package org.terasology.polyworld.voronoi;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
+
+import com.google.common.base.Preconditions;
 
 /**
  * Corner.java
@@ -28,7 +33,7 @@ import org.terasology.math.geom.Vector2d;
  */
 public class Corner {
 
-    public List<Center> touches = new ArrayList<>();
+    public List<Region> touches = new ArrayList<>();
     public List<Corner> adjacent = new ArrayList<>();
     public List<Edge> protrudes = new ArrayList<>();
     public Vector2d loc;
@@ -41,4 +46,22 @@ public class Corner {
     public Corner downslope;
     public int river;
     public double moisture;
+    
+    public void addTouches(Region r) {
+        touches.add(r);
+    }
+
+    /**
+     * @return
+     */
+    public Collection<Corner> getAdjacent() {
+        return Collections.unmodifiableCollection(adjacent);
+    }
+    
+    public void addAdjacent(Corner c) {
+        Preconditions.checkArgument(c != null);
+        Preconditions.checkArgument(!adjacent.contains(c));
+
+        adjacent.add(c);
+    }
 }

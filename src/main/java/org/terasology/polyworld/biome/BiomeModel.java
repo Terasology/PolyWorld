@@ -16,12 +16,12 @@
 
 package org.terasology.polyworld.biome;
 
-import org.terasology.polyworld.voronoi.Center;
+import org.terasology.polyworld.voronoi.Region;
 
 /**
  * TODO Type description
  * @author Martin Steiger
  */
 public interface BiomeModel {
-    Biome getBiome(Center center);
+    Biome getBiome(Region center);
 }

@@ -29,7 +29,9 @@ import org.terasology.math.geom.Rect2d;
 import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.DefaultBiomeModel;
-import org.terasology.polyworld.voronoi.Center;
+import org.terasology.polyworld.biome.DefaultMoistureModel;
+import org.terasology.polyworld.biome.MoistureModel;
+import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
@@ -53,7 +55,7 @@ public class IslandPainter {
         this.graph = graph;
 
         Random r = new Random(1254);
-        int numSites = graph.getCenters().size();
+        int numSites = graph.getRegions().size();
         defaultColors = new Color[numSites];
         for (int i = 0; i < defaultColors.length; i++) {
             defaultColors[i] = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
@@ -93,10 +95,10 @@ public class IslandPainter {
     }
 
     public void drawRegions(Graphics2D g, boolean drawBiomes) {
-        List<Center> centers = graph.getCenters();
+        List<Region> centers = graph.getRegions();
 
         int index = 0;
-        for (final Center c : centers) {
+        for (final Region c : centers) {
             Color color;
             if (drawBiomes) {
                 Biome biome = biomeModel.getBiome(c);
@@ -107,7 +109,7 @@ public class IslandPainter {
             
             g.setColor(color);
 
-            List<Corner> pts = new ArrayList<>(c.corners);
+            List<Corner> pts = new ArrayList<>(c.getCorners());
             Collections.sort(pts, new AngleSorter(c));
 
             drawPoly(g, pts);
@@ -118,7 +120,7 @@ public class IslandPainter {
         for (Edge e : graph.getEdges()) {
             g.setStroke(new BasicStroke(1));
             g.setColor(Color.YELLOW);
-            g.drawLine((int) e.d0.getPos().getX(), (int) e.d0.getPos().getY(), (int) e.d1.getPos().getX(), (int) e.d1.getPos().getY());
+            g.drawLine((int) e.d0.getCenter().getX(), (int) e.d0.getCenter().getY(), (int) e.d1.getCenter().getX(), (int) e.d1.getCenter().getY());
         }
     }
 
@@ -133,11 +135,11 @@ public class IslandPainter {
     }
 
     public void drawSites(Graphics2D g) {
-        List<Center> centers = graph.getCenters();
+        List<Region> centers = graph.getRegions();
 
         g.setColor(Color.BLACK);
-        for (Center s : centers) {
-            g.fillOval((int) (s.getPos().getX() - 2), (int) (s.getPos().getY() - 2), 4, 4);
+        for (Region s : centers) {
+            g.fillOval((int) (s.getCenter().getX() - 2), (int) (s.getCenter().getY() - 2), 4, 4);
         }
     }
 

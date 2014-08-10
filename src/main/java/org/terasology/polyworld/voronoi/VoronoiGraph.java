@@ -30,7 +30,6 @@ import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
-import org.terasology.polyworld.biome.Biome;
 
 /**
  * VoronoiGraph.java
@@ -43,7 +42,7 @@ public class VoronoiGraph {
 
     private final List<Edge> edges = new ArrayList<>();
     private final List<Corner> corners = new ArrayList<>();
-    private final List<Center> centers = new ArrayList<>();
+    private final List<Region> regions = new ArrayList<>();
     private final Rect2d bounds;
     private final Random r;
 
@@ -84,14 +83,12 @@ public class VoronoiGraph {
         assignCornerElevations();
         assignOceanCoastAndLand();
         redistributeElevations(landCorners());
-        assignPolygonElevations();
 
         calculateDownslopes();
         //calculateWatersheds();
         createRivers();
         assignCornerMoisture();
         redistributeMoisture(landCorners());
-        assignPolygonMoisture();
     }
 
     private void improveCorners() {
@@ -102,9 +99,9 @@ public class VoronoiGraph {
             } else {
                 double x = 0;
                 double y = 0;
-                for (Center center : c.touches) {
-                    x += center.getPos().getX();
-                    y += center.getPos().getY();
+                for (Region region : c.touches) {
+                    x += region.getCenter().getX();
+                    y += region.getCenter().getY();
                 }
                 newP[c.index] = new Vector2d(x / c.touches.size(), y / c.touches.size());
             }
@@ -131,17 +128,17 @@ public class VoronoiGraph {
         return Math.abs(d1 - d2) <= diff;
     }
     private void buildGraph(Voronoi v) {
-        final Map<Vector2d, Center> pointCenterMap = new HashMap<>();
+        final Map<Vector2d, Region> pointCenterMap = new HashMap<>();
         final List<Vector2d> points = v.siteCoords();
         for (Vector2d p : points) {
-            Center c = new Center(p);
-            centers.add(c);
+            Region c = new Region(p);
+            regions.add(c);
             pointCenterMap.put(p, c);
         }
 
         //bug fix
-        for (Center c : centers) {
-            v.region(c.getPos());
+        for (Region c : regions) {
+            v.region(c.getCenter());
         }
 
         final List<org.terasology.math.delaunay.Edge> libedges = v.edges();
@@ -161,10 +158,10 @@ public class VoronoiGraph {
 
             // Centers point to edges. Corners point to edges.
             if (edge.d0 != null) {
-                edge.d0.borders.add(edge);
+                edge.d0.addBorder(edge);
             }
             if (edge.d1 != null) {
-                edge.d1.borders.add(edge);
+                edge.d1.addBorder(edge);
             }
             if (edge.v0 != null) {
                 edge.v0.protrudes.add(edge);
@@ -175,60 +172,60 @@ public class VoronoiGraph {
 
             // Centers point to centers.
             if (edge.d0 != null && edge.d1 != null) {
-                addToCenterList(edge.d0.neighbors, edge.d1);
-                addToCenterList(edge.d1.neighbors, edge.d0);
+                addToCenterList(edge.d0, edge.d1);
+                addToCenterList(edge.d1, edge.d0);
             }
 
             // Corners point to corners
             if (edge.v0 != null && edge.v1 != null) {
-                addToCornerList(edge.v0.adjacent, edge.v1);
-                addToCornerList(edge.v1.adjacent, edge.v0);
+                addToCornerList(edge.v0, edge.v1);
+                addToCornerList(edge.v1, edge.v0);
             }
 
             // Centers point to corners
             if (edge.d0 != null) {
-                addToCornerList(edge.d0.corners, edge.v0);
-                addToCornerList(edge.d0.corners, edge.v1);
+                addToCornerList(edge.d0, edge.v0);
+                addToCornerList(edge.d0, edge.v1);
             }
             if (edge.d1 != null) {
-                addToCornerList(edge.d1.corners, edge.v0);
-                addToCornerList(edge.d1.corners, edge.v1);
+                addToCornerList(edge.d1, edge.v0);
+                addToCornerList(edge.d1, edge.v1);
             }
 
             // Corners point to centers
             if (edge.v0 != null) {
-                addToCenterList(edge.v0.touches, edge.d0);
-                addToCenterList(edge.v0.touches, edge.d1);
+                addToCenterList(edge.v0, edge.d0);
+                addToCenterList(edge.v0, edge.d1);
             }
             if (edge.v1 != null) {
-                addToCenterList(edge.v1.touches, edge.d0);
-                addToCenterList(edge.v1.touches, edge.d1);
+                addToCenterList(edge.v1, edge.d0);
+                addToCenterList(edge.v1, edge.d1);
             }
         }
-        
+
         // add corners
-        for (Center center : centers) {
+        for (Region region : regions) {
             boolean onLeft = false;
             boolean onRight = false;
             boolean onTop = false;
             boolean onBottom = false;
-            
+
             int diff = 1;
-            for (Corner corner : center.corners) {
+            for (Corner corner : region.getCorners()) {
                 Vector2d p = corner.loc;
                 onLeft |= closeEnough(p.getX(), bounds.minX(), diff);
                 onTop |= closeEnough(p.getY(), bounds.minY(), diff); 
                 onRight |= closeEnough(p.getX(), bounds.maxX(), diff);
                 onBottom |= closeEnough(p.getY(), bounds.maxY(), diff);
             }
-            
+
             if (onLeft && onTop) {
                 Corner c = new Corner();
                 c.loc = new Vector2d(bounds.minX(), bounds.minY());
                 c.border = true;
                 c.index = corners.size();
                 corners.add(c);
-                center.corners.add(c);
+                region.addCorner(c);
             }
 
             if (onLeft && onBottom) {
@@ -237,7 +234,7 @@ public class VoronoiGraph {
                 c.border = true;
                 c.index = corners.size();
                 corners.add(c);
-                center.corners.add(c);
+                region.addCorner(c);
             }
 
             if (onRight && onTop) {
@@ -246,7 +243,7 @@ public class VoronoiGraph {
                 c.border = true;
                 c.index = corners.size();
                 corners.add(c);
-                center.corners.add(c);
+                region.addCorner(c);
             }
 
             if (onRight && onBottom) {
@@ -255,23 +252,33 @@ public class VoronoiGraph {
                 c.border = true;
                 c.index = corners.size();
                 corners.add(c);
-                center.corners.add(c);
+                region.addCorner(c);
             }
 
         }
     }
 
-    // Helper functions for the following for loop; ideally these
-    // would be inlined
-    private void addToCornerList(List<Corner> list, Corner c) {
-        if (c != null && !list.contains(c)) {
-            list.add(c);
+    private void addToCornerList(Corner corner, Corner c) {
+        if (c != null && !corner.getAdjacent().contains(c)) {
+            corner.addAdjacent(c);
         }
     }
 
-    private void addToCenterList(List<Center> list, Center c) {
-        if (c != null && !list.contains(c)) {
-            list.add(c);
+    private void addToCornerList(Region region, Corner c) {
+        if (c != null && !region.getCorners().contains(c)) {
+            region.addCorner(c);
+        }
+    }
+
+    private void addToCenterList(Region region, Region c) {
+        if (c != null && !region.getNeighbors().contains(c)) {
+            region.addNeigbor(c);
+        }
+    }
+
+    private void addToCenterList(Corner v, Region c) {
+        if (c != null && !v.touches.contains(c)) {
+            v.addTouches(c);
         }
     }
 
@@ -354,48 +361,48 @@ public class VoronoiGraph {
     }
 
     private void assignOceanCoastAndLand() {
-        Deque<Center> queue = new LinkedList<>();
+        Deque<Region> queue = new LinkedList<>();
         final double waterThreshold = .3;
-        for (final Center center : centers) {
+        for (final Region region : regions) {
             int numWater = 0;
-            for (final Corner c : center.corners) {
+            for (final Corner c : region.getCorners()) {
                 if (c.border) {
-                    center.border = true;
-                    center.water = true;
-                    center.ocean = true;
-                    queue.add(center);
+                    region.setBorder(true);
+                    region.setWater(true);
+                    region.setOcean(true);
+                    queue.add(region);
                 }
                 if (c.water) {
                     numWater++;
                 }
             }
-            center.water = center.ocean || ((double) numWater / center.corners.size() >= waterThreshold);
+            region.setWater(region.isOcean() || ((double) numWater / region.getCorners().size() >= waterThreshold));
         }
         while (!queue.isEmpty()) {
-            final Center center = queue.pop();
-            for (final Center n : center.neighbors) {
-                if (n.water && !n.ocean) {
-                    n.ocean = true;
+            final Region region = queue.pop();
+            for (final Region n : region.getNeighbors()) {
+                if (n.isWater() && !n.isOcean()) {
+                    n.setOcean(true);
                     queue.add(n);
                 }
             }
         }
-        for (Center center : centers) {
+        for (Region region : regions) {
             boolean oceanNeighbor = false;
             boolean landNeighbor = false;
-            for (Center n : center.neighbors) {
-                oceanNeighbor |= n.ocean;
-                landNeighbor |= !n.water;
+            for (Region n : region.getNeighbors()) {
+                oceanNeighbor |= n.isOcean();
+                landNeighbor |= !n.isWater();
             }
-            center.coast = oceanNeighbor && landNeighbor;
+            region.setCoast(oceanNeighbor && landNeighbor);
         }
 
         for (Corner c : corners) {
             int numOcean = 0;
             int numLand = 0;
-            for (Center center : c.touches) {
-                numOcean += center.ocean ? 1 : 0;
-                numLand += !center.water ? 1 : 0;
+            for (Region region : c.touches) {
+                numOcean += region.isOcean() ? 1 : 0;
+                numLand += !region.isWater() ? 1 : 0;
             }
             c.ocean = numOcean == c.touches.size();
             c.coast = numOcean > 0 && numLand > 0;
@@ -438,16 +445,6 @@ public class VoronoiGraph {
             if (c.ocean || c.coast) {
                 c.elevation = 0.0;
             }
-        }
-    }
-
-    private void assignPolygonElevations() {
-        for (Center center : centers) {
-            double total = 0;
-            for (Corner c : center.corners) {
-                total += c.elevation;
-            }
-            center.elevation = total / center.corners.size();
         }
     }
 
@@ -543,37 +540,27 @@ public class VoronoiGraph {
         }
     }
 
-    private void assignPolygonMoisture() {
-        for (Center center : centers) {
-            double total = 0;
-            for (Corner c : center.corners) {
-                total += c.moisture;
-            }
-            center.moisture = total / center.corners.size();
-        }
-    }
-
     /**
      * @return
      */
-    public List<Center> getCenters() {
-        return centers;
+    public List<Region> getRegions() {
+        return Collections.unmodifiableList(regions);
     }
 
     /**
      * @return
      */
     public List<Edge> getEdges() {
-        return edges;
+        return Collections.unmodifiableList(edges);
     }
-    
+
     /**
      * @return the corners
      */
     public List<Corner> getCorners() {
-        return corners;
+        return Collections.unmodifiableList(corners);
     }
-    
+
     /**
      * @return the bounds
      */

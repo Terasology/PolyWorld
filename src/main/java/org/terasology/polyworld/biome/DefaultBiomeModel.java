@@ -16,60 +16,61 @@
 
 package org.terasology.polyworld.biome;
 
-import org.terasology.polyworld.voronoi.Center;
+import org.terasology.polyworld.voronoi.Region;
 
 /**
  * TODO Type description
  * @author Martin Steiger
  */
 public class DefaultBiomeModel implements BiomeModel {
-    public Biome getBiome(Center p) {
-        if (p.ocean) {
+
+    public Biome getBiome(Region p) {
+        if (p.isOcean()) {
             return Biome.OCEAN;
-        } else if (p.water) {
-            if (p.elevation < 0.1) {
+        } else if (p.isWater()) {
+            if (p.getElevation() < 0.1) {
                 return Biome.MARSH;
             }
-            if (p.elevation > 0.8) {
+            if (p.getElevation() > 0.8) {
                 return Biome.ICE;
             }
             return Biome.LAKE;
-        } else if (p.coast) {
+        } else if (p.isCoast()) {
             return Biome.BEACH;
-        } else if (p.elevation > 0.8) {
-            if (p.moisture > 0.50) {
+        } else if (p.getElevation() > 0.8) {
+            if (p.getMoisture() > 0.50) {
                 return Biome.SNOW;
-            } else if (p.moisture > 0.33) {
+            } else if (p.getMoisture() > 0.33) {
                 return Biome.TUNDRA;
-            } else if (p.moisture > 0.16) {
+            } else if (p.getMoisture() > 0.16) {
                 return Biome.BARE;
             } else {
                 return Biome.SCORCHED;
             }
-        } else if (p.elevation > 0.6) {
-            if (p.moisture > 0.66) {
+        } else if (p.getElevation() > 0.6) {
+            if (p.getMoisture() > 0.66) {
                 return Biome.TAIGA;
-            } else if (p.moisture > 0.33) {
+            } else if (p.getMoisture() > 0.33) {
                 return Biome.SHRUBLAND;
             } else {
                 return Biome.TEMPERATE_DESERT;
             }
-        } else if (p.elevation > 0.3) {
-            if (p.moisture > 0.83) {
+        } else if (p.getElevation() > 0.3) {
+            if (p.getMoisture() > 0.83) {
                 return Biome.TEMPERATE_RAIN_FOREST;
-            } else if (p.moisture > 0.50) {
+            } else if (p.getMoisture() > 0.50) {
                 return Biome.TEMPERATE_DECIDUOUS_FOREST;
-            } else if (p.moisture > 0.16) {
+            } else if (p.getMoisture() > 0.16) {
                 return Biome.GRASSLAND;
             } else {
                 return Biome.TEMPERATE_DESERT;
             }
         } else {
-            if (p.moisture > 0.66) {
+            if (p.getMoisture() > 0.66) {
                 return Biome.TROPICAL_RAIN_FOREST;
-            } else if (p.moisture > 0.33) {
+            } else if (p.getMoisture() > 0.33) {
                 return Biome.TROPICAL_SEASONAL_FOREST;
-            } else if (p.moisture > 0.16) {
+            } else if (p.getMoisture() > 0.16) {
                 return Biome.GRASSLAND;
             } else {
                 return Biome.SUBTROPICAL_DESERT;

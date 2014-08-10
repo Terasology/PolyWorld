@@ -24,8 +24,8 @@ package org.terasology.polyworld.voronoi;
  */
 public class Edge {
 
-    public Center d0;  // Delaunay edge
-    public Center d1;  // Delaunay edge
+    public Region d0;  // Delaunay edge
+    public Region d1;  // Delaunay edge
     
     public Corner v0;  // Voronoi edge
     public Corner v1;  // Voronoi edge
