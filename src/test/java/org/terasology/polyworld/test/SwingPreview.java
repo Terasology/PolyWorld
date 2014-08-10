@@ -16,8 +16,32 @@
 
 package org.terasology.polyworld.test;
 
+import static org.terasology.polyworld.voronoi.Biome.BARE;
+import static org.terasology.polyworld.voronoi.Biome.BEACH;
+import static org.terasology.polyworld.voronoi.Biome.COAST;
+import static org.terasology.polyworld.voronoi.Biome.GRASSLAND;
+import static org.terasology.polyworld.voronoi.Biome.ICE;
+import static org.terasology.polyworld.voronoi.Biome.LAKE;
+import static org.terasology.polyworld.voronoi.Biome.LAKESHORE;
+import static org.terasology.polyworld.voronoi.Biome.MARSH;
+import static org.terasology.polyworld.voronoi.Biome.OCEAN;
+import static org.terasology.polyworld.voronoi.Biome.SCORCHED;
+import static org.terasology.polyworld.voronoi.Biome.SHRUBLAND;
+import static org.terasology.polyworld.voronoi.Biome.SHURBLAND;
+import static org.terasology.polyworld.voronoi.Biome.SNOW;
+import static org.terasology.polyworld.voronoi.Biome.SUBTROPICAL_DESERT;
+import static org.terasology.polyworld.voronoi.Biome.TAIGA;
+import static org.terasology.polyworld.voronoi.Biome.TEMPERATE_DECIDUOUS_FOREST;
+import static org.terasology.polyworld.voronoi.Biome.TEMPERATE_DESERT;
+import static org.terasology.polyworld.voronoi.Biome.TEMPERATE_RAIN_FOREST;
+import static org.terasology.polyworld.voronoi.Biome.TROPICAL_RAIN_FOREST;
+import static org.terasology.polyworld.voronoi.Biome.TROPICAL_SEASONAL_FOREST;
+import static org.terasology.polyworld.voronoi.Biome.TUNDRA;
+
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JComponent;
@@ -25,6 +49,10 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import org.terasology.math.delaunay.Voronoi;
+import org.terasology.polyworld.voronoi.Biome;
+import org.terasology.polyworld.voronoi.VoronoiGraph;
+
+import com.google.common.collect.Maps;
 
 /**
  * Preview generated world in Swing
@@ -46,7 +74,34 @@ final class SwingPreview {
 
         final Voronoi v = new Voronoi(numSites, width, height, r);
 
-        final VoronoiWorldGen graph = new VoronoiWorldGen(v, 2, r);
+        final VoronoiGraph graph = new VoronoiGraph(v, 2, r);
+        final IslandPainter painter = new IslandPainter(graph);
+
+        Map<Biome, Color> map = Maps.newHashMap();
+        map.put(OCEAN, new Color(0x44447a)); 
+        map.put(LAKE, new Color(0x336699)); 
+        map.put(BEACH, new Color(0xa09077)); 
+        map.put(SNOW, new Color(0xffffff));
+        map.put(TUNDRA, new Color(0xbbbbaa)); 
+        map.put(BARE, new Color(0x888888)); 
+        map.put(SCORCHED, new Color(0x555555)); 
+        map.put(TAIGA, new Color(0x99aa77));
+        map.put(SHURBLAND, new Color(0x889977)); 
+        map.put(TEMPERATE_DESERT, new Color(0xc9d29b));
+        map.put(TEMPERATE_RAIN_FOREST, new Color(0x448855)); 
+        map.put(TEMPERATE_DECIDUOUS_FOREST, new Color(0x679459));
+        map.put(GRASSLAND, new Color(0x88aa55)); 
+        map.put(SUBTROPICAL_DESERT, new Color(0xd2b98b)); 
+        map.put(SHRUBLAND, new Color(0x889977));
+        map.put(ICE, new Color(0x99ffff));
+        map.put(MARSH, new Color(0x2f6666));
+        map.put(TROPICAL_RAIN_FOREST, new Color(0x337755));
+        map.put(TROPICAL_SEASONAL_FOREST, new Color(0x559944));
+        map.put(COAST, new Color(0x33335a));
+        map.put(LAKESHORE, new Color(0x225588));
+
+        painter.setBiomeColors(map);
+        painter.setRiverColor(new Color(0x225588));
 
         JFrame frame = new JFrame();
         JComponent panel = new JComponent() {
@@ -55,7 +110,7 @@ final class SwingPreview {
 
             @Override
             public void paint(Graphics g) {
-                graph.paint((Graphics2D) g);
+                painter.paint((Graphics2D) g);
             }
         };
         frame.add(panel);

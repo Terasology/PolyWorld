@@ -16,12 +16,31 @@
 
 package org.terasology.polyworld.voronoi;
 
-import java.awt.Color;
 
 /**
- * TODO Type description
+ * Different biome types
  * @author Martin Steiger
  */
-public interface Biome {
-    Color getColor();
+public enum Biome {
+    OCEAN, 
+    LAKE, 
+    BEACH, 
+    SNOW,
+    TUNDRA, 
+    BARE, 
+    SCORCHED, 
+    TAIGA,
+    SHURBLAND, 
+    TEMPERATE_DESERT,
+    TEMPERATE_RAIN_FOREST, 
+    TEMPERATE_DECIDUOUS_FOREST,
+    GRASSLAND, 
+    SUBTROPICAL_DESERT, 
+    SHRUBLAND,
+    ICE,
+    MARSH,
+    TROPICAL_RAIN_FOREST,
+    TROPICAL_SEASONAL_FOREST,
+    COAST,
+    LAKESHORE;
 }

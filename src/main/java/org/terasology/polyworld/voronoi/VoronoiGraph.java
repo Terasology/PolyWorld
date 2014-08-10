@@ -16,9 +16,6 @@
 
 package org.terasology.polyworld.voronoi;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -31,16 +28,15 @@ import java.util.Random;
 
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Vector2d;
 import org.terasology.math.geom.Rect2d;
-import org.terasology.polyworld.test.VoronoiWorldGen.ColorData;
+import org.terasology.math.geom.Vector2d;
 
 /**
  * VoronoiGraph.java
  *
  * @author Connor
  */
-public abstract class VoronoiGraph {
+public class VoronoiGraph {
 
     private static final double ISLAND_FACTOR = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
 
@@ -98,8 +94,6 @@ public abstract class VoronoiGraph {
         assignBiomes();
     }
 
-    protected abstract Color getColor(Biome biome);
-
     private void improveCorners() {
         Vector2d[] newP = new Vector2d[corners.size()];
         for (Corner c : corners) {
@@ -134,18 +128,6 @@ public abstract class VoronoiGraph {
         return null;
     }
 
-    private void drawPoly(Graphics2D g, List<Corner> pts) {
-        int[] x = new int[pts.size()];
-        int[] y = new int[pts.size()];
-        
-        for (int i = 0; i < pts.size(); i++) {
-            x[i] = (int) pts.get(i).loc.getX();
-            y[i] = (int) pts.get(i).loc.getY();
-        }
-        
-        g.fillPolygon(x, y, pts.size());
-    }
-
     private static boolean liesOnAxes(Rect2d r, Vector2d p) {
         int diff = 1;
         return closeEnough(p.getX(), r.minX(), diff) 
@@ -157,82 +139,6 @@ public abstract class VoronoiGraph {
     private static boolean closeEnough(double d1, double d2, double diff) {
         return Math.abs(d1 - d2) <= diff;
     }
-
-    public void paint(Graphics2D g) {
-        paint(g, true, true, false, false, false);
-    }
-
-    //also records the area of each voronoi cell
-    public void paint(Graphics2D g, boolean drawBiomes, boolean drawRivers, boolean drawSites, boolean drawCorners, boolean drawDelaunay) {
-        final int numSites = centers.size();
-
-        Color[] defaultColors = null;
-        if (!drawBiomes) {
-            defaultColors = new Color[numSites];
-            for (int i = 0; i < defaultColors.length; i++) {
-                defaultColors[i] = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
-            }
-        }
-
-        //draw via triangles
-        for (final Center c : centers) {
-            g.setColor(drawBiomes ? getColor(c.biome) : defaultColors[c.index]);
-
-            List<Corner> pts = new ArrayList<>(c.corners);
-            Collections.sort(pts, new Comparator<Corner>() {
-
-                @Override
-                public int compare(Corner o0, Corner o1) {
-                    Vector2d a = new Vector2d(o0.loc).sub(c.loc).normalize();
-                    Vector2d b = new Vector2d(o1.loc).sub(c.loc).normalize();
-
-                    if (a.y() > 0) { //a between 0 and 180
-                        if (b.y() < 0) {  //b between 180 and 360
-                            return -1;
-                        }
-                        return a.x() < b.x() ? 1 : -1;
-                    } else { // a between 180 and 360
-                        if (b.y() > 0) { //b between 0 and 180
-                            return 1;
-                        }
-                        return a.x() > b.x() ? 1 : -1;
-                    }
-                }
-            });
-            
-            drawPoly(g, pts);
-        }
-
-        for (Edge e : edges) {
-            if (drawDelaunay) {
-                g.setStroke(new BasicStroke(1));
-                g.setColor(Color.YELLOW);
-                g.drawLine((int) e.d0.loc.getX(), (int) e.d0.loc.getY(), (int) e.d1.loc.getX(), (int) e.d1.loc.getY());
-            }
-            if (drawRivers && e.river > 0) {
-                g.setStroke(new BasicStroke(1 + (int) Math.sqrt(e.river * 2)));
-                g.setColor(getRiverColor());
-                g.drawLine((int) e.v0.loc.getX(), (int) e.v0.loc.getY(), (int) e.v1.loc.getX(), (int) e.v1.loc.getY());
-            }
-        }
-
-        if (drawSites) {
-            g.setColor(Color.BLACK);
-            for (Center s : centers) {
-                g.fillOval((int) (s.loc.getX() - 2), (int) (s.loc.getY() - 2), 4, 4);
-            }
-        }
-
-        if (drawCorners) {
-            g.setColor(Color.WHITE);
-            for (Corner c : corners) {
-                g.fillOval((int) (c.loc.getX() - 2), (int) (c.loc.getY() - 2), 4, 4);
-            }
-        }
-        g.setColor(Color.WHITE);
-        g.drawRect((int) bounds.minX(), (int) bounds.minY(), (int) bounds.width(), (int) bounds.height());
-    }
-
     private void buildGraph(Voronoi v) {
         final Map<Vector2d, Center> pointCenterMap = new HashMap<>();
         final List<Vector2d> points = v.siteCoords();
@@ -665,65 +571,85 @@ public abstract class VoronoiGraph {
         }
     }
 
-    /**
-     * @return
-     */
-    protected Color getRiverColor() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     protected Biome getBiome(Center p) {
         if (p.ocean) {
-            return ColorData.OCEAN;
+            return Biome.OCEAN;
         } else if (p.water) {
             if (p.elevation < 0.1) {
-                return ColorData.MARSH;
+                return Biome.MARSH;
             }
             if (p.elevation > 0.8) {
-                return ColorData.ICE;
+                return Biome.ICE;
             }
-            return ColorData.LAKE;
+            return Biome.LAKE;
         } else if (p.coast) {
-            return ColorData.BEACH;
+            return Biome.BEACH;
         } else if (p.elevation > 0.8) {
             if (p.moisture > 0.50) {
-                return ColorData.SNOW;
+                return Biome.SNOW;
             } else if (p.moisture > 0.33) {
-                return ColorData.TUNDRA;
+                return Biome.TUNDRA;
             } else if (p.moisture > 0.16) {
-                return ColorData.BARE;
+                return Biome.BARE;
             } else {
-                return ColorData.SCORCHED;
+                return Biome.SCORCHED;
             }
         } else if (p.elevation > 0.6) {
             if (p.moisture > 0.66) {
-                return ColorData.TAIGA;
+                return Biome.TAIGA;
             } else if (p.moisture > 0.33) {
-                return ColorData.SHRUBLAND;
+                return Biome.SHRUBLAND;
             } else {
-                return ColorData.TEMPERATE_DESERT;
+                return Biome.TEMPERATE_DESERT;
             }
         } else if (p.elevation > 0.3) {
             if (p.moisture > 0.83) {
-                return ColorData.TEMPERATE_RAIN_FOREST;
+                return Biome.TEMPERATE_RAIN_FOREST;
             } else if (p.moisture > 0.50) {
-                return ColorData.TEMPERATE_DECIDUOUS_FOREST;
+                return Biome.TEMPERATE_DECIDUOUS_FOREST;
             } else if (p.moisture > 0.16) {
-                return ColorData.GRASSLAND;
+                return Biome.GRASSLAND;
             } else {
-                return ColorData.TEMPERATE_DESERT;
+                return Biome.TEMPERATE_DESERT;
             }
         } else {
             if (p.moisture > 0.66) {
-                return ColorData.TROPICAL_RAIN_FOREST;
+                return Biome.TROPICAL_RAIN_FOREST;
             } else if (p.moisture > 0.33) {
-                return ColorData.TROPICAL_SEASONAL_FOREST;
+                return Biome.TROPICAL_SEASONAL_FOREST;
             } else if (p.moisture > 0.16) {
-                return ColorData.GRASSLAND;
+                return Biome.GRASSLAND;
             } else {
-                return ColorData.SUBTROPICAL_DESERT;
+                return Biome.SUBTROPICAL_DESERT;
             }
         }
+    }
+
+    /**
+     * @return
+     */
+    public List<Center> getCenters() {
+        return centers;
+    }
+
+    /**
+     * @return
+     */
+    public List<Edge> getEdges() {
+        return edges;
+    }
+    
+    /**
+     * @return the corners
+     */
+    public List<Corner> getCorners() {
+        return corners;
+    }
+    
+    /**
+     * @return the bounds
+     */
+    public Rect2d getBounds() {
+        return bounds;
     }
 }
