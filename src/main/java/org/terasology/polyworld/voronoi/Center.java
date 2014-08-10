@@ -28,8 +28,6 @@ import org.terasology.math.geom.Vector2d;
  */
 public class Center {
 
-    public int index;
-    public Vector2d loc;
     public final List<Corner> corners = new ArrayList<>();
     public final List<Center> neighbors = new ArrayList<>();
     public final List<Edge> borders = new ArrayList<>();
@@ -39,12 +37,17 @@ public class Center {
     public boolean coast;
     public double elevation;
     public double moisture;
-    public Biome biome;
 
-    public Center() {
+    private Vector2d pos;
+
+    public Center(Vector2d pos) {
+        this.pos = pos;
     }
 
-    public Center(Vector2d loc) {
-        this.loc = loc;
+    /**
+     * @return the pos
+     */
+    public Vector2d getPos() {
+        return pos;
     }
 }

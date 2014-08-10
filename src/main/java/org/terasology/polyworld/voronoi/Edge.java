@@ -16,7 +16,6 @@
 
 package org.terasology.polyworld.voronoi;
 
-import org.terasology.math.geom.Vector2d;
 
 /**
  * Edge.java
@@ -25,18 +24,30 @@ import org.terasology.math.geom.Vector2d;
  */
 public class Edge {
 
-    public int index;
     public Center d0;  // Delaunay edge
     public Center d1;  // Delaunay edge
     
     public Corner v0;  // Voronoi edge
     public Corner v1;  // Voronoi edge
-    public Vector2d midpoint;  // halfway between v0,v1
-    public int river;
+    
+    private int river;
 
     public void setVornoi(Corner nv0, Corner nv1) {
         this.v0 = nv0;
         this.v1 = nv1;
-        midpoint = new Vector2d((v0.loc.getX() + v1.loc.getX()) / 2, (v0.loc.getY() + v1.loc.getY()) / 2);
+    }
+
+    /**
+     * @return the river
+     */
+    public int getRiverValue() {
+        return river;
+    }
+
+    /**
+     * @param river the river to set
+     */
+    public void setRiverValue(int riverVal) {
+        this.river = riverVal;
     }
 }

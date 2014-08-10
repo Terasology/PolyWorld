@@ -21,21 +21,21 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.terasology.math.geom.Rect2d;
-import org.terasology.math.geom.Vector2d;
-import org.terasology.polyworld.voronoi.Biome;
+import org.terasology.polyworld.biome.Biome;
+import org.terasology.polyworld.biome.BiomeModel;
+import org.terasology.polyworld.biome.DefaultBiomeModel;
 import org.terasology.polyworld.voronoi.Center;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
 
 /**
- * TODO Type description
+ * Draws the generated voronoi-based world on a AWT graphics instance
  * @author Martin Steiger
  */
 public class IslandPainter {
@@ -44,14 +44,14 @@ public class IslandPainter {
     private Map<Biome, Color> biomeColors;
     private Color riverColor;
     private Color[] defaultColors;
-
+    private BiomeModel biomeModel;
 
     /**
      * @param graph
      */
     public IslandPainter(VoronoiGraph graph) {
         this.graph = graph;
-        
+
         Random r = new Random(1254);
         int numSites = graph.getCenters().size();
         defaultColors = new Color[numSites];
@@ -59,75 +59,98 @@ public class IslandPainter {
             defaultColors[i] = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
         }
         
+        biomeModel = new DefaultBiomeModel();
     }
 
+    /**
+     * Default drawing mode (biomes and rivers)
+     * @param g the graphics instance
+     */
     public void paint(Graphics2D g) {
         paint(g, true, true, false, false, false);
     }
 
-    //also records the area of each voronoi cell
     public void paint(Graphics2D g, boolean drawBiomes, boolean drawRivers, boolean drawSites, boolean drawCorners, boolean drawDelaunay) {
-        List<Center> centers = graph.getCenters();
-        final int numSites = centers.size();
+        drawRegions(g, drawBiomes);
 
-        //draw via triangles
-        for (final Center c : centers) {
-            g.setColor(drawBiomes ? biomeColors.get(c.biome) : defaultColors[c.index]);
-
-            List<Corner> pts = new ArrayList<>(c.corners);
-            Collections.sort(pts, new Comparator<Corner>() {
-
-                @Override
-                public int compare(Corner o0, Corner o1) {
-                    Vector2d a = new Vector2d(o0.loc).sub(c.loc).normalize();
-                    Vector2d b = new Vector2d(o1.loc).sub(c.loc).normalize();
-
-                    if (a.y() > 0) { //a between 0 and 180
-                        if (b.y() < 0) {  //b between 180 and 360
-                            return -1;
-                        }
-                        return a.x() < b.x() ? 1 : -1;
-                    } else { // a between 180 and 360
-                        if (b.y() > 0) { //b between 0 and 180
-                            return 1;
-                        }
-                        return a.x() > b.x() ? 1 : -1;
-                    }
-                }
-            });
-            
-            drawPoly(g, pts);
+        if (drawDelaunay) {
+            drawDelaunay(g);
         }
 
-        for (Edge e : graph.getEdges()) {
-            if (drawDelaunay) {
-                g.setStroke(new BasicStroke(1));
-                g.setColor(Color.YELLOW);
-                g.drawLine((int) e.d0.loc.getX(), (int) e.d0.loc.getY(), (int) e.d1.loc.getX(), (int) e.d1.loc.getY());
+        if (drawRivers) {
+            drawRivers(g);
+        }
+
+        if (drawSites) {
+            drawSites(g);
+        }
+
+        if (drawCorners) {
+            drawCorners(g);
+        }
+
+        drawBounds(g);
+    }
+
+    public void drawRegions(Graphics2D g, boolean drawBiomes) {
+        List<Center> centers = graph.getCenters();
+
+        int index = 0;
+        for (final Center c : centers) {
+            Color color;
+            if (drawBiomes) {
+                Biome biome = biomeModel.getBiome(c);
+                color =  biomeColors.get(biome);
+            } else {
+                color = defaultColors[index++];
             }
-            if (drawRivers && e.river > 0) {
-                g.setStroke(new BasicStroke(1 + (int) Math.sqrt(e.river * 2)));
+            
+            g.setColor(color);
+
+            List<Corner> pts = new ArrayList<>(c.corners);
+            Collections.sort(pts, new AngleSorter(c));
+
+            drawPoly(g, pts);
+        }
+    }
+
+    public void drawDelaunay(Graphics2D g) {
+        for (Edge e : graph.getEdges()) {
+            g.setStroke(new BasicStroke(1));
+            g.setColor(Color.YELLOW);
+            g.drawLine((int) e.d0.getPos().getX(), (int) e.d0.getPos().getY(), (int) e.d1.getPos().getX(), (int) e.d1.getPos().getY());
+        }
+    }
+
+    public void drawRivers(Graphics2D g) {
+        for (Edge e : graph.getEdges()) {
+            if (e.getRiverValue() > 0) {
+                g.setStroke(new BasicStroke(1 + (int) Math.sqrt(e.getRiverValue() * 2)));
                 g.setColor(riverColor);
                 g.drawLine((int) e.v0.loc.getX(), (int) e.v0.loc.getY(), (int) e.v1.loc.getX(), (int) e.v1.loc.getY());
             }
         }
+    }
 
-        if (drawSites) {
-            g.setColor(Color.BLACK);
-            for (Center s : centers) {
-                g.fillOval((int) (s.loc.getX() - 2), (int) (s.loc.getY() - 2), 4, 4);
-            }
-        }
+    public void drawSites(Graphics2D g) {
+        List<Center> centers = graph.getCenters();
 
-        if (drawCorners) {
-            g.setColor(Color.WHITE);
-            for (Corner c : graph.getCorners()) {
-                g.fillOval((int) (c.loc.getX() - 2), (int) (c.loc.getY() - 2), 4, 4);
-            }
+        g.setColor(Color.BLACK);
+        for (Center s : centers) {
+            g.fillOval((int) (s.getPos().getX() - 2), (int) (s.getPos().getY() - 2), 4, 4);
         }
-        
-        Rect2d bounds = graph.getBounds();
+    }
+
+    public void drawCorners(Graphics2D g) {
         g.setColor(Color.WHITE);
+        for (Corner c : graph.getCorners()) {
+            g.fillOval((int) (c.loc.getX() - 2), (int) (c.loc.getY() - 2), 4, 4);
+        }
+    }
+
+    public void drawBounds(Graphics2D g) {
+        Rect2d bounds = graph.getBounds();
+        g.setColor(Color.BLACK);
         g.drawRect((int) bounds.minX(), (int) bounds.minY(), (int) bounds.width(), (int) bounds.height());
     }
 
@@ -135,12 +158,12 @@ public class IslandPainter {
     private void drawPoly(Graphics2D g, List<Corner> pts) {
         int[] x = new int[pts.size()];
         int[] y = new int[pts.size()];
-        
+
         for (int i = 0; i < pts.size(); i++) {
             x[i] = (int) pts.get(i).loc.getX();
             y[i] = (int) pts.get(i).loc.getY();
         }
-        
+
         g.fillPolygon(x, y, pts.size());
     }
 
@@ -150,7 +173,7 @@ public class IslandPainter {
     public void setBiomeColors(Map<Biome, Color> map) {
         this.biomeColors = map;
     }
-    
+
     /**
      * @param color
      */

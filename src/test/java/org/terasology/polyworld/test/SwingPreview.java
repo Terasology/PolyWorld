@@ -16,27 +16,27 @@
 
 package org.terasology.polyworld.test;
 
-import static org.terasology.polyworld.voronoi.Biome.BARE;
-import static org.terasology.polyworld.voronoi.Biome.BEACH;
-import static org.terasology.polyworld.voronoi.Biome.COAST;
-import static org.terasology.polyworld.voronoi.Biome.GRASSLAND;
-import static org.terasology.polyworld.voronoi.Biome.ICE;
-import static org.terasology.polyworld.voronoi.Biome.LAKE;
-import static org.terasology.polyworld.voronoi.Biome.LAKESHORE;
-import static org.terasology.polyworld.voronoi.Biome.MARSH;
-import static org.terasology.polyworld.voronoi.Biome.OCEAN;
-import static org.terasology.polyworld.voronoi.Biome.SCORCHED;
-import static org.terasology.polyworld.voronoi.Biome.SHRUBLAND;
-import static org.terasology.polyworld.voronoi.Biome.SHURBLAND;
-import static org.terasology.polyworld.voronoi.Biome.SNOW;
-import static org.terasology.polyworld.voronoi.Biome.SUBTROPICAL_DESERT;
-import static org.terasology.polyworld.voronoi.Biome.TAIGA;
-import static org.terasology.polyworld.voronoi.Biome.TEMPERATE_DECIDUOUS_FOREST;
-import static org.terasology.polyworld.voronoi.Biome.TEMPERATE_DESERT;
-import static org.terasology.polyworld.voronoi.Biome.TEMPERATE_RAIN_FOREST;
-import static org.terasology.polyworld.voronoi.Biome.TROPICAL_RAIN_FOREST;
-import static org.terasology.polyworld.voronoi.Biome.TROPICAL_SEASONAL_FOREST;
-import static org.terasology.polyworld.voronoi.Biome.TUNDRA;
+import static org.terasology.polyworld.biome.Biome.BARE;
+import static org.terasology.polyworld.biome.Biome.BEACH;
+import static org.terasology.polyworld.biome.Biome.COAST;
+import static org.terasology.polyworld.biome.Biome.GRASSLAND;
+import static org.terasology.polyworld.biome.Biome.ICE;
+import static org.terasology.polyworld.biome.Biome.LAKE;
+import static org.terasology.polyworld.biome.Biome.LAKESHORE;
+import static org.terasology.polyworld.biome.Biome.MARSH;
+import static org.terasology.polyworld.biome.Biome.OCEAN;
+import static org.terasology.polyworld.biome.Biome.SCORCHED;
+import static org.terasology.polyworld.biome.Biome.SHRUBLAND;
+import static org.terasology.polyworld.biome.Biome.SHURBLAND;
+import static org.terasology.polyworld.biome.Biome.SNOW;
+import static org.terasology.polyworld.biome.Biome.SUBTROPICAL_DESERT;
+import static org.terasology.polyworld.biome.Biome.TAIGA;
+import static org.terasology.polyworld.biome.Biome.TEMPERATE_DECIDUOUS_FOREST;
+import static org.terasology.polyworld.biome.Biome.TEMPERATE_DESERT;
+import static org.terasology.polyworld.biome.Biome.TEMPERATE_RAIN_FOREST;
+import static org.terasology.polyworld.biome.Biome.TROPICAL_RAIN_FOREST;
+import static org.terasology.polyworld.biome.Biome.TROPICAL_SEASONAL_FOREST;
+import static org.terasology.polyworld.biome.Biome.TUNDRA;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -49,7 +49,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.polyworld.voronoi.Biome;
+import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
 
 import com.google.common.collect.Maps;
@@ -109,8 +109,17 @@ final class SwingPreview {
             private static final long serialVersionUID = 4178713176841691478L;
 
             @Override
-            public void paint(Graphics g) {
-                painter.paint((Graphics2D) g);
+            public void paint(Graphics g1) {
+                Graphics2D g = (Graphics2D) g1;
+
+                painter.drawRegions(g, true);
+//                painter.drawDelaunay(g);
+
+                painter.drawRivers(g);
+
+//                painter.drawSites(g);
+//                painter.drawCorners(g);
+                painter.drawBounds(g);
             }
         };
         frame.add(panel);

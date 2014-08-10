@@ -30,6 +30,7 @@ import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
+import org.terasology.polyworld.biome.Biome;
 
 /**
  * VoronoiGraph.java
@@ -91,7 +92,6 @@ public class VoronoiGraph {
         assignCornerMoisture();
         redistributeMoisture(landCorners());
         assignPolygonMoisture();
-        assignBiomes();
     }
 
     private void improveCorners() {
@@ -103,8 +103,8 @@ public class VoronoiGraph {
                 double x = 0;
                 double y = 0;
                 for (Center center : c.touches) {
-                    x += center.loc.getX();
-                    y += center.loc.getY();
+                    x += center.getPos().getX();
+                    y += center.getPos().getY();
                 }
                 newP[c.index] = new Vector2d(x / c.touches.size(), y / c.touches.size());
             }
@@ -117,15 +117,6 @@ public class VoronoiGraph {
                 e.setVornoi(e.v0, e.v1);
             }
         }
-    }
-
-    private Edge edgeWithCenters(Center c1, Center c2) {
-        for (Edge e : c1.borders) {
-            if (e.d0 == c2 || e.d1 == c2) {
-                return e;
-            }
-        }
-        return null;
     }
 
     private static boolean liesOnAxes(Rect2d r, Vector2d p) {
@@ -143,16 +134,14 @@ public class VoronoiGraph {
         final Map<Vector2d, Center> pointCenterMap = new HashMap<>();
         final List<Vector2d> points = v.siteCoords();
         for (Vector2d p : points) {
-            Center c = new Center();
-            c.loc = p;
-            c.index = centers.size();
+            Center c = new Center(p);
             centers.add(c);
             pointCenterMap.put(p, c);
         }
 
         //bug fix
         for (Center c : centers) {
-            v.region(c.loc);
+            v.region(c.getPos());
         }
 
         final List<org.terasology.math.delaunay.Edge> libedges = v.edges();
@@ -163,7 +152,6 @@ public class VoronoiGraph {
             final LineSegment dEdge = libedge.delaunayLine();
 
             final Edge edge = new Edge();
-            edge.index = edges.size();
             edges.add(edge);
 
             edge.v0 = makeCorner(pointCornerMap, vEdge.getP0());
@@ -490,7 +478,7 @@ public class VoronoiGraph {
                 }
                 Edge edge = lookupEdgeFromCorner(c, c.downslope);
                 if (!edge.v0.water || !edge.v1.water) {
-                    edge.river++;
+                    edge.setRiverValue(edge.getRiverValue() + 1);
                     c.river++;
                     c.downslope.river++;  // TODO: fix double count
                 }
@@ -562,66 +550,6 @@ public class VoronoiGraph {
                 total += c.moisture;
             }
             center.moisture = total / center.corners.size();
-        }
-    }
-
-    private void assignBiomes() {
-        for (Center center : centers) {
-            center.biome = getBiome(center);
-        }
-    }
-
-    protected Biome getBiome(Center p) {
-        if (p.ocean) {
-            return Biome.OCEAN;
-        } else if (p.water) {
-            if (p.elevation < 0.1) {
-                return Biome.MARSH;
-            }
-            if (p.elevation > 0.8) {
-                return Biome.ICE;
-            }
-            return Biome.LAKE;
-        } else if (p.coast) {
-            return Biome.BEACH;
-        } else if (p.elevation > 0.8) {
-            if (p.moisture > 0.50) {
-                return Biome.SNOW;
-            } else if (p.moisture > 0.33) {
-                return Biome.TUNDRA;
-            } else if (p.moisture > 0.16) {
-                return Biome.BARE;
-            } else {
-                return Biome.SCORCHED;
-            }
-        } else if (p.elevation > 0.6) {
-            if (p.moisture > 0.66) {
-                return Biome.TAIGA;
-            } else if (p.moisture > 0.33) {
-                return Biome.SHRUBLAND;
-            } else {
-                return Biome.TEMPERATE_DESERT;
-            }
-        } else if (p.elevation > 0.3) {
-            if (p.moisture > 0.83) {
-                return Biome.TEMPERATE_RAIN_FOREST;
-            } else if (p.moisture > 0.50) {
-                return Biome.TEMPERATE_DECIDUOUS_FOREST;
-            } else if (p.moisture > 0.16) {
-                return Biome.GRASSLAND;
-            } else {
-                return Biome.TEMPERATE_DESERT;
-            }
-        } else {
-            if (p.moisture > 0.66) {
-                return Biome.TROPICAL_RAIN_FOREST;
-            } else if (p.moisture > 0.33) {
-                return Biome.TROPICAL_SEASONAL_FOREST;
-            } else if (p.moisture > 0.16) {
-                return Biome.GRASSLAND;
-            } else {
-                return Biome.SUBTROPICAL_DESERT;
-            }
         }
     }
 

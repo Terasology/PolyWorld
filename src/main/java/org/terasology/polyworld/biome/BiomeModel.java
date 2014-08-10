@@ -14,33 +14,14 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.voronoi;
+package org.terasology.polyworld.biome;
 
+import org.terasology.polyworld.voronoi.Center;
 
 /**
- * Different biome types
+ * TODO Type description
  * @author Martin Steiger
  */
-public enum Biome {
-    OCEAN, 
-    LAKE, 
-    BEACH, 
-    SNOW,
-    TUNDRA, 
-    BARE, 
-    SCORCHED, 
-    TAIGA,
-    SHURBLAND, 
-    TEMPERATE_DESERT,
-    TEMPERATE_RAIN_FOREST, 
-    TEMPERATE_DECIDUOUS_FOREST,
-    GRASSLAND, 
-    SUBTROPICAL_DESERT, 
-    SHRUBLAND,
-    ICE,
-    MARSH,
-    TROPICAL_RAIN_FOREST,
-    TROPICAL_SEASONAL_FOREST,
-    COAST,
-    LAKESHORE;
+public interface BiomeModel {
+    Biome getBiome(Center center);
 }
