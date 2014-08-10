@@ -19,10 +19,6 @@ package org.terasology.polyworld.voronoi;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.Area;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,6 +33,7 @@ import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Vector2d;
 import org.terasology.math.geom.Rect2d;
+import org.terasology.polyworld.test.VoronoiWorldGen.ColorData;
 
 /**
  * VoronoiGraph.java
@@ -100,8 +97,6 @@ public abstract class VoronoiGraph {
         assignPolygonMoisture();
         assignBiomes();
     }
-
-    protected abstract Biome getBiome(Center p);
 
     protected abstract Color getColor(Biome biome);
 
@@ -192,12 +187,14 @@ public abstract class VoronoiGraph {
                     Vector2d b = new Vector2d(o1.loc).sub(c.loc).normalize();
 
                     if (a.y() > 0) { //a between 0 and 180
-                        if (b.y() < 0)  //b between 180 and 360
+                        if (b.y() < 0) {  //b between 180 and 360
                             return -1;
-                        return a.x() < b.x() ? 1 : -1; 
+                        }
+                        return a.x() < b.x() ? 1 : -1;
                     } else { // a between 180 and 360
-                        if (b.y() > 0) //b between 0 and 180
+                        if (b.y() > 0) { //b between 0 and 180
                             return 1;
+                        }
                         return a.x() > b.x() ? 1 : -1;
                     }
                 }
@@ -674,5 +671,59 @@ public abstract class VoronoiGraph {
     protected Color getRiverColor() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    protected Biome getBiome(Center p) {
+        if (p.ocean) {
+            return ColorData.OCEAN;
+        } else if (p.water) {
+            if (p.elevation < 0.1) {
+                return ColorData.MARSH;
+            }
+            if (p.elevation > 0.8) {
+                return ColorData.ICE;
+            }
+            return ColorData.LAKE;
+        } else if (p.coast) {
+            return ColorData.BEACH;
+        } else if (p.elevation > 0.8) {
+            if (p.moisture > 0.50) {
+                return ColorData.SNOW;
+            } else if (p.moisture > 0.33) {
+                return ColorData.TUNDRA;
+            } else if (p.moisture > 0.16) {
+                return ColorData.BARE;
+            } else {
+                return ColorData.SCORCHED;
+            }
+        } else if (p.elevation > 0.6) {
+            if (p.moisture > 0.66) {
+                return ColorData.TAIGA;
+            } else if (p.moisture > 0.33) {
+                return ColorData.SHRUBLAND;
+            } else {
+                return ColorData.TEMPERATE_DESERT;
+            }
+        } else if (p.elevation > 0.3) {
+            if (p.moisture > 0.83) {
+                return ColorData.TEMPERATE_RAIN_FOREST;
+            } else if (p.moisture > 0.50) {
+                return ColorData.TEMPERATE_DECIDUOUS_FOREST;
+            } else if (p.moisture > 0.16) {
+                return ColorData.GRASSLAND;
+            } else {
+                return ColorData.TEMPERATE_DESERT;
+            }
+        } else {
+            if (p.moisture > 0.66) {
+                return ColorData.TROPICAL_RAIN_FOREST;
+            } else if (p.moisture > 0.33) {
+                return ColorData.TROPICAL_SEASONAL_FOREST;
+            } else if (p.moisture > 0.16) {
+                return ColorData.GRASSLAND;
+            } else {
+                return ColorData.SUBTROPICAL_DESERT;
+            }
+        }
     }
 }

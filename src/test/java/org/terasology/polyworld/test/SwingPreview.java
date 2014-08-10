@@ -16,25 +16,23 @@
 
 package org.terasology.polyworld.test;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import org.terasology.math.delaunay.Voronoi;
 
 /**
- * TestDriver.java
- *
- * @author Connor
+ * Preview generated world in Swing
+ * @author Martin Steiger
  */
-final class TestDriver {
+final class SwingPreview {
     
-    private TestDriver() {
+    private SwingPreview() {
         
     }
 
@@ -42,34 +40,26 @@ final class TestDriver {
         final int width = 1024;
         final int height = 1024;
         final int numSites = 5000;
-        final long seed = 92070987606126L; // System.nanoTime();
+        final long seed = System.nanoTime();
 
         final Random r = new Random(seed);
-        System.out.println("seed: " + seed);
 
-        //make the intial underlying voronoi structure
         final Voronoi v = new Voronoi(numSites, width, height, r);
 
-        //assemble the voronoi strucutre into a usable graph object representing a map
-        final TestGraphImpl graph = new TestGraphImpl(v, 2, r);
+        final VoronoiWorldGen graph = new VoronoiWorldGen(v, 2, r);
 
-//        g2.scale(5.0, 5);
-//        g2.translate(-280, -690);
+        JFrame frame = new JFrame();
+        JComponent panel = new JComponent() {
 
-
-        final JFrame frame = new JFrame() {
-            private static final long serialVersionUID = -1290616722309726306L;
+            private static final long serialVersionUID = 4178713176841691478L;
 
             @Override
             public void paint(Graphics g) {
-                g.setColor(Color.CYAN);
-                g.translate(10, 40);
-                g.fillRect(0, 0, width, height);
-
                 graph.paint((Graphics2D) g);
             }
         };
-        frame.setTitle("java fortune");
+        frame.add(panel);
+        frame.setTitle("Preview - " + seed);
         frame.setVisible(true);
         frame.setSize(width + 50, height + 50);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
