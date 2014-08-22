@@ -57,7 +57,7 @@ public class Region {
     public double getElevation() {
         double total = 0;
         for (Corner c : getCorners()) {
-            total += c.elevation;
+            total += c.getElevation();
         }
         return total / getCorners().size();
     }
@@ -65,7 +65,7 @@ public class Region {
     public double getMoisture() {
         double total = 0;
         for (Corner c : getCorners()) {
-            total += c.moisture;
+            total += c.getMoisture();
         }
         return total / getCorners().size();
     }

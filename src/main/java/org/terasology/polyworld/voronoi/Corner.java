@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
 
 import com.google.common.base.Preconditions;
@@ -33,22 +32,24 @@ import com.google.common.base.Preconditions;
  */
 public class Corner {
 
-    public List<Region> touches = new ArrayList<>();
-    public List<Corner> adjacent = new ArrayList<>();
-    public List<Edge> protrudes = new ArrayList<>();
-    public Vector2d loc;
-    public int index;
-    public boolean border;
-    public double elevation;
-    public boolean water;
-    public boolean ocean;
-    public boolean coast;
-    public Corner downslope;
-    public int river;
-    public double moisture;
-    
-    public void addTouches(Region r) {
-        touches.add(r);
+    private List<Region> touches = new ArrayList<>();
+    private List<Corner> adjacent = new ArrayList<>();
+    private List<Edge> protrudes = new ArrayList<>();
+    private Vector2d loc;
+    private boolean border;
+    private double elevation;
+    private boolean water;
+    private boolean ocean;
+    private boolean coast;
+    private Corner downslope;
+    private int river;
+    private double moisture;
+
+    /**
+     * @param loc
+     */
+    public Corner(Vector2d loc) {
+        this.loc = loc;
     }
 
     /**
@@ -57,11 +58,171 @@ public class Corner {
     public Collection<Corner> getAdjacent() {
         return Collections.unmodifiableCollection(adjacent);
     }
-    
+
     public void addAdjacent(Corner c) {
         Preconditions.checkArgument(c != null);
         Preconditions.checkArgument(!adjacent.contains(c));
 
         adjacent.add(c);
+    }
+
+    /**
+     * @param region the region to add
+     */
+    public void addTouches(Region region) {
+        Preconditions.checkArgument(region != null);
+        Preconditions.checkArgument(!getTouches().contains(region));
+
+        touches.add(region);
+    }
+
+    /**
+     * @return the moisture
+     */
+    public double getMoisture() {
+        return moisture;
+    }
+
+    /**
+     * @param moisture the moisture to set
+     */
+    public void setMoisture(double moisture) {
+        this.moisture = moisture;
+    }
+
+    /**
+     * @return the river
+     */
+    public int getRiverValue() {
+        return river;
+    }
+
+    /**
+     * @param river the river to set
+     */
+    public void setRiverValue(int river) {
+        this.river = river;
+    }
+
+    /**
+     * @return the coast
+     */
+    public boolean isCoast() {
+        return coast;
+    }
+
+    /**
+     * @param coast the coast to set
+     */
+    public void setCoast(boolean coast) {
+        this.coast = coast;
+    }
+
+    /**
+     * @return the ocean
+     */
+    public boolean isOcean() {
+        return ocean;
+    }
+
+    /**
+     * @param ocean the ocean to set
+     */
+    public void setOcean(boolean ocean) {
+        this.ocean = ocean;
+    }
+
+    /**
+     * @return the water
+     */
+    public boolean isWater() {
+        return water;
+    }
+
+    /**
+     * @param water the water to set
+     */
+    public void setWater(boolean water) {
+        this.water = water;
+    }
+
+    /**
+     * @return the elevation
+     */
+    public double getElevation() {
+        return elevation;
+    }
+
+    /**
+     * @param elevation the elevation to set
+     */
+    public void setElevation(double elevation) {
+        this.elevation = elevation;
+    }
+
+    /**
+     * @return the border
+     */
+    public boolean isBorder() {
+        return border;
+    }
+
+    /**
+     * @param border the border to set
+     */
+    public void setBorder(boolean border) {
+        this.border = border;
+    }
+
+    /**
+     * @return the touches
+     */
+    public Collection<Region> getTouches() {
+        return Collections.unmodifiableList(touches);
+    }
+
+    /**
+     * @return the downslope
+     */
+    public Corner getDownslope() {
+        return downslope;
+    }
+
+    /**
+     * @param downslope the downslope to set
+     */
+    public void setDownslope(Corner downslope) {
+        this.downslope = downslope;
+    }
+
+    /**
+     * @return the loc
+     */
+    public Vector2d getLocation() {
+        return loc;
+    }
+
+    /**
+     * @param loc the loc to set
+     */
+    public void setLocation(Vector2d loc) {
+        this.loc = loc;
+    }
+
+    /**
+     * @return the protrudes
+     */
+    public Collection<Edge> getEdges() {
+        return Collections.unmodifiableList(protrudes);
+    }
+
+    /**
+     * @param edge the protrudes to set
+     */
+    public void addProtrudes(Edge edge) {
+        Preconditions.checkArgument(edge != null);
+        Preconditions.checkArgument(!adjacent.contains(edge));
+
+        this.protrudes.add(edge);
     }
 }

@@ -68,7 +68,7 @@ final class SwingPreview {
         final int width = 1024;
         final int height = 1024;
         final int numSites = 5000;
-        final long seed = System.nanoTime();
+        final long seed = 9782985378925l;//System.nanoTime();
 
         final Random r = new Random(seed);
 
@@ -113,7 +113,7 @@ final class SwingPreview {
                 Graphics2D g = (Graphics2D) g1;
 
                 painter.drawRegions(g, true);
-//                painter.drawDelaunay(g);
+                painter.drawDelaunay(g);
 
                 painter.drawRivers(g);
 

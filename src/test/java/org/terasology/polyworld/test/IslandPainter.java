@@ -130,8 +130,8 @@ public class IslandPainter {
             if (e.getRiverValue() > 0) {
                 g.setStroke(new BasicStroke(1 + (int) Math.sqrt(e.getRiverValue() * 2)));
                 g.setColor(riverColor);
-                Vector2d c0p = e.getCorner0().loc;
-                Vector2d c1p = e.getCorner1().loc;
+                Vector2d c0p = e.getCorner0().getLocation();
+                Vector2d c1p = e.getCorner1().getLocation();
                 g.drawLine((int) c0p.getX(), (int) c0p.getY(), (int) c1p.getX(), (int) c1p.getY());
             }
         }
@@ -149,7 +149,7 @@ public class IslandPainter {
     public void drawCorners(Graphics2D g) {
         g.setColor(Color.WHITE);
         for (Corner c : graph.getCorners()) {
-            g.fillOval((int) (c.loc.getX() - 2), (int) (c.loc.getY() - 2), 4, 4);
+            g.fillOval((int) (c.getLocation().getX() - 2), (int) (c.getLocation().getY() - 2), 4, 4);
         }
     }
 
@@ -165,8 +165,8 @@ public class IslandPainter {
         int[] y = new int[pts.size()];
 
         for (int i = 0; i < pts.size(); i++) {
-            x[i] = (int) pts.get(i).loc.getX();
-            y[i] = (int) pts.get(i).loc.getY();
+            x[i] = (int) pts.get(i).getLocation().getX();
+            y[i] = (int) pts.get(i).getLocation().getY();
         }
 
         g.fillPolygon(x, y, pts.size());
