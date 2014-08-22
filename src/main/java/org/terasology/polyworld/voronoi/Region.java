@@ -62,14 +62,6 @@ public class Region {
         return total / getCorners().size();
     }
 
-    public double getMoisture() {
-        double total = 0;
-        for (Corner c : getCorners()) {
-            total += c.getMoisture();
-        }
-        return total / getCorners().size();
-    }
-
     /**
      * @param border true if it is at the border
      */

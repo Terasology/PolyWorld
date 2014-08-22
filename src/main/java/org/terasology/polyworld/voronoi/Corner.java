@@ -77,20 +77,6 @@ public class Corner {
     }
 
     /**
-     * @return the moisture
-     */
-    public double getMoisture() {
-        return moisture;
-    }
-
-    /**
-     * @param moisture the moisture to set
-     */
-    public void setMoisture(double moisture) {
-        this.moisture = moisture;
-    }
-
-    /**
      * @return the river
      */
     public int getRiverValue() {

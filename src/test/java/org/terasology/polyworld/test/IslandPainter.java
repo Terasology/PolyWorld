@@ -30,6 +30,8 @@ import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.DefaultBiomeModel;
+import org.terasology.polyworld.biome.DefaultMoistureModel;
+import org.terasology.polyworld.biome.MoistureModel;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.Region;
@@ -59,8 +61,9 @@ public class IslandPainter {
         for (int i = 0; i < defaultColors.length; i++) {
             defaultColors[i] = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
         }
-        
-        biomeModel = new DefaultBiomeModel();
+
+        MoistureModel moistureModel = new DefaultMoistureModel(graph);
+        biomeModel = new DefaultBiomeModel(moistureModel);
     }
 
     /**
@@ -105,7 +108,7 @@ public class IslandPainter {
             } else {
                 color = defaultColors[index++];
             }
-            
+
             g.setColor(color);
 
             List<Corner> pts = new ArrayList<>(c.getCorners());

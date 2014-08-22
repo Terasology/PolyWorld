@@ -82,13 +82,11 @@ public class VoronoiGraph {
 
         assignCornerElevations();
         assignOceanCoastAndLand();
-        redistributeElevations(landCorners());
+        redistributeElevations(getLandCorners());
 
         calculateDownslopes();
         //calculateWatersheds();
         createRivers();
-        assignCornerMoisture();
-        redistributeMoisture(landCorners());
     }
 
     private void improveCorners() {
@@ -402,7 +400,7 @@ public class VoronoiGraph {
         }
     }
 
-    private List<Corner> landCorners() {
+    public List<Corner> getLandCorners() {
         final List<Corner> list = new ArrayList<>();
         for (Corner c : corners) {
             if (!c.isOcean() && !c.isCoast()) {
@@ -483,53 +481,6 @@ public class VoronoiGraph {
             }
         }
         return null;
-    }
-
-    private void assignCornerMoisture() {
-        Deque<Corner> queue = new LinkedList<>();
-        for (Corner c : corners) {
-            if ((c.isWater() || c.getRiverValue() > 0) && !c.isOcean()) {
-                c.setMoisture(c.getRiverValue() > 0 ? Math.min(3.0, (0.2 * c.getRiverValue())) : 1.0);
-                queue.push(c);
-            } else {
-                c.setMoisture(0.0);
-            }
-        }
-
-        while (!queue.isEmpty()) {
-            Corner c = queue.pop();
-            for (Corner a : c.getAdjacent()) {
-                double newM = .9 * c.getMoisture();
-                if (newM > a.getMoisture()) {
-                    a.setMoisture(newM);
-                    queue.add(a);
-                }
-            }
-        }
-
-        // Salt water
-        for (Corner c : corners) {
-            if (c.isOcean() || c.isCoast()) {
-                c.setMoisture(1.0);
-            }
-        }
-    }
-
-    private void redistributeMoisture(List<Corner> landCorners) {
-        Collections.sort(landCorners, new Comparator<Corner>() {
-            @Override
-            public int compare(Corner o1, Corner o2) {
-                if (o1.getMoisture() > o2.getMoisture()) {
-                    return 1;
-                } else if (o1.getMoisture() < o2.getMoisture()) {
-                    return -1;
-                }
-                return 0;
-            }
-        });
-        for (int i = 0; i < landCorners.size(); i++) {
-            landCorners.get(i).setMoisture((double) i / landCorners.size());
-        }
     }
 
     /**
