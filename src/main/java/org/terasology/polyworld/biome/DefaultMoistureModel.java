@@ -37,10 +37,12 @@ public class DefaultMoistureModel implements MoistureModel {
 
     private final VoronoiGraph graph;
     private final Map<Corner, Double> moisture = Maps.newHashMap();
+    private final RiverModel riverModel;
 
-    public DefaultMoistureModel(VoronoiGraph graph)
+    public DefaultMoistureModel(VoronoiGraph graph, RiverModel riverModel)
     {
         this.graph = graph;
+        this.riverModel = riverModel;
 
         assignCornerMoisture();
         redistributeMoisture();
@@ -49,8 +51,9 @@ public class DefaultMoistureModel implements MoistureModel {
     private void assignCornerMoisture() {
         Deque<Corner> queue = new LinkedList<>();
         for (Corner c : graph.getCorners()) {
-            if ((c.isWater() || c.getRiverValue() > 0) && !c.isOcean()) {
-                moisture.put(c, c.getRiverValue() > 0 ? Math.min(3.0, (0.2 * c.getRiverValue())) : 1.0);
+            int riverValue = riverModel.getRiverValue(c);
+            if ((c.isWater() || riverValue > 0) && !c.isOcean()) {
+                moisture.put(c, riverValue > 0 ? Math.min(3.0, (0.2 * riverValue)) : 1.0);
                 queue.push(c);
             } else {
                 moisture.put(c, 0.0);

@@ -59,9 +59,9 @@ import com.google.common.collect.Maps;
  * @author Martin Steiger
  */
 final class SwingPreview {
-    
+
     private SwingPreview() {
-        
+
     }
 
     public static void main(String[] args) {
@@ -78,20 +78,20 @@ final class SwingPreview {
         final IslandPainter painter = new IslandPainter(graph);
 
         Map<Biome, Color> map = Maps.newHashMap();
-        map.put(OCEAN, new Color(0x44447a)); 
-        map.put(LAKE, new Color(0x336699)); 
-        map.put(BEACH, new Color(0xa09077)); 
+        map.put(OCEAN, new Color(0x44447a));
+        map.put(LAKE, new Color(0x336699));
+        map.put(BEACH, new Color(0xa09077));
         map.put(SNOW, new Color(0xffffff));
-        map.put(TUNDRA, new Color(0xbbbbaa)); 
-        map.put(BARE, new Color(0x888888)); 
-        map.put(SCORCHED, new Color(0x555555)); 
+        map.put(TUNDRA, new Color(0xbbbbaa));
+        map.put(BARE, new Color(0x888888));
+        map.put(SCORCHED, new Color(0x555555));
         map.put(TAIGA, new Color(0x99aa77));
-        map.put(SHURBLAND, new Color(0x889977)); 
+        map.put(SHURBLAND, new Color(0x889977));
         map.put(TEMPERATE_DESERT, new Color(0xc9d29b));
-        map.put(TEMPERATE_RAIN_FOREST, new Color(0x448855)); 
+        map.put(TEMPERATE_RAIN_FOREST, new Color(0x448855));
         map.put(TEMPERATE_DECIDUOUS_FOREST, new Color(0x679459));
-        map.put(GRASSLAND, new Color(0x88aa55)); 
-        map.put(SUBTROPICAL_DESERT, new Color(0xd2b98b)); 
+        map.put(GRASSLAND, new Color(0x88aa55));
+        map.put(SUBTROPICAL_DESERT, new Color(0xd2b98b));
         map.put(SHRUBLAND, new Color(0x889977));
         map.put(ICE, new Color(0x99ffff));
         map.put(MARSH, new Color(0x2f6666));
@@ -113,7 +113,7 @@ final class SwingPreview {
                 Graphics2D g = (Graphics2D) g1;
 
                 painter.drawRegions(g, true);
-                painter.drawDelaunay(g);
+//                painter.drawDelaunay(g);
 
                 painter.drawRivers(g);
 

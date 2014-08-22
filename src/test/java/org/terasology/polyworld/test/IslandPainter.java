@@ -31,7 +31,9 @@ import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.DefaultBiomeModel;
 import org.terasology.polyworld.biome.DefaultMoistureModel;
+import org.terasology.polyworld.biome.DefaultRiverModel;
 import org.terasology.polyworld.biome.MoistureModel;
+import org.terasology.polyworld.biome.RiverModel;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.Region;
@@ -48,6 +50,8 @@ public class IslandPainter {
     private Color riverColor;
     private Color[] defaultColors;
     private BiomeModel biomeModel;
+    private RiverModel riverModel;
+    private MoistureModel moistureModel;
 
     /**
      * @param graph
@@ -62,7 +66,8 @@ public class IslandPainter {
             defaultColors[i] = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
         }
 
-        MoistureModel moistureModel = new DefaultMoistureModel(graph);
+        riverModel = new DefaultRiverModel(graph);
+        moistureModel = new DefaultMoistureModel(graph, riverModel);
         biomeModel = new DefaultBiomeModel(moistureModel);
     }
 
@@ -130,8 +135,9 @@ public class IslandPainter {
 
     public void drawRivers(Graphics2D g) {
         for (Edge e : graph.getEdges()) {
-            if (e.getRiverValue() > 0) {
-                g.setStroke(new BasicStroke(1 + (int) Math.sqrt(e.getRiverValue() * 2)));
+            int riverValue = riverModel.getRiverValue(e);
+            if (riverValue > 0) {
+                g.setStroke(new BasicStroke(1 + (int) Math.sqrt(riverValue * 2)));
                 g.setColor(riverColor);
                 Vector2d c0p = e.getCorner0().getLocation();
                 Vector2d c1p = e.getCorner1().getLocation();

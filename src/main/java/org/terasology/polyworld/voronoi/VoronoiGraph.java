@@ -44,7 +44,6 @@ public class VoronoiGraph {
     private final List<Corner> corners = new ArrayList<>();
     private final List<Region> regions = new ArrayList<>();
     private final Rect2d bounds;
-    private final Random r;
 
     private final int bumps;
     private final double startAngle;
@@ -52,7 +51,6 @@ public class VoronoiGraph {
     private final double dipWidth;
 
     public VoronoiGraph(Voronoi ov, int numLloydRelaxations, Random r) {
-        this.r = r;
         bumps = r.nextInt(5) + 1;
         startAngle = r.nextDouble() * 2 * Math.PI;
         dipAngle = r.nextDouble() * 2 * Math.PI;
@@ -86,7 +84,6 @@ public class VoronoiGraph {
 
         calculateDownslopes();
         //calculateWatersheds();
-        createRivers();
     }
 
     private void improveCorners() {
@@ -452,29 +449,7 @@ public class VoronoiGraph {
         }
     }
 
-    private void createRivers() {
-        for (int i = 0; i < bounds.width() / 2; i++) {
-            Corner c = corners.get(r.nextInt(corners.size()));
-            if (c.isOcean() || c.getElevation() < 0.3 || c.getElevation() > 0.9) {
-                continue;
-            }
-            // Bias rivers to go west: if (q.downslope.x > q.x) continue;
-            while (!c.isCoast()) {
-                if (c == c.getDownslope()) {
-                    break;
-                }
-                Edge edge = lookupEdgeFromCorner(c, c.getDownslope());
-                if (!edge.getCorner0().isWater() || !edge.getCorner1().isWater()) {
-                    edge.setRiverValue(edge.getRiverValue() + 1);
-                    c.setRiverValue(c.getRiverValue() + 1);
-                    c.getDownslope().setRiverValue(c.getDownslope().getRiverValue() + 1);  // TODO: fix double count
-                }
-                c = c.getDownslope();
-            }
-        }
-    }
-
-    private Edge lookupEdgeFromCorner(Corner c, Corner downslope) {
+    public Edge lookupEdgeFromCorner(Corner c, Corner downslope) {
         for (Edge e : c.getEdges()) {
             if (e.getCorner0() == downslope || e.getCorner1() == downslope) {
                 return e;

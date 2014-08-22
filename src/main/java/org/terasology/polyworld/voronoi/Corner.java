@@ -42,8 +42,6 @@ public class Corner {
     private boolean ocean;
     private boolean coast;
     private Corner downslope;
-    private int river;
-    private double moisture;
 
     /**
      * @param loc
@@ -74,20 +72,6 @@ public class Corner {
         Preconditions.checkArgument(!getTouches().contains(region));
 
         touches.add(region);
-    }
-
-    /**
-     * @return the river
-     */
-    public int getRiverValue() {
-        return river;
-    }
-
-    /**
-     * @param river the river to set
-     */
-    public void setRiverValue(int river) {
-        this.river = river;
     }
 
     /**
