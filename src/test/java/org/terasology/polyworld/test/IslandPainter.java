@@ -26,14 +26,13 @@ import java.util.Map;
 import java.util.Random;
 
 import org.terasology.math.geom.Rect2d;
+import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.DefaultBiomeModel;
-import org.terasology.polyworld.biome.DefaultMoistureModel;
-import org.terasology.polyworld.biome.MoistureModel;
-import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
+import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
 
 /**
@@ -120,7 +119,9 @@ public class IslandPainter {
         for (Edge e : graph.getEdges()) {
             g.setStroke(new BasicStroke(1));
             g.setColor(Color.YELLOW);
-            g.drawLine((int) e.d0.getCenter().getX(), (int) e.d0.getCenter().getY(), (int) e.d1.getCenter().getX(), (int) e.d1.getCenter().getY());
+            Vector2d r0c = e.getRegion0().getCenter();
+            Vector2d r1c = e.getRegion1().getCenter();
+            g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
         }
     }
 
@@ -129,7 +130,9 @@ public class IslandPainter {
             if (e.getRiverValue() > 0) {
                 g.setStroke(new BasicStroke(1 + (int) Math.sqrt(e.getRiverValue() * 2)));
                 g.setColor(riverColor);
-                g.drawLine((int) e.v0.loc.getX(), (int) e.v0.loc.getY(), (int) e.v1.loc.getX(), (int) e.v1.loc.getY());
+                Vector2d c0p = e.getCorner0().loc;
+                Vector2d c1p = e.getCorner1().loc;
+                g.drawLine((int) c0p.getX(), (int) c0p.getY(), (int) c1p.getX(), (int) c1p.getY());
             }
         }
     }

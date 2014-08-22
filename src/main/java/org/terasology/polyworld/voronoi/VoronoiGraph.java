@@ -109,11 +109,6 @@ public class VoronoiGraph {
         for (Corner c : corners) {
             c.loc = newP[c.index];
         }
-        for (Edge e : edges) {
-            if (e.v0 != null && e.v1 != null) {
-                e.setVornoi(e.v0, e.v1);
-            }
-        }
     }
 
     private static boolean liesOnAxes(Rect2d r, Vector2d p) {
@@ -148,58 +143,61 @@ public class VoronoiGraph {
             final LineSegment vEdge = libedge.voronoiEdge();
             final LineSegment dEdge = libedge.delaunayLine();
 
-            final Edge edge = new Edge();
+            Corner c0 = makeCorner(pointCornerMap, vEdge.getP0());
+            Corner c1 = makeCorner(pointCornerMap, vEdge.getP1());
+
+            Region r0 = pointCenterMap.get(dEdge.getP0()); 
+            Region r1 = pointCenterMap.get(dEdge.getP1()); 
+
+            final Edge edge = new Edge(c0, c1, r0, r1);
+
             edges.add(edge);
 
-            edge.v0 = makeCorner(pointCornerMap, vEdge.getP0());
-            edge.v1 = makeCorner(pointCornerMap, vEdge.getP1());
-            edge.d0 = pointCenterMap.get(dEdge.getP0());
-            edge.d1 = pointCenterMap.get(dEdge.getP1());
-
             // Centers point to edges. Corners point to edges.
-            if (edge.d0 != null) {
-                edge.d0.addBorder(edge);
+
+            if (r0 != null) {
+                r0.addBorder(edge);
             }
-            if (edge.d1 != null) {
-                edge.d1.addBorder(edge);
+            if (r1 != null) {
+                r1.addBorder(edge);
             }
-            if (edge.v0 != null) {
-                edge.v0.protrudes.add(edge);
+            if (edge.getCorner0() != null) {
+                edge.getCorner0().protrudes.add(edge);
             }
-            if (edge.v1 != null) {
-                edge.v1.protrudes.add(edge);
+            if (edge.getCorner1() != null) {
+                edge.getCorner1().protrudes.add(edge);
             }
 
             // Centers point to centers.
-            if (edge.d0 != null && edge.d1 != null) {
-                addToCenterList(edge.d0, edge.d1);
-                addToCenterList(edge.d1, edge.d0);
+            if (r0 != null && r1 != null) {
+                addToCenterList(r0, r1);
+                addToCenterList(r1, r0);
             }
 
             // Corners point to corners
-            if (edge.v0 != null && edge.v1 != null) {
-                addToCornerList(edge.v0, edge.v1);
-                addToCornerList(edge.v1, edge.v0);
+            if (edge.getCorner0() != null && edge.getCorner1() != null) {
+                addToCornerList(edge.getCorner0(), edge.getCorner1());
+                addToCornerList(edge.getCorner1(), edge.getCorner0());
             }
 
             // Centers point to corners
-            if (edge.d0 != null) {
-                addToCornerList(edge.d0, edge.v0);
-                addToCornerList(edge.d0, edge.v1);
+            if (r0 != null) {
+                addToCornerList(r0, edge.getCorner0());
+                addToCornerList(r0, edge.getCorner1());
             }
-            if (edge.d1 != null) {
-                addToCornerList(edge.d1, edge.v0);
-                addToCornerList(edge.d1, edge.v1);
+            if (r1 != null) {
+                addToCornerList(r1, edge.getCorner0());
+                addToCornerList(r1, edge.getCorner1());
             }
 
             // Corners point to centers
-            if (edge.v0 != null) {
-                addToCenterList(edge.v0, edge.d0);
-                addToCenterList(edge.v0, edge.d1);
+            if (edge.getCorner0() != null) {
+                addToCenterList(edge.getCorner0(), r0);
+                addToCenterList(edge.getCorner0(), r1);
             }
-            if (edge.v1 != null) {
-                addToCenterList(edge.v1, edge.d0);
-                addToCenterList(edge.v1, edge.d1);
+            if (edge.getCorner1() != null) {
+                addToCenterList(edge.getCorner1(), r0);
+                addToCenterList(edge.getCorner1(), r1);
             }
         }
 
@@ -474,7 +472,7 @@ public class VoronoiGraph {
                     break;
                 }
                 Edge edge = lookupEdgeFromCorner(c, c.downslope);
-                if (!edge.v0.water || !edge.v1.water) {
+                if (!edge.getCorner0().water || !edge.getCorner1().water) {
                     edge.setRiverValue(edge.getRiverValue() + 1);
                     c.river++;
                     c.downslope.river++;  // TODO: fix double count
@@ -486,7 +484,7 @@ public class VoronoiGraph {
 
     private Edge lookupEdgeFromCorner(Corner c, Corner downslope) {
         for (Edge e : c.protrudes) {
-            if (e.v0 == downslope || e.v1 == downslope) {
+            if (e.getCorner0() == downslope || e.getCorner1() == downslope) {
                 return e;
             }
         }

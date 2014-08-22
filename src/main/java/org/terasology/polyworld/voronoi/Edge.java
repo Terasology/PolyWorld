@@ -18,23 +18,30 @@ package org.terasology.polyworld.voronoi;
 
 
 /**
- * Edge.java
- *
- * @author Connor
+ * Defines an edge
+ * @author Martin Steiger
  */
 public class Edge {
 
-    public Region d0;  // Delaunay edge
-    public Region d1;  // Delaunay edge
-    
-    public Corner v0;  // Voronoi edge
-    public Corner v1;  // Voronoi edge
-    
+    private Region d0;  // Delaunay edge
+    private Region d1;  // Delaunay edge
+
+    private Corner v0;  // Voronoi edge
+    private Corner v1;  // Voronoi edge
+
     private int river;
 
-    public void setVornoi(Corner nv0, Corner nv1) {
-        this.v0 = nv0;
-        this.v1 = nv1;
+    /**
+     * @param c0
+     * @param c1
+     * @param r1 
+     * @param r0 
+     */
+    public Edge(Corner c0, Corner c1, Region r0, Region r1) {
+        this.v0 = c0;
+        this.v1 = c1;
+        this.d0 = r0;
+        this.d1 = r1;
     }
 
     /**
@@ -49,5 +56,33 @@ public class Edge {
      */
     public void setRiverValue(int riverVal) {
         this.river = riverVal;
+    }
+
+    /**
+     * @return the v0
+     */
+    public Corner getCorner0() {
+        return v0;
+    }
+
+    /**
+     * @return the v1
+     */
+    public Corner getCorner1() {
+        return v1;
+    }
+
+    /**
+     * @return the d1
+     */
+    public Region getRegion1() {
+        return d1;
+    }
+
+    /**
+     * @return the d0
+     */
+    public Region getRegion0() {
+        return d0;
     }
 }
