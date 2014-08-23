@@ -54,14 +54,6 @@ public class Region {
         return center;
     }
 
-    public double getElevation() {
-        double total = 0;
-        for (Corner c : getCorners()) {
-            total += c.getElevation();
-        }
-        return total / getCorners().size();
-    }
-
     /**
      * @param border true if it is at the border
      */

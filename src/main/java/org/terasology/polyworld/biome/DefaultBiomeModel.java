@@ -24,31 +24,34 @@ import org.terasology.polyworld.voronoi.Region;
  */
 public class DefaultBiomeModel implements BiomeModel {
 
-    private MoistureModel moistureModel;
+    private final MoistureModel moistureModel;
+    private final ElevationModel elevationModel;
 
     /**
      * @param moistureModel
      */
-    public DefaultBiomeModel(MoistureModel moistureModel) {
+    public DefaultBiomeModel(ElevationModel elevationModel, MoistureModel moistureModel) {
+        this.elevationModel = elevationModel;
         this.moistureModel = moistureModel;
     }
 
     public Biome getBiome(Region p) {
         double moisture = moistureModel.getMoisture(p);
+        double elevation = elevationModel.getElevation(p);
 
         if (p.isOcean()) {
             return Biome.OCEAN;
         } else if (p.isWater()) {
-            if (p.getElevation() < 0.1) {
+            if (elevation < 0.1) {
                 return Biome.MARSH;
             }
-            if (p.getElevation() > 0.8) {
+            if (elevation > 0.8) {
                 return Biome.ICE;
             }
             return Biome.LAKE;
         } else if (p.isCoast()) {
             return Biome.BEACH;
-        } else if (p.getElevation() > 0.8) {
+        } else if (elevation > 0.8) {
             if (moisture > 0.50) {
                 return Biome.SNOW;
             } else if (moisture > 0.33) {
@@ -58,7 +61,7 @@ public class DefaultBiomeModel implements BiomeModel {
             } else {
                 return Biome.SCORCHED;
             }
-        } else if (p.getElevation() > 0.6) {
+        } else if (elevation > 0.6) {
             if (moisture > 0.66) {
                 return Biome.TAIGA;
             } else if (moisture > 0.33) {
@@ -66,7 +69,7 @@ public class DefaultBiomeModel implements BiomeModel {
             } else {
                 return Biome.TEMPERATE_DESERT;
             }
-        } else if (p.getElevation() > 0.3) {
+        } else if (elevation > 0.3) {
             if (moisture > 0.83) {
                 return Biome.TEMPERATE_RAIN_FOREST;
             } else if (moisture > 0.50) {

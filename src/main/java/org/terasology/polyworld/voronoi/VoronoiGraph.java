@@ -18,7 +18,6 @@ package org.terasology.polyworld.voronoi;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -71,11 +70,6 @@ public class VoronoiGraph {
 
         assignOceanCoastAndLand(new AmitRadialWaterModel(bounds));
 
-        assignCornerElevations();
-        redistributeElevations(getLandCorners());
-
-        calculateDownslopes();
-        //calculateWatersheds();
     }
 
     /**
@@ -284,33 +278,6 @@ public class VoronoiGraph {
         return c;
     }
 
-    private void assignCornerElevations() {
-
-        Deque<Corner> queue = new LinkedList<>();
-        for (Corner c : corners) {
-            if (c.isBorder()) {
-                c.setElevation(0);
-                queue.add(c);
-            } else {
-                c.setElevation(Double.MAX_VALUE);
-            }
-        }
-
-        while (!queue.isEmpty()) {
-            Corner c = queue.pop();
-            for (Corner a : c.getAdjacent()) {
-                double newElevation = 0.01 + c.getElevation();
-                if (!c.isWater() && !a.isWater()) {
-                    newElevation += 1;
-                }
-                if (newElevation < a.getElevation()) {
-                    a.setElevation(newElevation);
-                    queue.add(a);
-                }
-            }
-        }
-    }
-
     private void assignOceanCoastAndLand(WaterModel waterModel) {
         for (Corner c : corners) {
             c.setWater(waterModel.isWater(c.getLocation()));
@@ -373,48 +340,6 @@ public class VoronoiGraph {
             }
         }
         return list;
-    }
-
-    private void redistributeElevations(List<Corner> landCorners) {
-        Collections.sort(landCorners, new Comparator<Corner>() {
-            @Override
-            public int compare(Corner o1, Corner o2) {
-                if (o1.getElevation() > o2.getElevation()) {
-                    return 1;
-                } else if (o1.getElevation() < o2.getElevation()) {
-                    return -1;
-                }
-                return 0;
-            }
-        });
-
-        final double scaleFactor = 1.1;
-        for (int i = 0; i < landCorners.size(); i++) {
-            double y = (double) i / landCorners.size();
-            double x = Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y));
-            x = Math.min(x, 1);
-            landCorners.get(i).setElevation(x);
-        }
-
-        for (Corner c : corners) {
-            if (c.isOcean() || c.isCoast()) {
-                c.setElevation(0.0);
-            }
-        }
-    }
-
-    private void calculateDownslopes() {
-        for (Corner c : corners) {
-            Corner down = c;
-            //System.out.println("ME: " + c.elevation);
-            for (Corner a : c.getAdjacent()) {
-                //System.out.println(a.elevation);
-                if (a.getElevation() <= down.getElevation()) {
-                    down = a;
-                }
-            }
-            c.setDownslope(down);
-        }
     }
 
     public Edge lookupEdgeFromCorner(Corner c, Corner downslope) {

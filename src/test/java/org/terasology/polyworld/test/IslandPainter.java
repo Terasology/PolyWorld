@@ -30,8 +30,10 @@ import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.DefaultBiomeModel;
+import org.terasology.polyworld.biome.DefaultElevationModel;
 import org.terasology.polyworld.biome.DefaultMoistureModel;
 import org.terasology.polyworld.biome.DefaultRiverModel;
+import org.terasology.polyworld.biome.ElevationModel;
 import org.terasology.polyworld.biome.MoistureModel;
 import org.terasology.polyworld.biome.RiverModel;
 import org.terasology.polyworld.voronoi.Corner;
@@ -66,9 +68,10 @@ public class IslandPainter {
             defaultColors[i] = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
         }
 
-        riverModel = new DefaultRiverModel(graph);
+        ElevationModel elevationModel = new DefaultElevationModel(graph);
+        riverModel = new DefaultRiverModel(graph, elevationModel);
         moistureModel = new DefaultMoistureModel(graph, riverModel);
-        biomeModel = new DefaultBiomeModel(moistureModel);
+        biomeModel = new DefaultBiomeModel(elevationModel, moistureModel);
     }
 
     /**

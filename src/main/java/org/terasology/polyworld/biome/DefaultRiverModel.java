@@ -33,7 +33,7 @@ public class DefaultRiverModel implements RiverModel {
     private final DefaultValueMap<Edge, Integer> edgeVals = new DefaultValueMap<>(0);
     private final DefaultValueMap<Corner, Integer> cornerVals = new DefaultValueMap<>(0);
 
-    public DefaultRiverModel(VoronoiGraph graph)
+    public DefaultRiverModel(VoronoiGraph graph, ElevationModel elevationModel)
     {
         List<Corner> corners = graph.getCorners();
 
@@ -42,21 +42,23 @@ public class DefaultRiverModel implements RiverModel {
 
         for (int i = 0; i < count; i++) {
             Corner c = corners.get(r.nextInt(corners.size()));
-            if (c.isOcean() || c.getElevation() < 0.3 || c.getElevation() > 0.9) {
+            double elevation = elevationModel.getElevation(c);
+            if (c.isOcean() || elevation < 0.3 || elevation > 0.9) {
                 continue;
             }
             // Bias rivers to go west: if (q.downslope.x > q.x) continue;
             while (!c.isCoast()) {
-                if (c == c.getDownslope()) {
+                Corner downslope = elevationModel.getDownslope(c);
+                if (c == downslope) {
                     break;
                 }
-                Edge edge = graph.lookupEdgeFromCorner(c, c.getDownslope());
+                Edge edge = graph.lookupEdgeFromCorner(c, downslope);
                 if (!edge.getCorner0().isWater() || !edge.getCorner1().isWater()) {
                     edgeVals.put(edge, edgeVals.getOrDefault(edge) + 1);
                     cornerVals.put(c, edgeVals.getOrDefault(c) + 1);
-                    cornerVals.put(c.getDownslope(), cornerVals.getOrDefault(c.getDownslope()) + 1);  // TODO: fix double count
+                    cornerVals.put(downslope, cornerVals.getOrDefault(downslope) + 1);  // TODO: fix double count
                 }
-                c = c.getDownslope();
+                c = downslope;
             }
         }
     }

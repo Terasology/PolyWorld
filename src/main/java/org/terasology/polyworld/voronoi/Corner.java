@@ -37,11 +37,9 @@ public class Corner {
     private List<Edge> protrudes = new ArrayList<>();
     private Vector2d loc;
     private boolean border;
-    private double elevation;
     private boolean water;
     private boolean ocean;
     private boolean coast;
-    private Corner downslope;
 
     /**
      * @param loc
@@ -117,20 +115,6 @@ public class Corner {
     }
 
     /**
-     * @return the elevation
-     */
-    public double getElevation() {
-        return elevation;
-    }
-
-    /**
-     * @param elevation the elevation to set
-     */
-    public void setElevation(double elevation) {
-        this.elevation = elevation;
-    }
-
-    /**
      * @return the border
      */
     public boolean isBorder() {
@@ -149,20 +133,6 @@ public class Corner {
      */
     public Collection<Region> getTouches() {
         return Collections.unmodifiableList(touches);
-    }
-
-    /**
-     * @return the downslope
-     */
-    public Corner getDownslope() {
-        return downslope;
-    }
-
-    /**
-     * @param downslope the downslope to set
-     */
-    public void setDownslope(Corner downslope) {
-        this.downslope = downslope;
     }
 
     /**
