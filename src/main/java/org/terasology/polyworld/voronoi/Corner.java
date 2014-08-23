@@ -37,9 +37,6 @@ public class Corner {
     private List<Edge> protrudes = new ArrayList<>();
     private Vector2d loc;
     private boolean border;
-    private boolean water;
-    private boolean ocean;
-    private boolean coast;
 
     /**
      * @param loc
@@ -70,48 +67,6 @@ public class Corner {
         Preconditions.checkArgument(!getTouches().contains(region));
 
         touches.add(region);
-    }
-
-    /**
-     * @return the coast
-     */
-    public boolean isCoast() {
-        return coast;
-    }
-
-    /**
-     * @param coast the coast to set
-     */
-    public void setCoast(boolean coast) {
-        this.coast = coast;
-    }
-
-    /**
-     * @return the ocean
-     */
-    public boolean isOcean() {
-        return ocean;
-    }
-
-    /**
-     * @param ocean the ocean to set
-     */
-    public void setOcean(boolean ocean) {
-        this.ocean = ocean;
-    }
-
-    /**
-     * @return the water
-     */
-    public boolean isWater() {
-        return water;
-    }
-
-    /**
-     * @param water the water to set
-     */
-    public void setWater(boolean water) {
-        this.water = water;
     }
 
     /**

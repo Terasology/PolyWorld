@@ -16,7 +16,9 @@
 
 package org.terasology.polyworld.biome;
 
-import org.terasology.math.geom.Vector2d;
+import java.util.List;
+
+import org.terasology.polyworld.voronoi.Corner;
 
 /**
  * TODO Type description
@@ -24,6 +26,14 @@ import org.terasology.math.geom.Vector2d;
  */
 public interface WaterModel {
 
-    boolean isWater(Vector2d p2);
+    boolean isWater(Corner c);
 
+    boolean isOcean(Corner c);
+
+    boolean isCoast(Corner c);
+
+    /**
+     * @return all corners that are neither ocean nor coast
+     */
+    List<Corner> getLandCorners();
 }

@@ -16,27 +16,14 @@
 
 package org.terasology.polyworld.biome;
 
-import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
 
 /**
  * TODO Type description
  * @author Martin Steiger
  */
-public class AmitBlobWaterModel implements WaterDistribution {
+public interface WaterDistribution {
 
-    private final Rect2d bounds;
+    boolean isWater(Vector2d p2);
 
-    public AmitBlobWaterModel(Rect2d bounds) {
-        this.bounds = bounds;
-    }
-
-    public boolean isWater(Vector2d p2) {
-        Vector2d p = new Vector2d(2 * (p2.getX() / bounds.width() - 0.5), 2 * (p2.getY() / bounds.height() - 0.5));
-
-        boolean eye1 = new Vector2d(p.getX() - 0.2, p.getY() / 2 + 0.2).length() < 0.05;
-        boolean eye2 = new Vector2d(p.getX() + 0.2, p.getY() / 2 + 0.2).length() < 0.05;
-        boolean body = p.length() < 0.8 - 0.18 * Math.sin(5 * Math.atan2(p.getY(), p.getX()));
-        return !(body && !eye1 && !eye2);
-    }
 }

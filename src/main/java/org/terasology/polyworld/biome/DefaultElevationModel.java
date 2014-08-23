@@ -40,12 +40,15 @@ public class DefaultElevationModel implements ElevationModel {
     private final Map<Corner, Double> elevations = Maps.newHashMap();
     private final Map<Corner, Corner> downslopes = Maps.newHashMap();
 
-    public DefaultElevationModel(VoronoiGraph graph)
+    private final WaterModel waterModel;
+
+    public DefaultElevationModel(VoronoiGraph graph, WaterModel waterModel)
     {
         this.graph = graph;
+        this.waterModel = waterModel;
 
         assignCornerElevations();
-        redistributeElevations(graph.getLandCorners());
+        redistributeElevations(waterModel.getLandCorners());
 
         calculateDownslopes();
     }
@@ -66,7 +69,7 @@ public class DefaultElevationModel implements ElevationModel {
             Corner c = queue.pop();
             for (Corner a : c.getAdjacent()) {
                 double newElevation = 0.01 + elevations.get(c);
-                if (!c.isWater() && !a.isWater()) {
+                if (!waterModel.isWater(c) && !waterModel.isWater(a)) {
                     newElevation += 1;
                 }
                 if (newElevation < elevations.get(a)) {
@@ -99,7 +102,7 @@ public class DefaultElevationModel implements ElevationModel {
         }
 
         for (Corner c : graph.getCorners()) {
-            if (c.isOcean() || c.isCoast()) {
+            if (waterModel.isOcean(c) || waterModel.isCoast(c)) {
                 elevations.put(c, 0.0);
             }
         }

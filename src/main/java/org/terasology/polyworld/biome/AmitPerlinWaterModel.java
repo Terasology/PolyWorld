@@ -25,7 +25,7 @@ import org.terasology.utilities.procedural.PerlinNoise;
  * TODO Type description
  * @author Martin Steiger
  */
-public class AmitPerlinWaterModel implements WaterModel {
+public class AmitPerlinWaterModel implements WaterDistribution {
 
     private final Rect2d bounds;
 

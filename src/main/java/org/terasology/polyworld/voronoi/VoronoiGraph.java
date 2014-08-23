@@ -18,9 +18,7 @@ package org.terasology.polyworld.voronoi;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -29,8 +27,6 @@ import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
-import org.terasology.polyworld.biome.AmitRadialWaterModel;
-import org.terasology.polyworld.biome.WaterModel;
 
 /**
  * VoronoiGraph.java
@@ -67,9 +63,6 @@ public class VoronoiGraph {
         }
         buildGraph(v);
         improveCorners();
-
-        assignOceanCoastAndLand(new AmitRadialWaterModel(bounds));
-
     }
 
     /**
@@ -276,70 +269,6 @@ public class VoronoiGraph {
             pointCornerMap.put(index, c);
         }
         return c;
-    }
-
-    private void assignOceanCoastAndLand(WaterModel waterModel) {
-        for (Corner c : corners) {
-            c.setWater(waterModel.isWater(c.getLocation()));
-        }
-
-        Deque<Region> queue = new LinkedList<>();
-        final double waterThreshold = .3;
-        for (final Region region : regions) {
-            int numWater = 0;
-            for (final Corner c : region.getCorners()) {
-                if (c.isBorder()) {
-                    region.setBorder(true);
-                    region.setWater(true);
-                    region.setOcean(true);
-                    queue.add(region);
-                }
-                if (c.isWater()) {
-                    numWater++;
-                }
-            }
-            region.setWater(region.isOcean() || ((double) numWater / region.getCorners().size() >= waterThreshold));
-        }
-        while (!queue.isEmpty()) {
-            final Region region = queue.pop();
-            for (final Region n : region.getNeighbors()) {
-                if (n.isWater() && !n.isOcean()) {
-                    n.setOcean(true);
-                    queue.add(n);
-                }
-            }
-        }
-        for (Region region : regions) {
-            boolean oceanNeighbor = false;
-            boolean landNeighbor = false;
-            for (Region n : region.getNeighbors()) {
-                oceanNeighbor |= n.isOcean();
-                landNeighbor |= !n.isWater();
-            }
-            region.setCoast(oceanNeighbor && landNeighbor);
-        }
-
-        for (Corner c : corners) {
-            int numOcean = 0;
-            int numLand = 0;
-            for (Region region : c.getTouches()) {
-                numOcean += region.isOcean() ? 1 : 0;
-                numLand += !region.isWater() ? 1 : 0;
-            }
-            c.setOcean(numOcean == c.getTouches().size());
-            c.setCoast(numOcean > 0 && numLand > 0);
-            c.setWater(c.isBorder() || ((numLand != c.getTouches().size()) && !c.isCoast()));
-        }
-    }
-
-    public List<Corner> getLandCorners() {
-        final List<Corner> list = new ArrayList<>();
-        for (Corner c : corners) {
-            if (!c.isOcean() && !c.isCoast()) {
-                list.add(c);
-            }
-        }
-        return list;
     }
 
     public Edge lookupEdgeFromCorner(Corner c, Corner downslope) {

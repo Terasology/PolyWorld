@@ -25,7 +25,7 @@ import org.terasology.math.geom.Vector2d;
  * TODO Type description
  * @author Martin Steiger
  */
-public class AmitRadialWaterModel implements WaterModel {
+public class AmitRadialWaterModel implements WaterDistribution {
 
     private static final double ISLAND_FACTOR = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
 

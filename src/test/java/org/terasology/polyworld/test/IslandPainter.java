@@ -27,15 +27,18 @@ import java.util.Random;
 
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
+import org.terasology.polyworld.biome.AmitRadialWaterModel;
 import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.DefaultBiomeModel;
 import org.terasology.polyworld.biome.DefaultElevationModel;
 import org.terasology.polyworld.biome.DefaultMoistureModel;
 import org.terasology.polyworld.biome.DefaultRiverModel;
+import org.terasology.polyworld.biome.DefaultWaterModel;
 import org.terasology.polyworld.biome.ElevationModel;
 import org.terasology.polyworld.biome.MoistureModel;
 import org.terasology.polyworld.biome.RiverModel;
+import org.terasology.polyworld.biome.WaterModel;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.Region;
@@ -68,9 +71,11 @@ public class IslandPainter {
             defaultColors[i] = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
         }
 
-        ElevationModel elevationModel = new DefaultElevationModel(graph);
-        riverModel = new DefaultRiverModel(graph, elevationModel);
-        moistureModel = new DefaultMoistureModel(graph, riverModel);
+        AmitRadialWaterModel waterDist = new AmitRadialWaterModel(graph.getBounds());
+        WaterModel waterModel = new DefaultWaterModel(graph, waterDist);
+        ElevationModel elevationModel = new DefaultElevationModel(graph, waterModel);
+        riverModel = new DefaultRiverModel(graph, elevationModel, waterModel);
+        moistureModel = new DefaultMoistureModel(graph, riverModel, waterModel);
         biomeModel = new DefaultBiomeModel(elevationModel, moistureModel);
     }
 

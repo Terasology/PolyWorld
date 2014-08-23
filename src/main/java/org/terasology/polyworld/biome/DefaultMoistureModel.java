@@ -38,11 +38,13 @@ public class DefaultMoistureModel implements MoistureModel {
     private final VoronoiGraph graph;
     private final Map<Corner, Double> moisture = Maps.newHashMap();
     private final RiverModel riverModel;
+    private WaterModel waterModel;
 
-    public DefaultMoistureModel(VoronoiGraph graph, RiverModel riverModel)
+    public DefaultMoistureModel(VoronoiGraph graph, RiverModel riverModel, WaterModel waterModel)
     {
         this.graph = graph;
         this.riverModel = riverModel;
+        this.waterModel = waterModel;
 
         assignCornerMoisture();
         redistributeMoisture();
@@ -52,7 +54,7 @@ public class DefaultMoistureModel implements MoistureModel {
         Deque<Corner> queue = new LinkedList<>();
         for (Corner c : graph.getCorners()) {
             int riverValue = riverModel.getRiverValue(c);
-            if ((c.isWater() || riverValue > 0) && !c.isOcean()) {
+            if ((waterModel.isWater(c) || riverValue > 0) && !waterModel.isOcean(c)) {
                 moisture.put(c, riverValue > 0 ? Math.min(3.0, (0.2 * riverValue)) : 1.0);
                 queue.push(c);
             } else {
@@ -73,7 +75,7 @@ public class DefaultMoistureModel implements MoistureModel {
 
         // Salt water
         for (Corner c : graph.getCorners()) {
-            if (c.isOcean() || c.isCoast()) {
+            if (waterModel.isOcean(c) || waterModel.isCoast(c)) {
                 moisture.put(c, 1.0);
             }
         }
@@ -81,7 +83,7 @@ public class DefaultMoistureModel implements MoistureModel {
 
     private void redistributeMoisture() {
 
-        List<Corner> landCorners = graph.getLandCorners();
+        List<Corner> landCorners = waterModel.getLandCorners();
 
         Collections.sort(landCorners, new Comparator<Corner>() {
             @Override
