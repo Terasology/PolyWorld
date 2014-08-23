@@ -30,6 +30,8 @@ import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
+import org.terasology.polyworld.biome.AmitRadialWaterModel;
+import org.terasology.polyworld.biome.WaterModel;
 
 /**
  * VoronoiGraph.java
@@ -38,23 +40,12 @@ import org.terasology.math.geom.Vector2d;
  */
 public class VoronoiGraph {
 
-    private static final double ISLAND_FACTOR = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
-
     private final List<Edge> edges = new ArrayList<>();
     private final List<Corner> corners = new ArrayList<>();
     private final List<Region> regions = new ArrayList<>();
     private final Rect2d bounds;
 
-    private final int bumps;
-    private final double startAngle;
-    private final double dipAngle;
-    private final double dipWidth;
-
     public VoronoiGraph(Voronoi ov, int numLloydRelaxations, Random r) {
-        bumps = r.nextInt(5) + 1;
-        startAngle = r.nextDouble() * 2 * Math.PI;
-        dipAngle = r.nextDouble() * 2 * Math.PI;
-        dipWidth = r.nextDouble() * .5 + .2;
         Voronoi v = ov;
 
         bounds = v.getPlotBounds();
@@ -78,14 +69,20 @@ public class VoronoiGraph {
         buildGraph(v);
         improveCorners();
 
+        assignOceanCoastAndLand(new AmitRadialWaterModel(bounds));
+
         assignCornerElevations();
-        assignOceanCoastAndLand();
         redistributeElevations(getLandCorners());
 
         calculateDownslopes();
         //calculateWatersheds();
     }
 
+    /**
+     * Moving corners by averaging the nearby centers produces more uniform edge lengths,
+     * although it occasionally worsens the polygon sizes. However, moving corners will
+     * lose the Voronoi diagram properties.
+     */
     private void improveCorners() {
         Vector2d[] newP = new Vector2d[corners.size()];
         int idx = 0;
@@ -288,9 +285,9 @@ public class VoronoiGraph {
     }
 
     private void assignCornerElevations() {
+
         Deque<Corner> queue = new LinkedList<>();
         for (Corner c : corners) {
-            c.setWater(isWater(c.getLocation()));
             if (c.isBorder()) {
                 c.setElevation(0);
                 queue.add(c);
@@ -314,40 +311,11 @@ public class VoronoiGraph {
         }
     }
 
-    //only the radial implementation of amitp's map generation
-    //TODO implement more island shapes
-    private boolean isWater(Vector2d p2) {
-        Vector2d p = new Vector2d(2 * (p2.getX() / bounds.width() - 0.5), 2 * (p2.getY() / bounds.height() - 0.5));
-
-        double angle = Math.atan2(p.getY(), p.getX());
-        double length = 0.5 * (Math.max(Math.abs(p.getX()), Math.abs(p.getY())) + p.length());
-
-        double r1 = 0.5 + 0.40 * Math.sin(startAngle + bumps * angle + Math.cos((bumps + 3) * angle));
-        double r2 = 0.7 - 0.20 * Math.sin(startAngle + bumps * angle - Math.sin((bumps + 2) * angle));
-        if (Math.abs(angle - dipAngle) < dipWidth
-                || Math.abs(angle - dipAngle + 2 * Math.PI) < dipWidth
-                || Math.abs(angle - dipAngle - 2 * Math.PI) < dipWidth) {
-            r1 = 0.2;
-            r2 = 0.2;
+    private void assignOceanCoastAndLand(WaterModel waterModel) {
+        for (Corner c : corners) {
+            c.setWater(waterModel.isWater(c.getLocation()));
         }
-        return !(length < r1 || (length > r1 * ISLAND_FACTOR && length < r2));
 
-        //return false;
-
-        /*if (noise == null) {
-         noise = new Perlin2d(.125, 8, MyRandom.seed).createArray(257, 257);
-         }
-         int x = (int) ((p.x + 1) * 128);
-         int y = (int) ((p.y + 1) * 128);
-         return noise[x][y] < .3 + .3 * p.l2();*/
-
-        /*boolean eye1 = new Point(p.x - 0.2, p.y / 2 + 0.2).length() < 0.05;
-         boolean eye2 = new Point(p.x + 0.2, p.y / 2 + 0.2).length() < 0.05;
-         boolean body = p.length() < 0.8 - 0.18 * Math.sin(5 * Math.atan2(p.y, p.x));
-         return !(body && !eye1 && !eye2);*/
-    }
-
-    private void assignOceanCoastAndLand() {
         Deque<Region> queue = new LinkedList<>();
         final double waterThreshold = .3;
         for (final Region region : regions) {
