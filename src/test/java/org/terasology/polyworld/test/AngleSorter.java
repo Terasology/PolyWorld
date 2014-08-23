@@ -19,8 +19,8 @@ package org.terasology.polyworld.test;
 import java.util.Comparator;
 
 import org.terasology.math.geom.Vector2d;
-import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.voronoi.Corner;
+import org.terasology.polyworld.voronoi.Region;
 
 /**
  * TODO Type description

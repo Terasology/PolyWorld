@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.biome;
-
-import java.util.List;
+package org.terasology.polyworld.elevation;
 
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Region;
@@ -25,22 +23,15 @@ import org.terasology.polyworld.voronoi.Region;
  * TODO Type description
  * @author Martin Steiger
  */
-public interface WaterModel {
+public interface ElevationModel {
 
-    boolean isWater(Corner c);
+    public double getElevation(Region r);
 
-    boolean isWater(Region p);
-
-    boolean isOcean(Corner c);
-
-    boolean isOcean(Region p);
-
-    boolean isCoast(Corner c);
-
-    boolean isCoast(Region p);
+    public double getElevation(Corner r);
 
     /**
-     * @return all corners that are neither ocean nor coast
+     * @param c
+     * @return
      */
-    List<Corner> getLandCorners();
+    public Corner getDownslope(Corner c);
 }

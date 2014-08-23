@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.biome;
+package org.terasology.polyworld.rivers;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
-import org.terasology.polyworld.map.DefaultValueMap;
+import org.terasology.polyworld.elevation.ElevationModel;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
+import org.terasology.polyworld.water.WaterModel;
+
+import com.google.common.collect.Maps;
 
 /**
  * TODO Type description
@@ -30,8 +34,8 @@ import org.terasology.polyworld.voronoi.VoronoiGraph;
  */
 public class DefaultRiverModel implements RiverModel {
 
-    private final DefaultValueMap<Edge, Integer> edgeVals = new DefaultValueMap<>(0);
-    private final DefaultValueMap<Corner, Integer> cornerVals = new DefaultValueMap<>(0);
+    private final Map<Edge, Integer> edgeVals = Maps.newHashMap();
+    private final Map<Corner, Integer> cornerVals = Maps.newHashMap();
 
     public DefaultRiverModel(VoronoiGraph graph, ElevationModel elevationModel, WaterModel waterModel)
     {
@@ -54,24 +58,34 @@ public class DefaultRiverModel implements RiverModel {
                 }
                 Edge edge = graph.lookupEdgeFromCorner(c, downslope);
                 if (!waterModel.isWater(edge.getCorner0()) || !waterModel.isWater(edge.getCorner1())) {
-                    edgeVals.put(edge, edgeVals.getOrDefault(edge) + 1);
-                    cornerVals.put(c, edgeVals.getOrDefault(c) + 1);
-                    cornerVals.put(downslope, cornerVals.getOrDefault(downslope) + 1);  // TODO: fix double count
+                    incrementEdgeVal(edge, 1);
+                    incrementCornerVal(c, 1);
+                    incrementCornerVal(downslope, 1);  // TODO: fix double count
                 }
                 c = downslope;
             }
         }
     }
 
-    /**
-     * @return the river
-     */
+    private void incrementEdgeVal(Edge edge, int inc) {
+        int newVal = getRiverValue(edge) + inc;
+        edgeVals.put(edge, Integer.valueOf(newVal));
+    }
+
+    private void incrementCornerVal(Corner corner, int inc) {
+        int newVal = getRiverValue(corner) + inc;
+        cornerVals.put(corner, Integer.valueOf(newVal));
+    }
+
+    @Override
     public int getRiverValue(Edge edge) {
-        return edgeVals.getOrDefault(edge);
+        Integer boxed = edgeVals.get(edge);
+        return (boxed == null) ? 0 : boxed.intValue();
     }
 
     @Override
     public int getRiverValue(Corner c) {
-        return cornerVals.getOrDefault(c);
+        Integer boxed = cornerVals.get(c);
+        return (boxed == null) ? 0 : boxed.intValue();
     }
 }

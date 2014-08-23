@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.biome;
+package org.terasology.polyworld.moisture;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,9 +23,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
+import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Maps;
 

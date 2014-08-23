@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.terasology.math.geom.Circle;
-import org.terasology.math.geom.Vector2d;
 import org.terasology.math.geom.Rect2d;
+import org.terasology.math.geom.Vector2d;
 
 final class SiteList {
 

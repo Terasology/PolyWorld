@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.biome;
+package org.terasology.polyworld.rivers;
 
 import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Region;
+import org.terasology.polyworld.voronoi.Edge;
 
 /**
  * TODO Type description
  * @author Martin Steiger
  */
-public interface ElevationModel {
+public interface RiverModel {
 
-    public double getElevation(Region r);
-
-    public double getElevation(Corner r);
+    /**
+     * @param e
+     * @return
+     */
+    int getRiverValue(Edge e);
 
     /**
      * @param c
      * @return
      */
-    public Corner getDownslope(Corner c);
+    int getRiverValue(Corner c);
+
 }

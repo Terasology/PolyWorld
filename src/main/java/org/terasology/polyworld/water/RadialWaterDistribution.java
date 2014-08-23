@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.biome;
+package org.terasology.polyworld.water;
 
 import java.util.Random;
 
@@ -25,7 +25,7 @@ import org.terasology.math.geom.Vector2d;
  * TODO Type description
  * @author Martin Steiger
  */
-public class AmitRadialWaterModel implements WaterDistribution {
+public class RadialWaterDistribution implements WaterDistribution {
 
     private static final double ISLAND_FACTOR = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
 
@@ -39,7 +39,7 @@ public class AmitRadialWaterModel implements WaterDistribution {
     /**
      *
      */
-    public AmitRadialWaterModel(Rect2d bounds) {
+    public RadialWaterDistribution(Rect2d bounds) {
         Random r = new Random(9782985378925l);
 
         this.bounds = bounds;

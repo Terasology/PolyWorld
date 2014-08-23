@@ -21,8 +21,8 @@ import java.util.Map;
 
 import org.terasology.math.geom.BaseVector2d;
 import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Vector2d;
 import org.terasology.math.geom.Rect2d;
+import org.terasology.math.geom.Vector2d;
 
 /**
  * The line segment connecting the two Sites is part of the Delaunay

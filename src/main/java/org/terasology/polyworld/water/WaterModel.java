@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.biome;
+package org.terasology.polyworld.water;
+
+import java.util.List;
 
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Region;
@@ -23,18 +25,22 @@ import org.terasology.polyworld.voronoi.Region;
  * TODO Type description
  * @author Martin Steiger
  */
-public interface MoistureModel {
+public interface WaterModel {
+
+    boolean isWater(Corner c);
+
+    boolean isWater(Region p);
+
+    boolean isOcean(Corner c);
+
+    boolean isOcean(Region p);
+
+    boolean isCoast(Corner c);
+
+    boolean isCoast(Region p);
 
     /**
-     * @param c
-     * @return
+     * @return all corners that are neither ocean nor coast
      */
-    double getMoisture(Corner c);
-
-    /**
-     * @param r
-     * @return
-     */
-    double getMoisture(Region r);
-
+    List<Corner> getLandCorners();
 }

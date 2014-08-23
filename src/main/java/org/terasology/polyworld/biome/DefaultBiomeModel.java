@@ -16,7 +16,10 @@
 
 package org.terasology.polyworld.biome;
 
+import org.terasology.polyworld.elevation.ElevationModel;
+import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.voronoi.Region;
+import org.terasology.polyworld.water.WaterModel;
 
 /**
  * TODO Type description

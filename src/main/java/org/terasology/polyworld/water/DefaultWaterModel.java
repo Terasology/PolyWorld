@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.biome;
+package org.terasology.polyworld.water;
 
 import java.util.Collection;
 import java.util.Deque;

@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import org.terasology.math.geom.BaseVector2d;
 import org.terasology.math.geom.Circle;
 import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Vector2d;
 import org.terasology.math.geom.Rect2d;
+import org.terasology.math.geom.Vector2d;
 
 public final class Voronoi {
 

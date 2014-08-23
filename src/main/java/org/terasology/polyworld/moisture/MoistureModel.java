@@ -14,16 +14,27 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.biome;
+package org.terasology.polyworld.moisture;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.polyworld.voronoi.Corner;
+import org.terasology.polyworld.voronoi.Region;
 
 /**
  * TODO Type description
  * @author Martin Steiger
  */
-public interface WaterDistribution {
+public interface MoistureModel {
 
-    boolean isWater(Vector2d p2);
+    /**
+     * @param c
+     * @return
+     */
+    double getMoisture(Corner c);
+
+    /**
+     * @param r
+     * @return
+     */
+    double getMoisture(Region r);
 
 }

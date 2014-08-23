@@ -14,27 +14,16 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.biome;
+package org.terasology.polyworld.water;
 
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Edge;
+import org.terasology.math.geom.Vector2d;
 
 /**
  * TODO Type description
  * @author Martin Steiger
  */
-public interface RiverModel {
+public interface WaterDistribution {
 
-    /**
-     * @param e
-     * @return
-     */
-    int getRiverValue(Edge e);
-
-    /**
-     * @param c
-     * @return
-     */
-    int getRiverValue(Corner c);
+    boolean isWater(Vector2d p2);
 
 }
