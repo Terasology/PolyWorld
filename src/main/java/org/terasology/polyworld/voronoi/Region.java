@@ -36,10 +36,6 @@ public class Region {
 
     private final Collection<Region> neighbors = new LinkedHashSet<>();
 
-    private boolean water;
-    private boolean coast;
-
-    private boolean isOcean;
     private boolean isBorder;
     private Vector2d center;
 
@@ -66,48 +62,6 @@ public class Region {
      */
     public boolean isBorder() {
         return isBorder;
-    }
-
-    /**
-     * @return the ocean
-     */
-    public boolean isOcean() {
-        return isOcean;
-    }
-
-    /**
-     * @param ocean the ocean to set
-     */
-    public void setOcean(boolean ocean) {
-        this.isOcean = ocean;
-    }
-
-    /**
-     * @return the coast
-     */
-    public boolean isCoast() {
-        return coast;
-    }
-
-    /**
-     * @param coast the coast to set
-     */
-    public void setCoast(boolean coast) {
-        this.coast = coast;
-    }
-
-    /**
-     * @return the water
-     */
-    public boolean isWater() {
-        return water;
-    }
-
-    /**
-     * @param water the water to set
-     */
-    public void setWater(boolean water) {
-        this.water = water;
     }
 
     public Collection<Region> getNeighbors() {

@@ -16,6 +16,7 @@
 
 package org.terasology.polyworld.biome;
 
+import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,9 +35,13 @@ import com.google.common.collect.Maps;
  */
 public class DefaultWaterModel implements WaterModel {
 
-    private Map<Corner, Boolean> isWater = Maps.newHashMap();
-    private Map<Corner, Boolean> isOcean = Maps.newHashMap();
-    private Map<Corner, Boolean> isCoast = Maps.newHashMap();
+    private Map<Corner, Boolean> cornerWater = Maps.newHashMap();
+    private Map<Corner, Boolean> cornerOcean = Maps.newHashMap();
+    private Map<Corner, Boolean> cornerCoast = Maps.newHashMap();
+
+    private Map<Region, Boolean> regionWater = Maps.newHashMap();
+    private Map<Region, Boolean> regionOcean = Maps.newHashMap();
+    private Map<Region, Boolean> regionCoast = Maps.newHashMap();
 
     private VoronoiGraph graph;
     private List<Corner> landCorners;
@@ -53,24 +58,25 @@ public class DefaultWaterModel implements WaterModel {
         Deque<Region> queue = new LinkedList<>();
         for (final Region region : graph.getRegions()) {
             int numWater = 0;
-            for (final Corner c : region.getCorners()) {
+            Collection<Corner> corners = region.getCorners();
+            for (final Corner c : corners) {
                 if (c.isBorder()) {
                     region.setBorder(true);
-                    region.setWater(true);
-                    region.setOcean(true);
+                    setWater(region, true);
+                    setOcean(region, true);
                     queue.add(region);
                 }
                 if (isWater(c)) {
                     numWater++;
                 }
             }
-            region.setWater(region.isOcean() || ((double) numWater / region.getCorners().size() >= waterThreshold));
+            setWater(region, isOcean(region) || ((double) numWater / corners.size() >= waterThreshold));
         }
         while (!queue.isEmpty()) {
             final Region region = queue.pop();
             for (final Region n : region.getNeighbors()) {
-                if (n.isWater() && !n.isOcean()) {
-                    n.setOcean(true);
+                if (isWater(n) && !isOcean(n)) {
+                    setOcean(n, true);
                     queue.add(n);
                 }
             }
@@ -79,18 +85,18 @@ public class DefaultWaterModel implements WaterModel {
             boolean oceanNeighbor = false;
             boolean landNeighbor = false;
             for (Region n : region.getNeighbors()) {
-                oceanNeighbor |= n.isOcean();
-                landNeighbor |= !n.isWater();
+                oceanNeighbor |= isOcean(n);
+                landNeighbor |= !isWater(n);
             }
-            region.setCoast(oceanNeighbor && landNeighbor);
+            setCoast(region, oceanNeighbor && landNeighbor);
         }
 
         for (Corner c : graph.getCorners()) {
             int numOcean = 0;
             int numLand = 0;
             for (Region region : c.getTouches()) {
-                numOcean += region.isOcean() ? 1 : 0;
-                numLand += !region.isWater() ? 1 : 0;
+                numOcean += isOcean(region) ? 1 : 0;
+                numLand += !isWater(region) ? 1 : 0;
             }
             setOcean(c, numOcean == c.getTouches().size());
             setCoast(c, numOcean > 0 && numLand > 0);
@@ -101,9 +107,6 @@ public class DefaultWaterModel implements WaterModel {
 
     }
 
-    /**
-     *
-     */
     private void findLandCorners() {
         landCorners = Lists.newArrayList();
         for (Corner c : graph.getCorners()) {
@@ -114,31 +117,62 @@ public class DefaultWaterModel implements WaterModel {
     }
 
     private void setCoast(Corner c, boolean coast) {
-         isCoast.put(c, Boolean.valueOf(coast));
+         cornerCoast.put(c, Boolean.valueOf(coast));
     }
 
     private void setOcean(Corner c, boolean ocean) {
-        isOcean.put(c, Boolean.valueOf(ocean));
+        cornerOcean.put(c, Boolean.valueOf(ocean));
     }
 
     private void setWater(Corner c, boolean water) {
-        isWater.put(c, Boolean.valueOf(water));
+        cornerWater.put(c, Boolean.valueOf(water));
+    }
+
+    private void setCoast(Region c, boolean coast) {
+        regionCoast.put(c, Boolean.valueOf(coast));
+    }
+
+    private void setOcean(Region c, boolean ocean) {
+        regionOcean.put(c, Boolean.valueOf(ocean));
+    }
+
+    private void setWater(Region c, boolean water) {
+        regionWater.put(c, Boolean.valueOf(water));
     }
 
     @Override
     public boolean isWater(Corner c)
     {
-        return isWater.get(c);
+        return cornerWater.get(c);
     }
 
     @Override
     public boolean isCoast(Corner c) {
-        return isCoast.get(c);
+        return cornerCoast.get(c);
     }
 
     @Override
     public boolean isOcean(Corner c) {
-        return isOcean.get(c);
+        return cornerOcean.get(c);
+    }
+
+    @Override
+    public boolean isWater(Region c)
+    {
+        Boolean val = regionWater.get(c);
+        return val == null ? false : val.booleanValue();
+    }
+
+    @Override
+    public boolean isCoast(Region c) {
+        Boolean val = regionCoast.get(c);
+        return val == null ? false : val.booleanValue();
+    }
+
+    @Override
+    public boolean isOcean(Region c) {
+        Boolean val = regionOcean.get(c);
+        return val == null ? false : val.booleanValue();
     }
 
     @Override

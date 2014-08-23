@@ -26,12 +26,14 @@ public class DefaultBiomeModel implements BiomeModel {
 
     private final MoistureModel moistureModel;
     private final ElevationModel elevationModel;
+    private final WaterModel waterModel;
 
     /**
      * @param moistureModel
      */
-    public DefaultBiomeModel(ElevationModel elevationModel, MoistureModel moistureModel) {
+    public DefaultBiomeModel(ElevationModel elevationModel, WaterModel waterModel, MoistureModel moistureModel) {
         this.elevationModel = elevationModel;
+        this.waterModel = waterModel;
         this.moistureModel = moistureModel;
     }
 
@@ -39,9 +41,9 @@ public class DefaultBiomeModel implements BiomeModel {
         double moisture = moistureModel.getMoisture(p);
         double elevation = elevationModel.getElevation(p);
 
-        if (p.isOcean()) {
+        if (waterModel.isOcean(p)) {
             return Biome.OCEAN;
-        } else if (p.isWater()) {
+        } else if (waterModel.isWater(p)) {
             if (elevation < 0.1) {
                 return Biome.MARSH;
             }
@@ -49,7 +51,7 @@ public class DefaultBiomeModel implements BiomeModel {
                 return Biome.ICE;
             }
             return Biome.LAKE;
-        } else if (p.isCoast()) {
+        } else if (waterModel.isCoast(p)) {
             return Biome.BEACH;
         } else if (elevation > 0.8) {
             if (moisture > 0.50) {
