@@ -33,7 +33,7 @@ import org.terasology.math.geom.Vector2d;
  *
  * @author Connor
  */
-public class VoronoiGraph {
+public class VoronoiGraph implements Graph {
 
     private final List<Edge> edges = new ArrayList<>();
     private final List<Corner> corners = new ArrayList<>();
@@ -105,6 +105,7 @@ public class VoronoiGraph {
     private static boolean closeEnough(double d1, double d2, double diff) {
         return Math.abs(d1 - d2) <= diff;
     }
+
     private void buildGraph(Voronoi v) {
         final Map<Vector2d, Region> pointCenterMap = new HashMap<>();
         final List<Vector2d> points = v.siteCoords();
@@ -271,18 +272,10 @@ public class VoronoiGraph {
         return c;
     }
 
-    public Edge lookupEdgeFromCorner(Corner c, Corner downslope) {
-        for (Edge e : c.getEdges()) {
-            if (e.getCorner0() == downslope || e.getCorner1() == downslope) {
-                return e;
-            }
-        }
-        return null;
-    }
-
     /**
      * @return
      */
+    @Override
     public List<Region> getRegions() {
         return Collections.unmodifiableList(regions);
     }
@@ -290,6 +283,7 @@ public class VoronoiGraph {
     /**
      * @return
      */
+    @Override
     public List<Edge> getEdges() {
         return Collections.unmodifiableList(edges);
     }
@@ -297,6 +291,7 @@ public class VoronoiGraph {
     /**
      * @return the corners
      */
+    @Override
     public List<Corner> getCorners() {
         return Collections.unmodifiableList(corners);
     }
@@ -304,6 +299,7 @@ public class VoronoiGraph {
     /**
      * @return the bounds
      */
+    @Override
     public Rect2d getBounds() {
         return bounds;
     }

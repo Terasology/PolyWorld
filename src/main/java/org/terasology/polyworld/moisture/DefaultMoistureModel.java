@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.voronoi.Corner;
+import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
-import org.terasology.polyworld.voronoi.VoronoiGraph;
 import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Maps;
@@ -37,12 +37,12 @@ import com.google.common.collect.Maps;
  */
 public class DefaultMoistureModel implements MoistureModel {
 
-    private final VoronoiGraph graph;
+    private final Graph graph;
     private final Map<Corner, Double> moisture = Maps.newHashMap();
     private final RiverModel riverModel;
     private WaterModel waterModel;
 
-    public DefaultMoistureModel(VoronoiGraph graph, RiverModel riverModel, WaterModel waterModel)
+    public DefaultMoistureModel(Graph graph, RiverModel riverModel, WaterModel waterModel)
     {
         this.graph = graph;
         this.riverModel = riverModel;

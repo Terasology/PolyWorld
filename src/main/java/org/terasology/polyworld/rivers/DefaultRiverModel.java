@@ -23,7 +23,7 @@ import java.util.Random;
 import org.terasology.polyworld.elevation.ElevationModel;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
-import org.terasology.polyworld.voronoi.VoronoiGraph;
+import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Maps;
@@ -37,7 +37,7 @@ public class DefaultRiverModel implements RiverModel {
     private final Map<Edge, Integer> edgeVals = Maps.newHashMap();
     private final Map<Corner, Integer> cornerVals = Maps.newHashMap();
 
-    public DefaultRiverModel(VoronoiGraph graph, ElevationModel elevationModel, WaterModel waterModel)
+    public DefaultRiverModel(Graph graph, ElevationModel elevationModel, WaterModel waterModel)
     {
         List<Corner> corners = graph.getCorners();
 
@@ -56,7 +56,7 @@ public class DefaultRiverModel implements RiverModel {
                 if (c == downslope) {
                     break;
                 }
-                Edge edge = graph.lookupEdgeFromCorner(c, downslope);
+                Edge edge = lookupEdgeFromCorner(c, downslope);
                 if (!waterModel.isWater(edge.getCorner0()) || !waterModel.isWater(edge.getCorner1())) {
                     incrementEdgeVal(edge, 1);
                     incrementCornerVal(c, 1);
@@ -65,6 +65,16 @@ public class DefaultRiverModel implements RiverModel {
                 c = downslope;
             }
         }
+    }
+
+
+    public Edge lookupEdgeFromCorner(Corner c1, Corner c2) {
+        for (Edge e : c1.getEdges()) {
+            if (e.getCorner0() == c2 || e.getCorner1() == c2) {
+                return e;
+            }
+        }
+        return null;
     }
 
     private void incrementEdgeVal(Edge edge, int inc) {

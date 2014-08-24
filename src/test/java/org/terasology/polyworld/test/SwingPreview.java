@@ -50,6 +50,7 @@ import javax.swing.WindowConstants;
 
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.polyworld.biome.Biome;
+import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
 
 import com.google.common.collect.Maps;
@@ -74,7 +75,7 @@ final class SwingPreview {
 
         final Voronoi v = new Voronoi(numSites, width, height, r);
 
-        final VoronoiGraph graph = new VoronoiGraph(v, 2, r);
+        final Graph graph = new VoronoiGraph(v, 2, r);
         final IslandPainter painter = new IslandPainter(graph);
 
         Map<Biome, Color> map = Maps.newHashMap();

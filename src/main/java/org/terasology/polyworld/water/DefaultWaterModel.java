@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.terasology.polyworld.voronoi.Corner;
+import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
-import org.terasology.polyworld.voronoi.VoronoiGraph;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -43,10 +43,10 @@ public class DefaultWaterModel implements WaterModel {
     private Map<Region, Boolean> regionOcean = Maps.newHashMap();
     private Map<Region, Boolean> regionCoast = Maps.newHashMap();
 
-    private VoronoiGraph graph;
+    private Graph graph;
     private List<Corner> landCorners;
 
-    public DefaultWaterModel(VoronoiGraph graph, WaterDistribution dist) {
+    public DefaultWaterModel(Graph graph, WaterDistribution dist) {
         this.graph = graph;
 
         final double waterThreshold = .3;

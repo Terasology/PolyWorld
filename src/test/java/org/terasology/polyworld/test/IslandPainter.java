@@ -38,8 +38,8 @@ import org.terasology.polyworld.rivers.DefaultRiverModel;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
+import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
-import org.terasology.polyworld.voronoi.VoronoiGraph;
 import org.terasology.polyworld.water.DefaultWaterModel;
 import org.terasology.polyworld.water.RadialWaterDistribution;
 import org.terasology.polyworld.water.WaterModel;
@@ -50,7 +50,7 @@ import org.terasology.polyworld.water.WaterModel;
  */
 public class IslandPainter {
 
-    private VoronoiGraph graph;
+    private Graph graph;
     private Map<Biome, Color> biomeColors;
     private Color riverColor;
     private Color[] defaultColors;
@@ -61,7 +61,7 @@ public class IslandPainter {
     /**
      * @param graph
      */
-    public IslandPainter(VoronoiGraph graph) {
+    public IslandPainter(Graph graph) {
         this.graph = graph;
 
         Random r = new Random(1254);

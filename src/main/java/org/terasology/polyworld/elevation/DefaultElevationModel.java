@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.terasology.polyworld.voronoi.Corner;
+import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
-import org.terasology.polyworld.voronoi.VoronoiGraph;
 import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Maps;
@@ -36,14 +36,14 @@ import com.google.common.collect.Maps;
  */
 public class DefaultElevationModel implements ElevationModel {
 
-    private VoronoiGraph graph;
+    private Graph graph;
 
     private final Map<Corner, Double> elevations = Maps.newHashMap();
     private final Map<Corner, Corner> downslopes = Maps.newHashMap();
 
     private final WaterModel waterModel;
 
-    public DefaultElevationModel(VoronoiGraph graph, WaterModel waterModel)
+    public DefaultElevationModel(Graph graph, WaterModel waterModel)
     {
         this.graph = graph;
         this.waterModel = waterModel;
