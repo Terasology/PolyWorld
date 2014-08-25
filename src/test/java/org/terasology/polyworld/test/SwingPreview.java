@@ -41,6 +41,8 @@ import static org.terasology.polyworld.biome.Biome.TUNDRA;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -50,11 +52,15 @@ import javax.swing.WindowConstants;
 
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.Rect2d;
+import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.voronoi.Graph;
+import org.terasology.polyworld.voronoi.GraphEditor;
 import org.terasology.polyworld.voronoi.GridGraph;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -70,15 +76,26 @@ final class SwingPreview {
     public static void main(String[] args) {
         final int width = 768;
         final int height = 768;
-        final int numSites = 1000;
         final long seed = 9782985378925l;//System.nanoTime();
 
-        final Random r = new Random(seed);
+        Rect2d bounds = Rect2d.createFromMinAndSize(0, 0, width, height);
 
-        Rect2d bounds = Rect2d.createFromMinAndMax(0, 0, width, height);
+//        final int numSites = 2000;
+//        final Random r = new Random(seed);
+//        List<Vector2d> points = Lists.newArrayListWithCapacity(numSites);
+//        for (int i = 0; i < numSites; i++) {
+//            double px = bounds.minX() + r.nextDouble() * bounds.width();
+//            double py = bounds.minY() + r.nextDouble() * bounds.height();
+//            points.add(new Vector2d(px, py));
+//        }
+//
 //        final Voronoi v = new Voronoi(numSites, width, height, r);
 //        final Graph graph = new VoronoiGraph(v, 2, r);
+//        GraphEditor.improveCorners(graph.getCorners());
+
         final Graph graph = new GridGraph(bounds, 64, 64);
+        GraphEditor.jitterCorners(graph.getCorners(), width / 64 / 2);
+
         final IslandPainter painter = new IslandPainter(graph);
 
         Map<Biome, Color> map = Maps.newHashMap();
@@ -121,7 +138,7 @@ final class SwingPreview {
 
                 painter.drawRegions(g, true);
 //                painter.drawDelaunay(g);
-//                painter.drawEdges(g);
+                painter.drawEdges(g);
 
                 painter.drawRivers(g);
 

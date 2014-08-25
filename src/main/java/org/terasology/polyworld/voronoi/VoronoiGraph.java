@@ -62,37 +62,8 @@ public class VoronoiGraph implements Graph {
             v = new Voronoi(points, v.getPlotBounds());
         }
         buildGraph(v);
-        improveCorners();
     }
 
-    /**
-     * Moving corners by averaging the nearby centers produces more uniform edge lengths,
-     * although it occasionally worsens the polygon sizes. However, moving corners will
-     * lose the Voronoi diagram properties.
-     */
-    private void improveCorners() {
-        Vector2d[] newP = new Vector2d[corners.size()];
-        int idx = 0;
-        for (Corner c : corners) {
-            if (c.isBorder()) {
-                newP[idx] = c.getLocation();
-            } else {
-                double x = 0;
-                double y = 0;
-                for (Region region : c.getTouches()) {
-                    x += region.getCenter().getX();
-                    y += region.getCenter().getY();
-                }
-                newP[idx] = new Vector2d(x / c.getTouches().size(), y / c.getTouches().size());
-            }
-            idx++;
-        }
-
-        idx = 0;
-        for (Corner c : corners) {
-            c.setLocation(newP[idx++]);
-        }
-    }
 
     private static boolean liesOnAxes(Rect2d r, Vector2d p) {
         int diff = 1;
