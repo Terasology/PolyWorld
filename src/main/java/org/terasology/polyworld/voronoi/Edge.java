@@ -16,6 +16,8 @@
 
 package org.terasology.polyworld.voronoi;
 
+import com.google.common.base.Preconditions;
+
 
 /**
  * Defines an edge
@@ -23,11 +25,11 @@ package org.terasology.polyworld.voronoi;
  */
 public class Edge {
 
-    private Region d0;  // Delaunay edge
-    private Region d1;  // Delaunay edge
+    private final Region d0;  // Delaunay edge
+    private final Region d1;  // Delaunay edge
 
-    private Corner v0;  // Voronoi edge
-    private Corner v1;  // Voronoi edge
+    private final Corner v0;  // Voronoi edge
+    private final Corner v1;  // Voronoi edge
 
     /**
      * @param c0
@@ -36,6 +38,11 @@ public class Edge {
      * @param r0
      */
     public Edge(Corner c0, Corner c1, Region r0, Region r1) {
+        Preconditions.checkArgument(c0 != null);
+        Preconditions.checkArgument(c1 != null);
+        Preconditions.checkArgument(r0 != null);
+        Preconditions.checkArgument(r1 != null);
+
         this.v0 = c0;
         this.v1 = c1;
         this.d0 = r0;

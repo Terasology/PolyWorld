@@ -127,6 +127,9 @@ public class VoronoiGraph implements Graph {
             final LineSegment vEdge = libedge.voronoiEdge();
             final LineSegment dEdge = libedge.delaunayLine();
 
+            if (vEdge.getP0() == null || vEdge.getP1() == null)
+                continue;
+
             Corner c0 = makeCorner(pointCornerMap, vEdge.getP0());
             Corner c1 = makeCorner(pointCornerMap, vEdge.getP1());
 
@@ -139,50 +142,32 @@ public class VoronoiGraph implements Graph {
 
             // Centers point to edges. Corners point to edges.
 
-            if (r0 != null) {
-                r0.addBorder(edge);
-            }
-            if (r1 != null) {
-                r1.addBorder(edge);
-            }
-            if (edge.getCorner0() != null) {
-                edge.getCorner0().addProtrudes(edge);
-            }
-            if (edge.getCorner1() != null) {
-                edge.getCorner1().addProtrudes(edge);
-            }
+            r0.addBorder(edge);
+            r1.addBorder(edge);
+
+            c0.addProtrudes(edge);
+            c1.addProtrudes(edge);
 
             // Centers point to centers.
-            if (r0 != null && r1 != null) {
-                addToCenterList(r0, r1);
-                addToCenterList(r1, r0);
-            }
+            r0.addNeigbor(r1);
+            r1.addNeigbor(r0);
 
             // Corners point to corners
-            if (edge.getCorner0() != null && edge.getCorner1() != null) {
-                addToCornerList(edge.getCorner0(), edge.getCorner1());
-                addToCornerList(edge.getCorner1(), edge.getCorner0());
-            }
+            c0.addAdjacent(c1);
+            c1.addAdjacent(c0);
 
             // Centers point to corners
-            if (r0 != null) {
-                addToCornerList(r0, edge.getCorner0());
-                addToCornerList(r0, edge.getCorner1());
-            }
-            if (r1 != null) {
-                addToCornerList(r1, edge.getCorner0());
-                addToCornerList(r1, edge.getCorner1());
-            }
+            addToCornerList(r0, c0);
+            addToCornerList(r0, c1);
+            addToCornerList(r1, c0);
+            addToCornerList(r1, c1);
 
             // Corners point to centers
-            if (edge.getCorner0() != null) {
-                addToCenterList(edge.getCorner0(), r0);
-                addToCenterList(edge.getCorner0(), r1);
-            }
-            if (edge.getCorner1() != null) {
-                addToCenterList(edge.getCorner1(), r0);
-                addToCenterList(edge.getCorner1(), r1);
-            }
+            addToCenterList(c0, r0);
+            addToCenterList(c0, r1);
+
+            addToCenterList(c1, r0);
+            addToCenterList(c1, r1);
         }
 
         // add corners
@@ -232,21 +217,9 @@ public class VoronoiGraph implements Graph {
         }
     }
 
-    private void addToCornerList(Corner corner, Corner c) {
-        if (c != null && !corner.getAdjacent().contains(c)) {
-            corner.addAdjacent(c);
-        }
-    }
-
     private void addToCornerList(Region region, Corner c) {
         if (c != null && !region.getCorners().contains(c)) {
             region.addCorner(c);
-        }
-    }
-
-    private void addToCenterList(Region region, Region c) {
-        if (c != null && !region.getNeighbors().contains(c)) {
-            region.addNeigbor(c);
         }
     }
 
