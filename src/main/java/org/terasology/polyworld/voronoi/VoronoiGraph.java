@@ -145,8 +145,8 @@ public class VoronoiGraph implements Graph {
             r0.addBorder(edge);
             r1.addBorder(edge);
 
-            c0.addProtrudes(edge);
-            c1.addProtrudes(edge);
+            c0.addEdge(edge);
+            c1.addEdge(edge);
 
             // Centers point to centers.
             r0.addNeigbor(r1);
@@ -157,17 +157,17 @@ public class VoronoiGraph implements Graph {
             c1.addAdjacent(c0);
 
             // Centers point to corners
-            addToCornerList(r0, c0);
-            addToCornerList(r0, c1);
-            addToCornerList(r1, c0);
-            addToCornerList(r1, c1);
+            r0.addCorner(c0);
+            r0.addCorner(c1);
+            r1.addCorner(c0);
+            r1.addCorner(c1);
 
             // Corners point to centers
-            addToCenterList(c0, r0);
-            addToCenterList(c0, r1);
+            c0.addTouches(r0);
+            c0.addTouches(r1);
 
-            addToCenterList(c1, r0);
-            addToCenterList(c1, r1);
+            c1.addTouches(r0);
+            c1.addTouches(r1);
         }
 
         // add corners
@@ -217,19 +217,9 @@ public class VoronoiGraph implements Graph {
         }
     }
 
-    private void addToCornerList(Region region, Corner c) {
-        if (c != null && !region.getCorners().contains(c)) {
-            region.addCorner(c);
-        }
-    }
-
-    private void addToCenterList(Corner v, Region c) {
-        if (c != null && !v.getTouches().contains(c)) {
-            v.addTouches(c);
-        }
-    }
-
-    //ensures that each corner is represented by only one corner object
+    /**
+     * ensures that each corner is represented by only one corner object
+     */
     private Corner makeCorner(Map<Integer, Corner> pointCornerMap, Vector2d p) {
         if (p == null) {
             return null;

@@ -25,11 +25,11 @@ import com.google.common.base.Preconditions;
  */
 public class Edge {
 
-    private final Region d0;  // Delaunay edge
-    private final Region d1;  // Delaunay edge
+    private final Region r0;  // Delaunay edge
+    private final Region r1;  // Delaunay edge
 
-    private final Corner v0;  // Voronoi edge
-    private final Corner v1;  // Voronoi edge
+    private final Corner c0;  // Voronoi edge
+    private final Corner c1;  // Voronoi edge
 
     /**
      * @param c0
@@ -43,37 +43,42 @@ public class Edge {
         Preconditions.checkArgument(r0 != null);
         Preconditions.checkArgument(r1 != null);
 
-        this.v0 = c0;
-        this.v1 = c1;
-        this.d0 = r0;
-        this.d1 = r1;
+        this.c0 = c0;
+        this.c1 = c1;
+        this.r0 = r0;
+        this.r1 = r1;
     }
 
     /**
      * @return the v0
      */
     public Corner getCorner0() {
-        return v0;
+        return c0;
     }
 
     /**
      * @return the v1
      */
     public Corner getCorner1() {
-        return v1;
+        return c1;
     }
 
     /**
      * @return the d1
      */
     public Region getRegion1() {
-        return d1;
+        return r1;
     }
 
     /**
      * @return the d0
      */
     public Region getRegion0() {
-        return d0;
+        return r0;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Edge [%s -> %s, separating %s and %s]", c0, c1, r0, r1);
     }
 }

@@ -49,8 +49,10 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import org.terasology.math.delaunay.Voronoi;
+import org.terasology.math.geom.Rect2d;
 import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.voronoi.Graph;
+import org.terasology.polyworld.voronoi.GridGraph;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
 
 import com.google.common.collect.Maps;
@@ -66,16 +68,17 @@ final class SwingPreview {
     }
 
     public static void main(String[] args) {
-        final int width = 1024;
-        final int height = 1024;
-        final int numSites = 5000;
+        final int width = 768;
+        final int height = 768;
+        final int numSites = 1000;
         final long seed = 9782985378925l;//System.nanoTime();
 
         final Random r = new Random(seed);
 
-        final Voronoi v = new Voronoi(numSites, width, height, r);
-
-        final Graph graph = new VoronoiGraph(v, 2, r);
+        Rect2d bounds = Rect2d.createFromMinAndMax(0, 0, width, height);
+//        final Voronoi v = new Voronoi(numSites, width, height, r);
+//        final Graph graph = new VoronoiGraph(v, 2, r);
+        final Graph graph = new GridGraph(bounds, 64, 64);
         final IslandPainter painter = new IslandPainter(graph);
 
         Map<Biome, Color> map = Maps.newHashMap();
@@ -112,21 +115,24 @@ final class SwingPreview {
             @Override
             public void paint(Graphics g1) {
                 Graphics2D g = (Graphics2D) g1;
+                g.translate(10, 10);
+                painter.drawBounds(g);
+                painter.fillBounds(g);
 
                 painter.drawRegions(g, true);
 //                painter.drawDelaunay(g);
+//                painter.drawEdges(g);
 
                 painter.drawRivers(g);
 
 //                painter.drawSites(g);
 //                painter.drawCorners(g);
-                painter.drawBounds(g);
             }
         };
         frame.add(panel);
         frame.setTitle("Preview - " + seed);
         frame.setVisible(true);
-        frame.setSize(width + 50, height + 50);
+        frame.setSize(width + 40, height + 60);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 }

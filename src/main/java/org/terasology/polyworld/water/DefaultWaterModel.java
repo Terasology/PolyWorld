@@ -61,7 +61,6 @@ public class DefaultWaterModel implements WaterModel {
             Collection<Corner> corners = region.getCorners();
             for (final Corner c : corners) {
                 if (c.isBorder()) {
-                    region.setBorder(true);
                     setWater(region, true);
                     setOcean(region, true);
                     queue.add(region);

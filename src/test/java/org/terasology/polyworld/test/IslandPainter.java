@@ -50,7 +50,7 @@ import org.terasology.polyworld.water.WaterModel;
  */
 public class IslandPainter {
 
-    private Graph graph;
+    private final Graph graph;
     private Map<Biome, Color> biomeColors;
     private Color riverColor;
     private Color[] defaultColors;
@@ -132,12 +132,26 @@ public class IslandPainter {
     }
 
     public void drawDelaunay(Graphics2D g) {
+        g.setStroke(new BasicStroke(1));
+        g.setColor(Color.ORANGE);
         for (Edge e : graph.getEdges()) {
-            g.setStroke(new BasicStroke(1));
-            g.setColor(Color.YELLOW);
             Vector2d r0c = e.getRegion0().getCenter();
             Vector2d r1c = e.getRegion1().getCenter();
             g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
+        }
+    }
+
+    public void drawEdges(Graphics2D g) {
+        g.setStroke(new BasicStroke(1));
+        g.setColor(Color.CYAN);
+        for (Edge e : graph.getEdges()) {
+            if (e.getCorner0() != null && e.getCorner1() != null) {
+                Vector2d r0c = e.getCorner0().getLocation();
+                Vector2d r1c = e.getCorner1().getLocation();
+                g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
+            } else {
+                System.out.println(e);
+            }
         }
     }
 
@@ -176,6 +190,11 @@ public class IslandPainter {
         g.drawRect((int) bounds.minX(), (int) bounds.minY(), (int) bounds.width(), (int) bounds.height());
     }
 
+    public void fillBounds(Graphics2D g) {
+        Rect2d bounds = graph.getBounds();
+        g.setColor(Color.MAGENTA);
+        g.fillRect((int) bounds.minX() + 1, (int) bounds.minY() + 1, (int) bounds.width() - 1, (int) bounds.height() - 1);
+    }
 
     private void drawPoly(Graphics2D g, List<Corner> pts) {
         int[] x = new int[pts.size()];

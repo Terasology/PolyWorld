@@ -16,7 +16,6 @@
 
 package org.terasology.polyworld.voronoi;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -32,12 +31,11 @@ import com.google.common.base.Preconditions;
 public class Region {
 
     private final Collection<Corner> corners = new LinkedHashSet<>();
-    private final Collection<Edge> borders = new ArrayList<>();
+    private final Collection<Edge> borders = new LinkedHashSet<>();
 
     private final Collection<Region> neighbors = new LinkedHashSet<>();
 
-    private boolean isBorder;
-    private Vector2d center;
+    private final Vector2d center;
 
     public Region(Vector2d pos) {
         this.center = pos;
@@ -50,39 +48,26 @@ public class Region {
         return center;
     }
 
-    /**
-     * @param border true if it is at the border
-     */
-    public void setBorder(boolean border) {
-        this.isBorder = border;
-    }
-
-    /**
-     * @return true if it is at the border
-     */
-    public boolean isBorder() {
-        return isBorder;
-    }
-
     public Collection<Region> getNeighbors() {
         return Collections.unmodifiableCollection(neighbors);
     }
 
     /**
-     * @param region the region to add
+     * @param region the region to add (can be null or already added)
      */
     public void addNeigbor(Region region) {
-        Preconditions.checkArgument(region != null);
-        Preconditions.checkArgument(!neighbors.contains(region));
-
-        neighbors.add(region);
+        if (region != null) {
+            neighbors.add(region);
+        }
     }
 
     /**
-     * @param edge
+     * @param edge the border edge to add  (can be null or already added)
      */
     public void addBorder(Edge edge) {
-        borders.add(edge);
+        if (edge != null) {
+            borders.add(edge);
+        }
     }
 
     /**
@@ -93,12 +78,18 @@ public class Region {
     }
 
     /**
-     * @param c
+     * @param c the corner to add (can be null or already added)
      */
     public void addCorner(Corner c) {
-        Preconditions.checkArgument(c != null);
-        Preconditions.checkArgument(!corners.contains(c));
-
-        corners.add(c);
+        if (c != null) {
+            corners.add(c);
+        }
     }
+
+    @Override
+    public String toString() {
+        return String.format("Region [center=%s, corners=%s, borders=%s, neighbors=%s]", center, corners.size(), borders.size(), neighbors.size());
+    }
+
+
 }

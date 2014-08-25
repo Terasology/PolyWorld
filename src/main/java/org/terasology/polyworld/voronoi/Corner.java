@@ -16,14 +16,13 @@
 
 package org.terasology.polyworld.voronoi;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import org.terasology.math.geom.Vector2d;
 
-import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 
 /**
  * Corner.java
@@ -32,9 +31,9 @@ import com.google.common.base.Preconditions;
  */
 public class Corner {
 
-    private List<Region> touches = new ArrayList<>();
-    private List<Corner> adjacent = new ArrayList<>();
-    private List<Edge> protrudes = new ArrayList<>();
+    private final Set<Region> touches = Sets.newLinkedHashSet();
+    private final Set<Corner> adjacent = Sets.newLinkedHashSet();
+    private final Set<Edge> protrudes = Sets.newLinkedHashSet();
     private Vector2d loc;
     private boolean border;
 
@@ -52,21 +51,22 @@ public class Corner {
         return Collections.unmodifiableCollection(adjacent);
     }
 
+    /**
+     * @param c a corner (can be in the set already). <code>null</code> values are ignored
+     */
     public void addAdjacent(Corner c) {
-        Preconditions.checkArgument(c != null);
-        Preconditions.checkArgument(!adjacent.contains(c));
-
-        adjacent.add(c);
+        if (c != null) {
+            adjacent.add(c);
+        }
     }
 
     /**
-     * @param region the region to add
+     * @param region the touching region to add (can be null or already added)
      */
     public void addTouches(Region region) {
-        Preconditions.checkArgument(region != null);
-        Preconditions.checkArgument(!getTouches().contains(region));
-
-        touches.add(region);
+        if (region != null) {
+            touches.add(region);
+        }
     }
 
     /**
@@ -87,7 +87,7 @@ public class Corner {
      * @return the touches
      */
     public Collection<Region> getTouches() {
-        return Collections.unmodifiableList(touches);
+        return Collections.unmodifiableSet(touches);
     }
 
     /**
@@ -108,16 +108,22 @@ public class Corner {
      * @return the protrudes
      */
     public Collection<Edge> getEdges() {
-        return Collections.unmodifiableList(protrudes);
+        return Collections.unmodifiableSet(protrudes);
     }
 
     /**
-     * @param edge the protrudes to set
+     * @param edge the protruding edge to add (can be null or already added)
      */
-    public void addProtrudes(Edge edge) {
-        Preconditions.checkArgument(edge != null);
-        Preconditions.checkArgument(!adjacent.contains(edge));
+    public void addEdge(Edge edge) {
+        if (edge != null) {
+            protrudes.add(edge);
+        }
+    }
 
-        this.protrudes.add(edge);
+    @Override
+    public String toString() {
+        String borderStr = border ? " (border)" : "";
+        String format = "Corner [%s%s, touches %d regions, protrudes %d edges, %d adjacent corners]";
+        return String.format(format, loc, borderStr, touches.size(), protrudes.size(), adjacent.size());
     }
 }
