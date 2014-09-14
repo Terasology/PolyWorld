@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.water;
+package org.terasology.polyworld.distribution;
 
 import java.util.Random;
 
-import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
 
 /**
  * TODO Type description
  * @author Martin Steiger
  */
-public class RadialWaterDistribution implements WaterDistribution {
+public class RadialDistribution implements Distribution {
 
     private static final double ISLAND_FACTOR = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
 
@@ -34,15 +33,11 @@ public class RadialWaterDistribution implements WaterDistribution {
     private final double dipAngle;
     private final double dipWidth;
 
-    private final Rect2d bounds;
-
     /**
-     *
+     * @param seed a random seed value
      */
-    public RadialWaterDistribution(Rect2d bounds) {
-        Random r = new Random(9782985378925l);
-
-        this.bounds = bounds;
+    public RadialDistribution(long seed) {
+        Random r = new Random(seed);
 
         bumps = r.nextInt(5) + 1;
         startAngle = r.nextDouble() * 2 * Math.PI;
@@ -50,10 +45,9 @@ public class RadialWaterDistribution implements WaterDistribution {
         dipWidth = r.nextDouble() * .5 + .2;
     }
 
-    public boolean isWater(Vector2d p2) {
-        double nx = (p2.getX() - bounds.minX()) / bounds.width();
-        double ny = (p2.getY() - bounds.minY()) / bounds.height();
-        Vector2d p = new Vector2d(2 * (nx - 0.5), 2 * (ny - 0.5));
+    @Override
+    public boolean isInside(Vector2d p2) {
+        Vector2d p = new Vector2d(2 * (p2.getX() - 0.5), 2 * (p2.getY() - 0.5));
 
         double angle = Math.atan2(p.getY(), p.getX());
         double length = 0.5 * (Math.max(Math.abs(p.getX()), Math.abs(p.getY())) + p.length());

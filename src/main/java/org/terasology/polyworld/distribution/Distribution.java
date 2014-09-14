@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.water;
+package org.terasology.polyworld.distribution;
 
 import org.terasology.math.geom.Vector2d;
 
@@ -22,8 +22,12 @@ import org.terasology.math.geom.Vector2d;
  * TODO Type description
  * @author Martin Steiger
  */
-public interface WaterDistribution {
+public interface Distribution {
 
-    boolean isWater(Vector2d p2);
+    /**
+     * @param point in normalized coordinates [0..1][0..1]
+     * @return true if inside
+     */
+    boolean isInside(Vector2d point);
 
 }

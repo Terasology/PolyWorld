@@ -14,27 +14,19 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.water;
+package org.terasology.polyworld.distribution;
 
-import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
 
 /**
- * TODO Type description
+ * A distribution that looks like Amit's blob (star-shape)
  * @author Martin Steiger
  */
-public class AmitBlobWaterDistribution implements WaterDistribution {
+public class AmitBlobDistribution implements Distribution {
 
-    private final Rect2d bounds;
-
-    public AmitBlobWaterDistribution(Rect2d bounds) {
-        this.bounds = bounds;
-    }
-
-    public boolean isWater(Vector2d p2) {
-        double nx = (p2.getX() - bounds.minX()) / bounds.width();
-        double ny = (p2.getY() - bounds.minY()) / bounds.height();
-        Vector2d p = new Vector2d(2 * (nx - 0.5), 2 * (ny - 0.5));
+    @Override
+    public boolean isInside(Vector2d p2) {
+        Vector2d p = new Vector2d(2 * (p2.getX() - 0.5), 2 * (p2.getY() - 0.5));
 
         boolean eye1 = new Vector2d(p.getX() - 0.2, p.getY() / 2 + 0.2).length() < 0.05;
         boolean eye2 = new Vector2d(p.getX() + 0.2, p.getY() / 2 + 0.2).length() < 0.05;

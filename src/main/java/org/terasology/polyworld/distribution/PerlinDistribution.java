@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.water;
+package org.terasology.polyworld.distribution;
 
-import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
 import org.terasology.utilities.procedural.BrownianNoise3D;
 import org.terasology.utilities.procedural.PerlinNoise;
@@ -25,24 +24,20 @@ import org.terasology.utilities.procedural.PerlinNoise;
  * TODO Type description
  * @author Martin Steiger
  */
-public class PerlinWaterDistribution implements WaterDistribution {
-
-    private final Rect2d bounds;
+public class PerlinDistribution implements Distribution {
 
     private final BrownianNoise3D noise;
 
     /**
-     *
+     * @param seed a random seed value
      */
-    public PerlinWaterDistribution(Rect2d bounds) {
-        this.bounds = bounds;
-        this.noise = new BrownianNoise3D(new PerlinNoise(97829853), 8);
+    public PerlinDistribution(long seed) {
+        this.noise = new BrownianNoise3D(new PerlinNoise(seed), 8);
     }
 
-    public boolean isWater(Vector2d p2) {
-        double nx = (p2.getX() - bounds.minX()) / bounds.width();
-        double ny = (p2.getY() - bounds.minY()) / bounds.height();
-        Vector2d p = new Vector2d(2 * (nx - 0.5), 2 * (ny - 0.5));
+    @Override
+    public boolean isInside(Vector2d p2) {
+        Vector2d p = new Vector2d(2 * (p2.getX() - 0.5), 2 * (p2.getY() - 0.5));
 
         double x = (p.getX() + 1) * 128;
         double y = (p.getY() + 1) * 128;

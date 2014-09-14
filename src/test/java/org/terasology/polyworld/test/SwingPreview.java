@@ -48,8 +48,8 @@ final class SwingPreview {
         Rect2d bounds1 = Rect2d.createFromMinAndSize(0, 0, width, height);
         Rect2d bounds2 = Rect2d.createFromMinAndSize(width, 0, width, height);
 
-        IslandGenerator sm1 = new IslandGenerator(bounds1);
-        final IslandGenerator sm2 = new IslandGenerator(bounds2);
+        IslandGenerator sm1 = new IslandGenerator(bounds1, 1234);
+        IslandGenerator sm2 = new IslandGenerator(bounds2, 5678);
         final Collection<IslandGenerator> sectors = ImmutableList.of(sm1, sm2);
 
         final GraphPainter graphPainter = new GraphPainter();

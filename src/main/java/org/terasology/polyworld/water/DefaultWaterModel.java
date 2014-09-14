@@ -22,6 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.terasology.math.geom.Rect2d;
+import org.terasology.math.geom.Vector2d;
+import org.terasology.polyworld.distribution.Distribution;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
@@ -46,13 +49,18 @@ public class DefaultWaterModel implements WaterModel {
     private Graph graph;
     private List<Corner> landCorners;
 
-    public DefaultWaterModel(Graph graph, WaterDistribution dist) {
+    public DefaultWaterModel(Graph graph, Distribution dist) {
         this.graph = graph;
 
         final double waterThreshold = .3;
 
         for (Corner c : graph.getCorners()) {
-            setWater(c, dist.isWater(c.getLocation()));
+            Rect2d bounds = graph.getBounds();
+            Vector2d p2 = c.getLocation();
+            double nx = (p2.getX() - bounds.minX()) / bounds.width();
+            double ny = (p2.getY() - bounds.minY()) / bounds.height();
+
+            setWater(c, dist.isInside(new Vector2d(nx, ny)));
         }
 
         Deque<Region> queue = new LinkedList<>();

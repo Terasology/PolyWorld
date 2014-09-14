@@ -25,6 +25,7 @@ import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.DefaultBiomeModel;
+import org.terasology.polyworld.distribution.RadialDistribution;
 import org.terasology.polyworld.elevation.DefaultElevationModel;
 import org.terasology.polyworld.elevation.ElevationModel;
 import org.terasology.polyworld.moisture.DefaultMoistureModel;
@@ -36,7 +37,6 @@ import org.terasology.polyworld.voronoi.GraphEditor;
 import org.terasology.polyworld.voronoi.GridGraph;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
 import org.terasology.polyworld.water.DefaultWaterModel;
-import org.terasology.polyworld.water.RadialWaterDistribution;
 import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Lists;
@@ -52,17 +52,16 @@ public class IslandGenerator {
     private BiomeModel biomeModel;
     private RiverModel riverModel;
 
-    IslandGenerator(Rect2d bounds) {
-       long seed = System.nanoTime();
+    IslandGenerator(Rect2d bounds, long seed) {
 
-       graph = createVoronoiGraph(bounds, seed);
+        graph = createVoronoiGraph(bounds, seed);
 
-      RadialWaterDistribution waterDist = new RadialWaterDistribution(graph.getBounds());
-      WaterModel waterModel = new DefaultWaterModel(graph, waterDist);
-      ElevationModel elevationModel = new DefaultElevationModel(graph, waterModel);
-      riverModel = new DefaultRiverModel(graph, elevationModel, waterModel);
-      MoistureModel moistureModel = new DefaultMoistureModel(graph, riverModel, waterModel);
-      biomeModel = new DefaultBiomeModel(elevationModel, waterModel, moistureModel);
+        RadialDistribution waterDist = new RadialDistribution(seed);
+        WaterModel waterModel = new DefaultWaterModel(graph, waterDist);
+        ElevationModel elevationModel = new DefaultElevationModel(graph, waterModel);
+        riverModel = new DefaultRiverModel(graph, elevationModel, waterModel);
+        MoistureModel moistureModel = new DefaultMoistureModel(graph, riverModel, waterModel);
+        biomeModel = new DefaultBiomeModel(elevationModel, waterModel, moistureModel);
     }
 
     private static Graph createVoronoiGraph(Rect2d bounds, long seed) {
