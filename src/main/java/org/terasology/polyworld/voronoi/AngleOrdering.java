@@ -14,33 +14,31 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.test;
-
-import java.util.Comparator;
+package org.terasology.polyworld.voronoi;
 
 import org.terasology.math.geom.Vector2d;
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Region;
+
+import com.google.common.collect.Ordering;
 
 /**
- * TODO Type description
+ * Defines an order of points around a central point, based on their angle
  * @author Martin Steiger
  */
-final class AngleSorter implements Comparator<Corner> {
+final class AngleOrdering extends Ordering<Corner> {
 
-    private final Region region;
+    private final Vector2d center;
 
     /**
-     * @param c
+     * @param center the center point
      */
-    AngleSorter(Region c) {
-        this.region = c;
+    AngleOrdering(Vector2d center) {
+        this.center = center;
     }
 
     @Override
     public int compare(Corner o0, Corner o1) {
-        Vector2d a = new Vector2d(o0.getLocation()).sub(region.getCenter()).normalize();
-        Vector2d b = new Vector2d(o1.getLocation()).sub(region.getCenter()).normalize();
+        Vector2d a = new Vector2d(o0.getLocation()).sub(center).normalize();
+        Vector2d b = new Vector2d(o1.getLocation()).sub(center).normalize();
 
         if (a.y() > 0) { //a between 0 and 180
             if (b.y() < 0) {  //b between 180 and 360

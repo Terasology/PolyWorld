@@ -19,6 +19,8 @@ package org.terasology.polyworld.test;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +39,6 @@ import com.google.common.collect.Maps;
  * @author Martin Steiger
  */
 public class GraphPainter {
-
-    private final Map<Graph, PolyPainter> polyPainters = Maps.newHashMap();
 
     /**
      * @param graph
@@ -67,15 +67,27 @@ public class GraphPainter {
     }
 
     public void drawPolys(Graphics2D g, Graph graph, Function<Region, Color> colorFunc) {
-        PolyPainter painter = polyPainters.get(graph);
-        if (painter == null) {
-            painter = new PolyPainter(graph);
-            polyPainters.put(graph, painter);
+        List<Region> regions = graph.getRegions();
+
+        for (final Region reg : regions) {
+
+            Color col = colorFunc.apply(reg);
+            Collection<Corner> pts = reg.getCorners();
+
+            int[] xPoints = new int[pts.size()];
+            int[] yPoints = new int[pts.size()];
+
+            int i = 0;
+            for (Corner corner : pts) {
+                xPoints[i] = (int) corner.getLocation().getX();
+                yPoints[i] = (int) corner.getLocation().getY();
+                i++;
+            }
+
+            g.setColor(col);
+            g.fillPolygon(xPoints, yPoints, pts.size());
         }
-
-        painter.drawRegions(g, colorFunc);
     }
-
 
     public void drawSites(Graphics2D g, Graph graph) {
         List<Region> centers = graph.getRegions();

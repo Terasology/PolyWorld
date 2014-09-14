@@ -17,21 +17,16 @@
 package org.terasology.polyworld.elevation;
 
 import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Region;
 
 /**
- * TODO Type description
+ * Defines elevation
  * @author Martin Steiger
  */
 public interface ElevationModel {
 
-    public double getElevation(Region r);
-
-    public double getElevation(Corner r);
-
     /**
-     * @param c
-     * @return
+     * @param corner the corner of interest
+     * @return the elevation at that corner
      */
-    public Corner getDownslope(Corner c);
+    public double getElevation(Corner corner);
 }

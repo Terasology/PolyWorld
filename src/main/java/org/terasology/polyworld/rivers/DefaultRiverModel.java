@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.terasology.polyworld.elevation.ElevationModel;
+import org.terasology.polyworld.elevation.ElevationModels;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.Graph;
@@ -52,7 +53,7 @@ public class DefaultRiverModel implements RiverModel {
             }
             // Bias rivers to go west: if (q.downslope.x > q.x) continue;
             while (!waterModel.isCoast(c)) {
-                Corner downslope = elevationModel.getDownslope(c);
+                Corner downslope = ElevationModels.getDownslope(elevationModel, c);
                 if (c == downslope) {
                     break;
                 }

@@ -18,9 +18,10 @@ package org.terasology.polyworld.voronoi;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 
 import org.terasology.math.geom.Vector2d;
+
+import com.google.common.collect.Sets;
 
 /**
  * Defines a polygon region (vornoi region)
@@ -28,10 +29,9 @@ import org.terasology.math.geom.Vector2d;
  */
 public class Region {
 
-    private final Collection<Corner> corners = new LinkedHashSet<>();
-    private final Collection<Edge> borders = new LinkedHashSet<>();
-
-    private final Collection<Region> neighbors = new LinkedHashSet<>();
+    private final Collection<Corner> corners;
+    private final Collection<Edge> borders;
+    private final Collection<Region> neighbors;
 
     private final Vector2d center;
 
@@ -40,6 +40,9 @@ public class Region {
      */
     public Region(Vector2d centerPos) {
         this.center = centerPos;
+        this.corners = Sets.newTreeSet(new AngleOrdering(centerPos));
+        this.borders = Sets.newLinkedHashSet();
+        this.neighbors = Sets.newLinkedHashSet();
     }
 
     /**
@@ -50,10 +53,17 @@ public class Region {
     }
 
     /**
-     * @return an unmodifiable collection of all neighbors
+     * @return an unmodifiable collection of all neighbors in insertion order
      */
     public Collection<Region> getNeighbors() {
         return Collections.unmodifiableCollection(neighbors);
+    }
+
+    /**
+     * @return an unmodifiable collection of all border edges in insertion order
+     */
+    public Collection<Edge> getBorders() {
+        return Collections.unmodifiableCollection(borders);
     }
 
     /**
@@ -75,7 +85,7 @@ public class Region {
     }
 
     /**
-     * @return the corners
+     * @return the corners, <b>sorted by angle</b> around the center point
      */
     public Collection<Corner> getCorners() {
         return Collections.unmodifiableCollection(corners);
@@ -84,7 +94,7 @@ public class Region {
     /**
      * @param c the corner to add (can be null or already added)
      */
-    public void addCorner(Corner c) {
+    public void addCorner(Corner c)  {
         if (c != null) {
             corners.add(c);
         }

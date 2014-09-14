@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Maps;
@@ -39,7 +38,6 @@ public class DefaultElevationModel implements ElevationModel {
     private Graph graph;
 
     private final Map<Corner, Double> elevations = Maps.newHashMap();
-    private final Map<Corner, Corner> downslopes = Maps.newHashMap();
 
     private final WaterModel waterModel;
 
@@ -50,8 +48,6 @@ public class DefaultElevationModel implements ElevationModel {
 
         assignCornerElevations();
         redistributeElevations(waterModel.getLandCorners());
-
-        calculateDownslopes();
     }
 
     private void assignCornerElevations() {
@@ -109,35 +105,9 @@ public class DefaultElevationModel implements ElevationModel {
         }
     }
 
-    private void calculateDownslopes() {
-        for (Corner c : graph.getCorners()) {
-            Corner down = c;
-
-            for (Corner a : c.getAdjacent()) {
-                if (elevations.get(a) <= elevations.get(down)) {
-                    down = a;
-                }
-            }
-            downslopes.put(c, down);
-        }
-    }
-
     @Override
     public double getElevation(Corner corner) {
         return elevations.get(corner);
     }
 
-    @Override
-    public double getElevation(Region r) {
-        double total = 0;
-        for (Corner c : r.getCorners()) {
-            total += getElevation(c);
-        }
-        return total / r.getCorners().size();
-    }
-
-    @Override
-    public Corner getDownslope(Corner c) {
-        return downslopes.get(c);
-    }
 }

@@ -17,6 +17,7 @@
 package org.terasology.polyworld.biome;
 
 import org.terasology.polyworld.elevation.ElevationModel;
+import org.terasology.polyworld.elevation.ElevationModels;
 import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.water.WaterModel;
@@ -40,13 +41,13 @@ public class DefaultBiomeModel implements BiomeModel {
         this.moistureModel = moistureModel;
     }
 
-    public Biome getBiome(Region p) {
-        double moisture = moistureModel.getMoisture(p);
-        double elevation = elevationModel.getElevation(p);
+    public Biome getBiome(Region region) {
+        double moisture = moistureModel.getMoisture(region);
+        double elevation = ElevationModels.getElevation(elevationModel, region);
 
-        if (waterModel.isOcean(p)) {
+        if (waterModel.isOcean(region)) {
             return Biome.OCEAN;
-        } else if (waterModel.isWater(p)) {
+        } else if (waterModel.isWater(region)) {
             if (elevation < 0.1) {
                 return Biome.MARSH;
             }
@@ -54,7 +55,7 @@ public class DefaultBiomeModel implements BiomeModel {
                 return Biome.ICE;
             }
             return Biome.LAKE;
-        } else if (waterModel.isCoast(p)) {
+        } else if (waterModel.isCoast(region)) {
             return Biome.BEACH;
         } else if (elevation > 0.8) {
             if (moisture > 0.50) {
