@@ -17,6 +17,7 @@
 package org.terasology.polyworld.elevation;
 
 import org.terasology.polyworld.voronoi.Corner;
+import org.terasology.polyworld.voronoi.Region;
 
 /**
  * Defines elevation
@@ -29,4 +30,16 @@ public interface ElevationModel {
      * @return the elevation at that corner
      */
     public double getElevation(Corner corner);
+
+    /**
+     * @param r the region
+     * @return the
+     */
+    public double getElevation(Region r);
+
+    /**
+     * @param c the corner of interest
+     * @return the neighbor corner with the lowest elevation
+     */
+    public Corner getDownslope(Corner c);
 }

@@ -17,7 +17,6 @@
 package org.terasology.polyworld.biome;
 
 import org.terasology.polyworld.elevation.ElevationModel;
-import org.terasology.polyworld.elevation.ElevationModels;
 import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.water.WaterModel;
@@ -43,7 +42,7 @@ public class DefaultBiomeModel implements BiomeModel {
 
     public Biome getBiome(Region region) {
         double moisture = moistureModel.getMoisture(region);
-        double elevation = ElevationModels.getElevation(elevationModel, region);
+        double elevation = elevationModel.getElevation(region);
 
         if (waterModel.isOcean(region)) {
             return Biome.OCEAN;

@@ -20,40 +20,31 @@ import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Region;
 
 /**
- * Default implementations for {@link ElevationModel}s
+ * Implementation-independent methods for {@link ElevationModel}s
  * @author Martin Steiger
  */
-public class ElevationModels {
+public abstract class AbstractElevationModel implements ElevationModel {
 
-    /**
-     * @param model the elevation model
-     * @param r the region
-     * @return the
-     */
-    public static double getElevation(ElevationModel model, Region r) {
+    @Override
+    public double getElevation(Region r) {
         double total = 0;
         for (Corner c : r.getCorners()) {
-            total += model.getElevation(c);
+            total += getElevation(c);
         }
 
         return total / r.getCorners().size();
     }
 
-    /**
-     * @param model the elevation model
-     * @param c the corner of interest
-     * @return the neighbor corner with the lowest elevation
-     */
-    public static Corner getDownslope(ElevationModel model, Corner c) {
+    @Override
+    public Corner getDownslope(Corner c) {
         Corner down = c;
 
         for (Corner a : c.getAdjacent()) {
-            if (model.getElevation(a) <= model.getElevation(down)) {
+            if (getElevation(a) <= getElevation(down)) {
                 down = a;
             }
         }
 
         return down;
     }
-
 }
