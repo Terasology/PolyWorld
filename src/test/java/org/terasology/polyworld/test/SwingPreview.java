@@ -54,6 +54,7 @@ final class SwingPreview {
 
         final GraphPainter graphPainter = new GraphPainter();
         final RiverPainter riverPainter = new RiverPainter();
+        final LavaPainter lavaPainter = new LavaPainter();
 
         JFrame frame = new JFrame();
         JComponent panel = new JComponent() {
@@ -72,10 +73,11 @@ final class SwingPreview {
                     graphPainter.fillBounds(g, graph);
                     graphPainter.drawPolys(g, graph, colorFunc);
 
-                    RiverModel riverModel = sm.getRiverModel();
-                    riverPainter.drawRivers(g, riverModel, graph);
+                    riverPainter.drawRivers(g, sm.getRiverModel(), graph);
+                    lavaPainter.drawLava(g, sm.getLavaModel(), graph);
 
 //                    graphPainter.drawSites(g, graph);
+//                    graphPainter.drawEdges(g, graph);
 //                    graphPainter.drawCorners(g, graph);
 //                    graphPainter.drawBounds(g, graph);
                 }

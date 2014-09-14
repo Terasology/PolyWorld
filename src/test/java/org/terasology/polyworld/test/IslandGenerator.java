@@ -28,6 +28,8 @@ import org.terasology.polyworld.biome.DefaultBiomeModel;
 import org.terasology.polyworld.distribution.RadialDistribution;
 import org.terasology.polyworld.elevation.DefaultElevationModel;
 import org.terasology.polyworld.elevation.ElevationModel;
+import org.terasology.polyworld.lava.DefaultLavaModel;
+import org.terasology.polyworld.lava.LavaModel;
 import org.terasology.polyworld.moisture.DefaultMoistureModel;
 import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.rivers.DefaultRiverModel;
@@ -52,8 +54,9 @@ public class IslandGenerator {
     private Graph graph;
     private BiomeModel biomeModel;
     private RiverModel riverModel;
+    private LavaModel lavaModel;
 
-    IslandGenerator(Rect2d bounds, long seed) {
+    public IslandGenerator(Rect2d bounds, long seed) {
 
         graph = createVoronoiGraph(bounds, seed);
 //        graph = createGridGraph(bounds, seed);
@@ -64,6 +67,7 @@ public class IslandGenerator {
         riverModel = new DefaultRiverModel(graph, elevationModel, waterModel);
         MoistureModel moistureModel = new DefaultMoistureModel(graph, riverModel, waterModel);
         biomeModel = new DefaultBiomeModel(elevationModel, waterModel, moistureModel);
+        lavaModel = new DefaultLavaModel(elevationModel, waterModel, moistureModel, riverModel);
     }
 
     private static Graph createVoronoiGraph(Rect2d bounds, long seed) {
@@ -120,5 +124,12 @@ public class IslandGenerator {
      */
     public RiverModel getRiverModel() {
         return riverModel;
+    }
+
+    /**
+     * @return the lava model
+     */
+    public LavaModel getLavaModel() {
+        return lavaModel;
     }
 }
