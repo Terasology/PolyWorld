@@ -49,6 +49,10 @@ public class DefaultWaterModel implements WaterModel {
     private Graph graph;
     private List<Corner> landCorners;
 
+    /**
+     * @param graph the graph to use
+     * @param dist the distribution of water
+     */
     public DefaultWaterModel(Graph graph, Distribution dist) {
         this.graph = graph;
 

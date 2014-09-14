@@ -38,6 +38,7 @@ import org.terasology.polyworld.voronoi.GridGraph;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
 import org.terasology.polyworld.water.DefaultWaterModel;
 import org.terasology.polyworld.water.WaterModel;
+import org.terasology.utilities.random.FastRandom;
 
 import com.google.common.collect.Lists;
 import com.google.common.math.DoubleMath;
@@ -55,6 +56,7 @@ public class IslandGenerator {
     IslandGenerator(Rect2d bounds, long seed) {
 
         graph = createVoronoiGraph(bounds, seed);
+//        graph = createGridGraph(bounds, seed);
 
         RadialDistribution waterDist = new RadialDistribution(seed);
         WaterModel waterModel = new DefaultWaterModel(graph, waterDist);
@@ -94,13 +96,13 @@ public class IslandGenerator {
         double maxJitterX = bounds.width() / cols * 0.5;
         double maxJitterY = bounds.height() / rows * 0.5;
         double maxJitter = Math.min(maxJitterX, maxJitterY);
-        GraphEditor.jitterCorners(graph.getCorners(), maxJitter);
+        GraphEditor.jitterCorners(graph.getCorners(), new FastRandom(seed), maxJitter);
 
         return graph;
     }
 
     /**
-     * @return
+     * @return the generated graph
      */
     public Graph getGraph() {
         return graph;
@@ -114,7 +116,7 @@ public class IslandGenerator {
     }
 
     /**
-     * @return
+     * @return the river model
      */
     public RiverModel getRiverModel() {
         return riverModel;

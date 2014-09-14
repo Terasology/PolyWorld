@@ -17,9 +17,9 @@
 package org.terasology.polyworld.voronoi;
 
 import java.util.Collection;
-import java.util.Random;
 
 import org.terasology.math.geom.Vector2d;
+import org.terasology.utilities.random.Random;
 
 /**
  * TODO Type description
@@ -31,7 +31,7 @@ public class GraphEditor {
      * Moving corners by averaging the nearby centers produces more uniform edge lengths,
      * although it occasionally worsens the polygon sizes. However, moving corners will
      * lose the Voronoi diagram properties.
-     * @param corners
+     * @param corners the collection of corners
      */
     public static void improveCorners(Collection<Corner> corners) {
         Vector2d[] newP = new Vector2d[corners.size()];
@@ -60,18 +60,18 @@ public class GraphEditor {
     /**
      * Moves all corners to a random position within a circle with r=maxDist around it
      * @param corners the set of corners
+     * @param random the random number gen
      * @param maxDist the maximum moving distance
      */
-    public static void jitterCorners(Collection<Corner> corners, double maxDist) {
-        Random r = new Random(32235);
+    public static void jitterCorners(Collection<Corner> corners, Random random, double maxDist) {
 
         for (Corner c : corners) {
             if (c.isBorder())
                 continue;
 
             Vector2d loc = c.getLocation();
-            double ang = r.nextDouble() * Math.PI * 2.0;
-            double len = r.nextDouble() * maxDist;
+            double ang = random.nextDouble(0, Math.PI * 2.0);
+            double len = random.nextDouble(0, maxDist);
             double rx = Math.cos(ang) * len;
             double ry = Math.sin(ang) * len;
             loc.addX(rx);

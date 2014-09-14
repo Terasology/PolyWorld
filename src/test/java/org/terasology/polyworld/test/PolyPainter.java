@@ -41,7 +41,7 @@ class PolyPainter {
     private Graph graph;
 
     /**
-     * @param graph
+     * @param graph the graph that is painted
      */
     public PolyPainter(Graph graph) {
         this.graph = graph;

@@ -22,8 +22,6 @@ import java.util.LinkedHashSet;
 
 import org.terasology.math.geom.Vector2d;
 
-import com.google.common.base.Preconditions;
-
 /**
  * Defines a polygon region (vornoi region)
  * @author Martin Steiger
@@ -37,8 +35,11 @@ public class Region {
 
     private final Vector2d center;
 
-    public Region(Vector2d pos) {
-        this.center = pos;
+    /**
+     * @param centerPos the center of the region
+     */
+    public Region(Vector2d centerPos) {
+        this.center = centerPos;
     }
 
     /**
@@ -48,6 +49,9 @@ public class Region {
         return center;
     }
 
+    /**
+     * @return an unmodifiable collection of all neighbors
+     */
     public Collection<Region> getNeighbors() {
         return Collections.unmodifiableCollection(neighbors);
     }

@@ -40,8 +40,9 @@ public class GridGraph implements Graph {
     private final Rect2d bounds;
 
     /**
-     * @param rows
-     * @param cols
+     * @param bounds the bounding box
+     * @param rows the number of rows
+     * @param cols the number of columns
      */
     public GridGraph(Rect2d bounds, int rows, int cols) {
         this.rows = rows;
@@ -54,7 +55,7 @@ public class GridGraph implements Graph {
         for (int r = 0; r <= rows; r++) {
             for (int c = 0; c <= cols; c++) {
                 double x = bounds.minX() + c * dx;
-                double y = bounds.minX() + r * dy;
+                double y = bounds.minY() + r * dy;
                 Corner corner = new Corner(new Vector2d(x, y));
                 corner.setBorder(r == 0 || c == 0 || r == rows || c == cols);
                 corners.add(corner);
@@ -74,7 +75,7 @@ public class GridGraph implements Graph {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 double x = bounds.minX() + (c + 0.5) * dx;
-                double y = bounds.minX() + (r + 0.5) * dy;
+                double y = bounds.minY() + (r + 0.5) * dy;
                 Vector2d pos = new Vector2d(x, y);
                 Region reg = new Region(pos);
                 Corner tl = getCorner(r, c);
@@ -168,17 +169,11 @@ public class GridGraph implements Graph {
         return Collections.unmodifiableList(regions);
     }
 
-    /**
-     * @return
-     */
     @Override
     public List<Edge> getEdges() {
         return Collections.unmodifiableList(edges);
     }
 
-    /**
-     * @return the corners
-     */
     @Override
     public List<Corner> getCorners() {
         return Collections.unmodifiableList(corners);
@@ -189,10 +184,16 @@ public class GridGraph implements Graph {
         return bounds;
     }
 
+    /**
+     * @return the number of rows
+     */
     public int getRows() {
         return rows;
     }
 
+    /**
+     * @return the number of columns
+     */
     public int getCols() {
         return cols;
     }

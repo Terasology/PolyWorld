@@ -77,7 +77,7 @@ final class SwingPreview {
 
 //                    graphPainter.drawSites(g, graph);
 //                    graphPainter.drawCorners(g, graph);
-                    graphPainter.drawBounds(g, graph);
+//                    graphPainter.drawBounds(g, graph);
                 }
             }
         };
