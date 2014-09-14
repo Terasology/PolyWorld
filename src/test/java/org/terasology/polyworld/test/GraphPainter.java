@@ -19,10 +19,8 @@ package org.terasology.polyworld.test;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
@@ -31,32 +29,21 @@ import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Maps;
+
 /**
  * Draws the generated graph on a AWT graphics instance
  * @author Martin Steiger
  */
 public class GraphPainter {
 
+    private final Map<Graph, PolyPainter> polyPainters = Maps.newHashMap();
+
     /**
      * @param graph
      */
     public GraphPainter() {
-    }
-
-    public void drawRegions(Graphics2D g, Graph graph) {
-        List<Region> centers = graph.getRegions();
-
-        Random r = new Random(1254);
-        for (final Region c : centers) {
-            Color color = new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
-
-            g.setColor(color);
-
-            List<Corner> pts = new ArrayList<>(c.getCorners());
-            Collections.sort(pts, new AngleSorter(c));
-
-            drawPoly(g, pts);
-        }
     }
 
     public void drawDelaunay(Graphics2D g, Graph graph) {
@@ -73,15 +60,22 @@ public class GraphPainter {
         g.setStroke(new BasicStroke(1));
         g.setColor(Color.CYAN);
         for (Edge e : graph.getEdges()) {
-            if (e.getCorner0() != null && e.getCorner1() != null) {
-                Vector2d r0c = e.getCorner0().getLocation();
-                Vector2d r1c = e.getCorner1().getLocation();
-                g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
-            } else {
-                System.out.println(e);
-            }
+            Vector2d r0c = e.getCorner0().getLocation();
+            Vector2d r1c = e.getCorner1().getLocation();
+            g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
         }
     }
+
+    public void drawPolys(Graphics2D g, Graph graph, Function<Region, Color> colorFunc) {
+        PolyPainter painter = polyPainters.get(graph);
+        if (painter == null) {
+            painter = new PolyPainter(graph);
+            polyPainters.put(graph, painter);
+        }
+
+        painter.drawRegions(g, colorFunc);
+    }
+
 
     public void drawSites(Graphics2D g, Graph graph) {
         List<Region> centers = graph.getRegions();
@@ -109,17 +103,5 @@ public class GraphPainter {
         Rect2d bounds = graph.getBounds();
         g.setColor(Color.MAGENTA);
         g.fillRect((int) bounds.minX() + 1, (int) bounds.minY() + 1, (int) bounds.width() - 1, (int) bounds.height() - 1);
-    }
-
-    private void drawPoly(Graphics2D g, List<Corner> pts) {
-        int[] x = new int[pts.size()];
-        int[] y = new int[pts.size()];
-
-        for (int i = 0; i < pts.size(); i++) {
-            x[i] = (int) pts.get(i).getLocation().getX();
-            y[i] = (int) pts.get(i).getLocation().getY();
-        }
-
-        g.fillPolygon(x, y, pts.size());
     }
 }

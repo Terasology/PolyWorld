@@ -32,7 +32,9 @@ public class AmitBlobWaterDistribution implements WaterDistribution {
     }
 
     public boolean isWater(Vector2d p2) {
-        Vector2d p = new Vector2d(2 * (p2.getX() / bounds.width() - 0.5), 2 * (p2.getY() / bounds.height() - 0.5));
+        double nx = (p2.getX() - bounds.minX()) / bounds.width();
+        double ny = (p2.getY() - bounds.minY()) / bounds.height();
+        Vector2d p = new Vector2d(2 * (nx - 0.5), 2 * (ny - 0.5));
 
         boolean eye1 = new Vector2d(p.getX() - 0.2, p.getY() / 2 + 0.2).length() < 0.05;
         boolean eye2 = new Vector2d(p.getX() + 0.2, p.getY() / 2 + 0.2).length() < 0.05;

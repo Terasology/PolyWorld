@@ -49,6 +49,7 @@ public class RiverPainter {
                 g.drawLine((int) c0p.getX(), (int) c0p.getY(), (int) c1p.getX(), (int) c1p.getY());
             }
         }
+        g.setStroke(new BasicStroke());
     }
 
     /**

@@ -39,29 +39,26 @@ import static org.terasology.polyworld.biome.Biome.TROPICAL_SEASONAL_FOREST;
 import static org.terasology.polyworld.biome.Biome.TUNDRA;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.terasology.polyworld.biome.Biome;
 import org.terasology.polyworld.biome.BiomeModel;
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
 /**
  * Draws the generated voronoi-based world on a AWT graphics instance
  * @author Martin Steiger
  */
-public class BiomePainter {
+public class BiomeColors implements Function<Region, Color> {
 
     private final Map<Biome, Color> biomeColors = Maps.newHashMap();
+    private final BiomeModel biomeModel;
 
-    public BiomePainter() {
+    public BiomeColors(BiomeModel biomeModel) {
+        this.biomeModel = biomeModel;
         biomeColors.put(OCEAN, new Color(0x44447a));
         biomeColors.put(LAKE, new Color(0x336699));
         biomeColors.put(BEACH, new Color(0xa09077));
@@ -85,39 +82,17 @@ public class BiomePainter {
         biomeColors.put(LAKESHORE, new Color(0x225588));
     }
 
-    public void drawBiomes(Graphics2D g, BiomeModel biomeModel, Graph graph) {
-        List<Region> centers = graph.getRegions();
-
-        for (final Region c : centers) {
-            Color color;
-            Biome biome = biomeModel.getBiome(c);
-            color =  biomeColors.get(biome);
-
-            g.setColor(color);
-
-            List<Corner> pts = new ArrayList<>(c.getCorners());
-            Collections.sort(pts, new AngleSorter(c));
-
-            drawPoly(g, pts);
-        }
-    }
-
-    private void drawPoly(Graphics2D g, List<Corner> pts) {
-        int[] x = new int[pts.size()];
-        int[] y = new int[pts.size()];
-
-        for (int i = 0; i < pts.size(); i++) {
-            x[i] = (int) pts.get(i).getLocation().getX();
-            y[i] = (int) pts.get(i).getLocation().getY();
-        }
-
-        g.fillPolygon(x, y, pts.size());
+    @Override
+    public Color apply(Region input) {
+        Biome biome = biomeModel.getBiome(input);
+        Color color = biomeColors.get(biome);
+        return color;
     }
 
     /**
      * @param map
      */
-    public void setBiomeColos(Biome biome, Color color) {
+    public void setBiomeColor(Biome biome, Color color) {
         this.biomeColors.put(biome, color);
     }
 
