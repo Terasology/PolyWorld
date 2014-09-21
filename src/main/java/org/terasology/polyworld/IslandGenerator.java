@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.test;
+package org.terasology.polyworld;
 
 import java.math.RoundingMode;
 import java.util.List;
