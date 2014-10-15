@@ -98,10 +98,10 @@ public class Corner {
     }
 
     /**
-     * @param loc the loc to set
+     * @param nloc the loc to set
      */
-    public void setLocation(Vector2d loc) {
-        this.loc = loc;
+    public void setLocation(Vector2d nloc) {
+        this.loc = nloc;
     }
 
     /**

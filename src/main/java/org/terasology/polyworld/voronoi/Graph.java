@@ -29,21 +29,20 @@ public interface Graph {
     /**
      * @return
      */
-    public List<Region> getRegions();
+    List<Region> getRegions();
 
     /**
      * @return
      */
-    public List<Edge> getEdges();
+    List<Edge> getEdges();
 
     /**
      * @return the corners
      */
-    public List<Corner> getCorners();
+    List<Corner> getCorners();
 
     /**
      * @return the bounds
      */
-    public Rect2d getBounds();
-
+    Rect2d getBounds();
 }

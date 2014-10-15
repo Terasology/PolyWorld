@@ -40,6 +40,7 @@ public class DefaultBiomeModel implements BiomeModel {
         this.moistureModel = moistureModel;
     }
 
+    @Override
     public Biome getBiome(Region region) {
         double moisture = moistureModel.getMoisture(region);
         double elevation = elevationModel.getElevation(region);

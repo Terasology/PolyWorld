@@ -37,8 +37,7 @@ public class DefaultRiverModel implements RiverModel {
     private final Map<Edge, Integer> edgeVals = Maps.newHashMap();
     private final Map<Corner, Integer> cornerVals = Maps.newHashMap();
 
-    public DefaultRiverModel(Graph graph, ElevationModel elevationModel, WaterModel waterModel)
-    {
+    public DefaultRiverModel(Graph graph, ElevationModel elevationModel, WaterModel waterModel) {
         List<Corner> corners = graph.getCorners();
 
         int count = corners.size() / 50;

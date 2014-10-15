@@ -41,7 +41,7 @@ public class PerlinDistribution implements Distribution {
 
         double x = (p.getX() + 1) * 128;
         double y = (p.getY() + 1) * 128;
-        double val = noise.getScale() + noise.noise((float)x, (float)y, 0);
+        double val = noise.getScale() + noise.noise((float) x, (float) y, 0);
         return val < 1.3 + .7 * p.length();
     }
 }

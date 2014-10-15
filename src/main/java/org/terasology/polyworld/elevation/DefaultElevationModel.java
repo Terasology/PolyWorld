@@ -23,14 +23,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.terasology.math.geom.Polygon;
-import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.water.WaterModel;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -45,8 +41,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
 
     private final WaterModel waterModel;
 
-    public DefaultElevationModel(Graph graph, WaterModel waterModel)
-    {
+    public DefaultElevationModel(Graph graph, WaterModel waterModel) {
         this.graph = graph;
         this.waterModel = waterModel;
 

@@ -25,7 +25,11 @@ import org.terasology.utilities.random.Random;
  * TODO Type description
  * @author Martin Steiger
  */
-public class GraphEditor {
+public final class GraphEditor {
+
+    private GraphEditor() {
+        // avoid instantiation
+    }
 
     /**
      * Moving corners by averaging the nearby centers produces more uniform edge lengths,
@@ -66,8 +70,9 @@ public class GraphEditor {
     public static void jitterCorners(Collection<Corner> corners, Random random, double maxDist) {
 
         for (Corner c : corners) {
-            if (c.isBorder())
+            if (c.isBorder()) {
                 continue;
+            }
 
             Vector2d loc = c.getLocation();
             double ang = random.nextDouble(0, Math.PI * 2.0);

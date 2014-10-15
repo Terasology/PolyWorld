@@ -143,22 +143,26 @@ public class GridGraph implements Graph {
     }
 
     private Region getRegion(int r, int c) {
-        if (r < 0 || r >= rows)
+        if (r < 0 || r >= rows) {
             return null;
+        }
 
-        if (c < 0 || c >= cols)
+        if (c < 0 || c >= cols) {
             return null;
+        }
 
         int idx = r * cols + c;
         return regions.get(idx);
     }
 
     private Corner getCorner(int r, int c) {
-        if (r < 0 || r > rows)
+        if (r < 0 || r > rows) {
             return null;
+        }
 
-        if (c < 0 || c > cols)
+        if (c < 0 || c > cols) {
             return null;
+        }
 
         int idx = r * (cols + 1) + c;
         return corners.get(idx);

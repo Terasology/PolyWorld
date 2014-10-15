@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.LineSegment;
@@ -40,7 +39,7 @@ public class VoronoiGraph implements Graph {
     private final List<Region> regions = new ArrayList<>();
     private final Rect2d bounds;
 
-    public VoronoiGraph(Voronoi ov, int numLloydRelaxations, Random r) {
+    public VoronoiGraph(Voronoi ov, int numLloydRelaxations) {
         Voronoi v = ov;
 
         bounds = v.getPlotBounds();
@@ -98,8 +97,9 @@ public class VoronoiGraph implements Graph {
             final LineSegment vEdge = libedge.voronoiEdge();
             final LineSegment dEdge = libedge.delaunayLine();
 
-            if (vEdge.getP0() == null || vEdge.getP1() == null)
+            if (vEdge.getP0() == null || vEdge.getP1() == null) {
                 continue;
+            }
 
             Corner c0 = makeCorner(pointCornerMap, vEdge.getP0());
             Corner c1 = makeCorner(pointCornerMap, vEdge.getP1());

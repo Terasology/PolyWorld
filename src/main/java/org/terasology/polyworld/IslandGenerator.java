@@ -83,7 +83,7 @@ public class IslandGenerator {
         }
 
         final Voronoi v = new Voronoi(points, bounds);
-        final Graph graph = new VoronoiGraph(v, 2, r);
+        final Graph graph = new VoronoiGraph(v, 2);
         GraphEditor.improveCorners(graph.getCorners());
 
         return graph;

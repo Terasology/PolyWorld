@@ -42,8 +42,7 @@ public class DefaultMoistureModel implements MoistureModel {
     private final RiverModel riverModel;
     private WaterModel waterModel;
 
-    public DefaultMoistureModel(Graph graph, RiverModel riverModel, WaterModel waterModel)
-    {
+    public DefaultMoistureModel(Graph graph, RiverModel riverModel, WaterModel waterModel) {
         this.graph = graph;
         this.riverModel = riverModel;
         this.waterModel = waterModel;

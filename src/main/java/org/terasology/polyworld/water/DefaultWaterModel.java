@@ -152,8 +152,7 @@ public class DefaultWaterModel implements WaterModel {
     }
 
     @Override
-    public boolean isWater(Corner c)
-    {
+    public boolean isWater(Corner c) {
         return cornerWater.get(c);
     }
 
@@ -168,8 +167,7 @@ public class DefaultWaterModel implements WaterModel {
     }
 
     @Override
-    public boolean isWater(Region c)
-    {
+    public boolean isWater(Region c) {
         Boolean val = regionWater.get(c);
         return val == null ? false : val.booleanValue();
     }

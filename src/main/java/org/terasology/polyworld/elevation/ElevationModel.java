@@ -29,17 +29,17 @@ public interface ElevationModel {
      * @param corner the corner of interest
      * @return the elevation at that corner
      */
-    public double getElevation(Corner corner);
+    double getElevation(Corner corner);
 
     /**
      * @param r the region
      * @return the
      */
-    public double getElevation(Region r);
+    double getElevation(Region r);
 
     /**
      * @param c the corner of interest
      * @return the neighbor corner with the lowest elevation
      */
-    public Corner getDownslope(Corner c);
+    Corner getDownslope(Corner c);
 }
