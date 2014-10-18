@@ -1,9 +1,9 @@
 {
     "id" : "PolyWorld",
-    "version" : "0.1.0",
-    "author" : "",
+    "version" : "0.2.0",
+    "author" : "msteiger",
     "displayName" : "PolyWorld",
-    "description" : "",
+    "description" : "A world generator that creates island worlds based on Amit Patel's flash implementation",
     "dependencies" : [],
     "isServerSideOnly" : false
 }
