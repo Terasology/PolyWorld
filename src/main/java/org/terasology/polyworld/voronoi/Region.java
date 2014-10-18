@@ -16,11 +16,14 @@
 
 package org.terasology.polyworld.voronoi;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.terasology.math.geom.Vector2d;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
@@ -98,6 +101,31 @@ public class Region {
         if (c != null) {
             corners.add(c);
         }
+    }
+
+    /**
+     * @return a new list that contains all triangles of this polygon
+     */
+    public List<Triangle> computeTriangles() {
+        List<Triangle> list = Lists.newArrayList();
+        if (corners.isEmpty()) {
+            return list;
+        }
+
+        Corner first = corners.iterator().next();
+        Corner prev = null;
+
+        for (Corner c : corners) {
+            if (prev != null) {
+                Triangle tri = new Triangle(this, prev, c);
+                list.add(tri);
+            }
+            prev = c;
+        }
+
+        list.add(new Triangle(this, prev, first));
+
+        return list;
     }
 
     @Override
