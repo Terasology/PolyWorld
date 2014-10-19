@@ -37,8 +37,15 @@ final class AngleOrdering extends Ordering<Corner> {
 
     @Override
     public int compare(Corner o0, Corner o1) {
-        Vector2d a = new Vector2d(o0.getLocation()).sub(center).normalize();
-        Vector2d b = new Vector2d(o1.getLocation()).sub(center).normalize();
+        Vector2d p0 = o0.getLocation();
+        Vector2d p1 = o1.getLocation();
+
+        if (p0.equals(p1)) {
+            return 0;
+        }
+
+        Vector2d a = new Vector2d(p0).sub(center).normalize();
+        Vector2d b = new Vector2d(p1).sub(center).normalize();
 
         if (a.y() > 0) { //a between 0 and 180
             if (b.y() < 0) {  //b between 180 and 360
