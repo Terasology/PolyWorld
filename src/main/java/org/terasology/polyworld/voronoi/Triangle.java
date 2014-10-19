@@ -19,6 +19,8 @@ package org.terasology.polyworld.voronoi;
 import org.terasology.math.geom.Vector2d;
 import org.terasology.math.geom.Vector3d;
 
+import com.google.common.base.Preconditions;
+
 /**
  * TODO Type description
  * @author Martin Steiger
@@ -35,6 +37,11 @@ public class Triangle {
      * @param c2
      */
     public Triangle(Region region, Corner c1, Corner c2) {
+        Preconditions.checkArgument(region != null);
+        Preconditions.checkArgument(c1 != null);
+        Preconditions.checkArgument(c2 != null);
+        Preconditions.checkArgument(!c1.equals(c2), "c1 must be different from c2");
+
         this.region = region;
         this.c1 = c1;
         this.c2 = c2;
@@ -52,23 +59,40 @@ public class Triangle {
         return c2;
     }
 
+    public double computeInterpolated(Vector2d p, double wreg, double wc1, double wc2) {
+//        Vector3d bary = computeBarycentricCoordinates(p);
+        return wreg; // * bary.getX() + wc1 * bary.getY() + wc2 * bary.getZ();
+    }
+
     public Vector3d computeBarycentricCoordinates(Vector2d p) {
         return computeBarycentricCoordinates(region.getCenter(), c1.getLocation(), c2.getLocation(), p);
     }
 
-    private static Vector3d computeBarycentricCoordinates(Vector2d p0, Vector2d p1, Vector2d p2, Vector2d p) {
-        double dx1 = p1.getX() - p0.getX();
-        double dy1 = p1.getY() - p0.getY();
+    public static boolean barycoordInsideTriangle(Vector3d bary) {
+        return bary.getX() >= 0 && bary.getY() >= 0 && bary.getX() + bary.getY() <= 1;
+    }
 
-        double dx2 = p2.getX() - p0.getX();
-        double dy2 = p2.getY() - p0.getY();
+    private static Vector3d computeBarycentricCoordinates(Vector2d a, Vector2d b, Vector2d c, Vector2d p) {
 
-        double dx = p.getX() - p0.getX();
-        double dy = p.getY() - p0.getY();
+        Vector2d v0 = new Vector2d(b).sub(a);
+        Vector2d v1 = new Vector2d(c).sub(a);
+        Vector2d v2 = new Vector2d(p).sub(a);
 
-        double x = (dy * dx2 - dx * dy2) / (dy1 * dx2 - dx1 * dy2);
-        double y = (dy * dx1 - dx * dy1) / (dy2 * dx1 - dx2 * dy1);
+        double d00 = v0.dot(v0);
+        double d01 = v0.dot(v1);
+        double d11 = v1.dot(v1);
+        double d20 = v2.dot(v0);
+        double d21 = v2.dot(v1);
+        double denom = d00 * d11 - d01 * d01;
+        double u = (d11 * d20 - d01 * d21) / denom;
+        double v = (d00 * d21 - d01 * d20) / denom;
+        double w = 1.0 - u - v;
 
-        return new Vector3d((float) x, (float) y, (float) (1 - x - y));
+        return new Vector3d(u, v, w);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Triangle [region=%s, c1=%s, c2=%s]", region, c1, c2);
     }
 }

@@ -69,7 +69,7 @@ public class TriangleLookup {
         try {
             Stopwatch sw = Stopwatch.createStarted();
             triangles = drawTriangles(g, graph);
-            logger.info("Cached {} triangle lookups in {}ms.", triangles.size(), sw.elapsed(TimeUnit.MILLISECONDS));
+            logger.debug("Cached {} triangle lookups in {}ms.", triangles.size(), sw.elapsed(TimeUnit.MILLISECONDS));
         } finally {
             g.dispose();
         }

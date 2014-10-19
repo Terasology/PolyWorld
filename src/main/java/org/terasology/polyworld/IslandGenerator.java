@@ -16,13 +16,6 @@
 
 package org.terasology.polyworld;
 
-import java.math.RoundingMode;
-import java.util.List;
-import java.util.Random;
-
-import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.Rect2d;
-import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.DefaultBiomeModel;
 import org.terasology.polyworld.distribution.RadialDistribution;
@@ -35,15 +28,8 @@ import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.rivers.DefaultRiverModel;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.GraphEditor;
-import org.terasology.polyworld.voronoi.GridGraph;
-import org.terasology.polyworld.voronoi.VoronoiGraph;
 import org.terasology.polyworld.water.DefaultWaterModel;
 import org.terasology.polyworld.water.WaterModel;
-import org.terasology.utilities.random.FastRandom;
-
-import com.google.common.collect.Lists;
-import com.google.common.math.DoubleMath;
 
 /**
  * TODO Type description
@@ -51,65 +37,35 @@ import com.google.common.math.DoubleMath;
  */
 public class IslandGenerator {
 
-    private Graph graph;
     private BiomeModel biomeModel;
     private RiverModel riverModel;
     private LavaModel lavaModel;
+    private MoistureModel moistureModel;
+    private ElevationModel elevationModel;
+    private WaterModel waterModel;
 
-    public IslandGenerator(Rect2d bounds, long seed) {
-
-        graph = createVoronoiGraph(bounds, seed);
-//        graph = createGridGraph(bounds, seed);
+    public IslandGenerator(Graph graph, long seed) {
 
         RadialDistribution waterDist = new RadialDistribution(seed);
-        WaterModel waterModel = new DefaultWaterModel(graph, waterDist);
-        ElevationModel elevationModel = new DefaultElevationModel(graph, waterModel);
+        waterModel = new DefaultWaterModel(graph, waterDist);
+        elevationModel = new DefaultElevationModel(graph, waterModel);
+
         riverModel = new DefaultRiverModel(graph, elevationModel, waterModel);
-        MoistureModel moistureModel = new DefaultMoistureModel(graph, riverModel, waterModel);
+        moistureModel = new DefaultMoistureModel(graph, riverModel, waterModel);
         biomeModel = new DefaultBiomeModel(elevationModel, waterModel, moistureModel);
         lavaModel = new DefaultLavaModel(elevationModel, waterModel, moistureModel, riverModel);
     }
 
-    private static Graph createVoronoiGraph(Rect2d bounds, long seed) {
-        double density = 256;
-        int numSites = DoubleMath.roundToInt(bounds.area() / density, RoundingMode.HALF_UP);
-        final Random r = new Random(seed);
-
-        List<Vector2d> points = Lists.newArrayListWithCapacity(numSites);
-        for (int i = 0; i < numSites; i++) {
-            double px = bounds.minX() + r.nextDouble() * bounds.width();
-            double py = bounds.minY() + r.nextDouble() * bounds.height();
-            points.add(new Vector2d(px, py));
-        }
-
-        final Voronoi v = new Voronoi(points, bounds);
-        final Graph graph = new VoronoiGraph(v, 2);
-        GraphEditor.improveCorners(graph.getCorners());
-
-        return graph;
+    public MoistureModel getMoistureModel() {
+        return moistureModel;
     }
 
-
-    private static Graph createGridGraph(Rect2d bounds, long seed) {
-        double cellSize = 16;
-
-        int rows = DoubleMath.roundToInt(bounds.height() / cellSize, RoundingMode.HALF_UP);
-        int cols = DoubleMath.roundToInt(bounds.width() / cellSize, RoundingMode.HALF_UP);
-
-        final Graph graph = new GridGraph(bounds, rows, cols);
-        double maxJitterX = bounds.width() / cols * 0.5;
-        double maxJitterY = bounds.height() / rows * 0.5;
-        double maxJitter = Math.min(maxJitterX, maxJitterY);
-        GraphEditor.jitterCorners(graph.getCorners(), new FastRandom(seed), maxJitter);
-
-        return graph;
+    public ElevationModel getElevationModel() {
+        return elevationModel;
     }
 
-    /**
-     * @return the generated graph
-     */
-    public Graph getGraph() {
-        return graph;
+    public WaterModel getWaterModel() {
+        return waterModel;
     }
 
     /**
