@@ -15,6 +15,7 @@
  */
 package org.terasology.polyworld;
 
+import org.terasology.core.world.generator.facetProviders.SeaLevelProvider;
 import org.terasology.engine.SimpleUri;
 import org.terasology.polyworld.elevation.ElevationProvider;
 import org.terasology.world.generation.BaseFacetedWorldGenerator;
@@ -31,10 +32,11 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
     @Override
     protected WorldBuilder createWorld(long seed) {
         return new WorldBuilder(seed)
-                .addProvider(new ElevationProvider())
+                .addProvider(new SeaLevelProvider(10))
+                .addProvider(new ElevationProvider());
 //                .addRasterizer(new FloraRasterizer())
 //                .addRasterizer(new TreeRasterizer())
 //                .addRasterizer(new SolidRasterizer())
-                .addPlugins();
+//                .addPlugins()
     }
 }

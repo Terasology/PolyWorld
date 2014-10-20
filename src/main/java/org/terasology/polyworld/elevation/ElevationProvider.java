@@ -39,9 +39,12 @@ import org.terasology.polyworld.voronoi.Triangle;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
 import org.terasology.utilities.random.FastRandom;
 import org.terasology.world.generation.Border3D;
+import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
+import org.terasology.world.generation.Requires;
+import org.terasology.world.generation.facets.SeaLevelFacet;
 import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 import com.google.common.base.Stopwatch;
@@ -56,6 +59,7 @@ import com.google.common.math.DoubleMath;
  * @author Martin Steiger
  */
 @Produces(SurfaceHeightFacet.class)
+@Requires(@Facet(SeaLevelFacet.class))
 public class ElevationProvider implements FacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ElevationProvider.class);
@@ -100,6 +104,16 @@ public class ElevationProvider implements FacetProvider {
         Border3D border = region.getBorderForFacet(SurfaceHeightFacet.class);
         SurfaceHeightFacet facet = new SurfaceHeightFacet(region.getRegion(), border);
 
+        SeaLevelFacet seaLevelFacet = region.getRegionFacet(SeaLevelFacet.class);
+        float seaLevel = seaLevelFacet.getSeaLevel();
+        float seaFloor = 2.0f;
+        float maxHeight = 50.0f;
+
+        // make sure that the sea is at least 1 block deep
+        if (seaLevel <= seaFloor) {
+            seaLevel = seaFloor + 1;
+        }
+
         Stopwatch sw = Stopwatch.createStarted();
         Sector sector = null;
         IslandGenerator model = null;
@@ -125,19 +139,30 @@ public class ElevationProvider implements FacetProvider {
                 @SuppressWarnings("null")
                 ElevationModel elevation = model.getElevationModel();
                 wreg = elevation.getElevation(tri.getRegion());
-              wc1 = elevation.getElevation(tri.getCorner1());
-              wc2 = elevation.getElevation(tri.getCorner1());
+                wc1 = elevation.getElevation(tri.getCorner1());
+                wc2 = elevation.getElevation(tri.getCorner1());
                 prevTri = tri;
             }
 
-            double ele = tri.computeInterpolated(new Vector2d(p.x, p.y), wreg, wc1, wc2);
+            float ele = (float) tri.computeInterpolated(new Vector2d(p.x, p.y), wreg, wc1, wc2);
+            float clampedEle = Math.max(ele, -1f);
+            float blockHeight = convertModelElevation(seaLevel, seaFloor, maxHeight, clampedEle);
 
-            facet.setWorld(p, (float) ele);
+            facet.setWorld(p, blockHeight);
         }
 
         logger.debug("Created elevation facet for {} in {}ms.", facet.getWorldRegion(), sw.elapsed(TimeUnit.MILLISECONDS));
 
         region.setRegionFacet(SurfaceHeightFacet.class, facet);
+    }
+
+    private float convertModelElevation(float seaLevel, float seaFloor, float maxHeight, float ele) {
+
+        if (ele < 0) {
+            return seaLevel + ele * (seaLevel - seaFloor);
+        } else {
+            return seaLevel + ele * maxHeight;
+        }
     }
 
     private static Graph createVoronoiGraph(Rect2i bounds, long seed) {
