@@ -22,7 +22,7 @@ import org.terasology.math.geom.Vector3d;
 import com.google.common.base.Preconditions;
 
 /**
- * TODO Type description
+ * Defines a triangle in the region-based {@link Graph} structure.
  * @author Martin Steiger
  */
 public class Triangle {
@@ -60,8 +60,8 @@ public class Triangle {
     }
 
     public double computeInterpolated(Vector2d p, double wreg, double wc1, double wc2) {
-//        Vector3d bary = computeBarycentricCoordinates(p);
-        return wreg; // * bary.getX() + wc1 * bary.getY() + wc2 * bary.getZ();
+        Vector3d bary = computeBarycentricCoordinates(p);
+        return wreg * bary.getX() + wc1 * bary.getY() + wc2 * bary.getZ();
     }
 
     public Vector3d computeBarycentricCoordinates(Vector2d p) {
@@ -88,7 +88,8 @@ public class Triangle {
         double v = (d00 * d21 - d01 * d20) / denom;
         double w = 1.0 - u - v;
 
-        return new Vector3d(u, v, w);
+        // note that w is the first parameter
+        return new Vector3d(w, u, v);
     }
 
     @Override

@@ -140,7 +140,7 @@ public class ElevationProvider implements FacetProvider {
                 ElevationModel elevation = model.getElevationModel();
                 wreg = elevation.getElevation(tri.getRegion());
                 wc1 = elevation.getElevation(tri.getCorner1());
-                wc2 = elevation.getElevation(tri.getCorner1());
+                wc2 = elevation.getElevation(tri.getCorner2());
                 prevTri = tri;
             }
 
@@ -151,7 +151,9 @@ public class ElevationProvider implements FacetProvider {
             facet.setWorld(p, blockHeight);
         }
 
-        logger.debug("Created elevation facet for {} in {}ms.", facet.getWorldRegion(), sw.elapsed(TimeUnit.MILLISECONDS));
+        if (logger.isTraceEnabled()) {
+            logger.trace("Created elevation facet for {} in {}ms.", facet.getWorldRegion(), sw.elapsed(TimeUnit.MILLISECONDS));
+        }
 
         region.setRegionFacet(SurfaceHeightFacet.class, facet);
     }

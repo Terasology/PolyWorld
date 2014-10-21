@@ -77,23 +77,35 @@ public class DefaultElevationModel extends AbstractElevationModel {
     }
 
     private void redistributeElevations(List<Corner> landCorners) {
+
+        // sort land corners by elevation
         Collections.sort(landCorners, new Comparator<Corner>() {
             @Override
             public int compare(Corner o1, Corner o2) {
-                if (elevations.get(o1) > elevations.get(o2)) {
-                    return 1;
-                } else if (elevations.get(o1) < elevations.get(o2)) {
-                    return -1;
-                }
-                return 0;
+                Double e1 = elevations.get(o1);
+                Double e2 = elevations.get(o2);
+                return e1.compareTo(e2);
             }
         });
 
+        // reset the elevation x of each to match the inverse of the desired cumulative distribution:
+        // y(x) = 1 - (1-x)^2
+        // --> solve for x
+        // x = 1 - sqrt(1 - y)
+
         final double scaleFactor = 1.1;
         for (int i = 0; i < landCorners.size(); i++) {
+
+            // y is the relative position in the sorted list
             double y = (double) i / landCorners.size();
+
+            // x is the desired elevation
             double x = Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y));
+
+            // clamp to max 1
             x = Math.min(x, 1);
+
+            // this preserves ordering so that elevations always increase from the coast to the mountains.
             elevations.put(landCorners.get(i), x);
         }
 
