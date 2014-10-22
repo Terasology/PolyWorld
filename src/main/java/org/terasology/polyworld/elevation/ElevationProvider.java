@@ -16,28 +16,18 @@
 
 package org.terasology.polyworld.elevation;
 
-import java.math.RoundingMode;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.commonworld.Sector;
 import org.terasology.commonworld.Sectors;
-import org.terasology.math.Rect2i;
 import org.terasology.math.Vector2i;
-import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.IslandGenerator;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.GraphEditor;
-import org.terasology.polyworld.voronoi.GridGraph;
 import org.terasology.polyworld.voronoi.Triangle;
-import org.terasology.polyworld.voronoi.VoronoiGraph;
-import org.terasology.utilities.random.FastRandom;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetProvider;
@@ -51,8 +41,6 @@ import com.google.common.base.Stopwatch;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Lists;
-import com.google.common.math.DoubleMath;
 
 /**
  * TODO Type description
@@ -66,19 +54,7 @@ public class ElevationProvider implements FacetProvider {
 
     private long seed;
 
-    private LoadingCache<Sector, Graph> graphCache = CacheBuilder.newBuilder().build(new CacheLoader<Sector, Graph>() {
-
-        @Override
-        public Graph load(Sector key) throws Exception {
-            Stopwatch sw = Stopwatch.createStarted();
-            Graph graph = createVoronoiGraph(key.getWorldBounds(), seed);
-            logger.debug("Created graph for {} in {}ms.", key, sw.elapsed(TimeUnit.MILLISECONDS));
-
-            return graph;
-        }
-    });
-
-    private LoadingCache<Graph, TriangleLookup> lookupCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, TriangleLookup>() {
+    private final LoadingCache<Graph, TriangleLookup> lookupCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, TriangleLookup>() {
 
         @Override
         public TriangleLookup load(Graph graph) throws Exception {
@@ -86,13 +62,22 @@ public class ElevationProvider implements FacetProvider {
         }
     });
 
-    private LoadingCache<Graph, IslandGenerator> modelCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, IslandGenerator>() {
+    private final LoadingCache<Graph, IslandGenerator> modelCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, IslandGenerator>() {
 
         @Override
         public IslandGenerator load(Graph key) throws Exception {
             return new IslandGenerator(key, seed);
         }
     });
+
+    private final LoadingCache<Sector, IslandLookup> islandCache;
+
+    /**
+     *
+     */
+    public ElevationProvider(LoadingCache<Sector, IslandLookup> islandCache) {
+        this.islandCache = islandCache;
+    }
 
     @Override
     public void setSeed(long seed) {
@@ -126,7 +111,8 @@ public class ElevationProvider implements FacetProvider {
         for (Vector2i p : facet.getWorldRegion()) {
             if (sector == null || !sector.getWorldBounds().contains(p)) {
                 Sector sec = Sectors.getSectorForBlock(p.x, p.y);
-                Graph graph = graphCache.getUnchecked(sec);
+                IslandLookup islandLookup = islandCache.getUnchecked(sec);
+                Graph graph = islandLookup.getGraphAt(p);
                 model = modelCache.getUnchecked(graph);
                 lookup = lookupCache.getUnchecked(graph);
                 sector = sec;
@@ -165,42 +151,5 @@ public class ElevationProvider implements FacetProvider {
         } else {
             return seaLevel + ele * maxHeight;
         }
-    }
-
-    private static Graph createVoronoiGraph(Rect2i bounds, long seed) {
-//        double density = 256;
-        double density = 2500;
-        int numSites = DoubleMath.roundToInt(bounds.area() / density, RoundingMode.HALF_UP);
-        final Random r = new Random(seed);
-
-        List<Vector2d> points = Lists.newArrayListWithCapacity(numSites);
-        for (int i = 0; i < numSites; i++) {
-            double px = bounds.minX() + r.nextDouble() * bounds.width();
-            double py = bounds.minY() + r.nextDouble() * bounds.height();
-            points.add(new Vector2d(px, py));
-        }
-
-        Rect2d doubleBounds = Rect2d.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
-        final Voronoi v = new Voronoi(points, doubleBounds);
-        final Graph graph = new VoronoiGraph(v, 2);
-        GraphEditor.improveCorners(graph.getCorners());
-
-        return graph;
-    }
-
-
-    private static Graph createGridGraph(Rect2d bounds, long seed) {
-        double cellSize = 16;
-
-        int rows = DoubleMath.roundToInt(bounds.height() / cellSize, RoundingMode.HALF_UP);
-        int cols = DoubleMath.roundToInt(bounds.width() / cellSize, RoundingMode.HALF_UP);
-
-        final Graph graph = new GridGraph(bounds, rows, cols);
-        double maxJitterX = bounds.width() / cols * 0.5;
-        double maxJitterY = bounds.height() / rows * 0.5;
-        double maxJitter = Math.min(maxJitterX, maxJitterY);
-        GraphEditor.jitterCorners(graph.getCorners(), new FastRandom(seed), maxJitter);
-
-        return graph;
     }
 }

@@ -15,12 +15,18 @@
  */
 package org.terasology.polyworld;
 
+import org.terasology.commonworld.Sector;
 import org.terasology.core.world.generator.facetProviders.SeaLevelProvider;
 import org.terasology.engine.SimpleUri;
 import org.terasology.polyworld.elevation.ElevationProvider;
+import org.terasology.polyworld.elevation.IslandLookup;
 import org.terasology.world.generation.BaseFacetedWorldGenerator;
 import org.terasology.world.generation.WorldBuilder;
 import org.terasology.world.generator.RegisterWorldGenerator;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 @RegisterWorldGenerator(id = "island", displayName = "Island")
 public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
@@ -30,10 +36,18 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
     }
 
     @Override
-    protected WorldBuilder createWorld(long seed) {
+    protected WorldBuilder createWorld(final long seed) {
+        LoadingCache<Sector, IslandLookup> islandCache = CacheBuilder.newBuilder().build(new CacheLoader<Sector, IslandLookup>() {
+
+            @Override
+            public IslandLookup load(Sector sector) throws Exception {
+                return new IslandLookup(sector, seed);
+            }
+        });
+
         return new WorldBuilder(seed)
                 .addProvider(new SeaLevelProvider(10))
-                .addProvider(new ElevationProvider());
+                .addProvider(new ElevationProvider(islandCache));
 //                .addRasterizer(new FloraRasterizer())
 //                .addRasterizer(new TreeRasterizer())
 //                .addRasterizer(new SolidRasterizer())
