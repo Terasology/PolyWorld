@@ -47,6 +47,12 @@ public class DefaultElevationModel extends AbstractElevationModel {
 
         assignCornerElevations();
         redistributeElevations(waterModel.getLandCorners());
+
+        for (Corner c : graph.getCorners()) {
+            if (waterModel.isCoast(c)) {
+                elevations.put(c, 0.0);
+            }
+        }
     }
 
     private void assignCornerElevations() {
@@ -54,7 +60,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
         Deque<Corner> queue = new LinkedList<>();
         for (Corner c : graph.getCorners()) {
             if (c.isBorder()) {
-                elevations.put(c, 0.0);
+                elevations.put(c, -1.0);
                 queue.add(c);
             } else {
                 elevations.put(c, Double.MAX_VALUE);
@@ -64,11 +70,12 @@ public class DefaultElevationModel extends AbstractElevationModel {
         while (!queue.isEmpty()) {
             Corner c = queue.pop();
             for (Corner a : c.getAdjacent()) {
-                double newElevation = 0.01 + elevations.get(c);
+                double newElevation = elevations.get(c);
                 if (!waterModel.isWater(c) && !waterModel.isWater(a)) {
                     newElevation += 1;
                 }
-                if (newElevation < elevations.get(a)) {
+                Double prevElevation = elevations.get(a);
+                if (newElevation < prevElevation) {
                     elevations.put(a, newElevation);
                     queue.add(a);
                 }
@@ -97,7 +104,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
         for (int i = 0; i < landCorners.size(); i++) {
 
             // y is the relative position in the sorted list
-            double y = (double) i / landCorners.size();
+            double y = (double) i / (landCorners.size() - 1);
 
             // x is the desired elevation
             double x = Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y));
@@ -107,12 +114,6 @@ public class DefaultElevationModel extends AbstractElevationModel {
 
             // this preserves ordering so that elevations always increase from the coast to the mountains.
             elevations.put(landCorners.get(i), x);
-        }
-
-        for (Corner c : graph.getCorners()) {
-            if (waterModel.isOcean(c) || waterModel.isCoast(c)) {
-                elevations.put(c, 0.0);
-            }
         }
     }
 
