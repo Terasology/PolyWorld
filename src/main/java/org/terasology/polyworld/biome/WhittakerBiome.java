@@ -16,26 +16,27 @@
 
 package org.terasology.polyworld.biome;
 
+import org.terasology.world.biomes.Biome;
 
 /**
  * Different biome types
  * @author Martin Steiger
  */
-public enum Biome {
-    OCEAN, 
-    LAKE, 
-    BEACH, 
+public enum WhittakerBiome implements Biome {
+    OCEAN,
+    LAKE,
+    BEACH,
     SNOW,
-    TUNDRA, 
-    BARE, 
-    SCORCHED, 
+    TUNDRA,
+    BARE,
+    SCORCHED,
     TAIGA,
-    SHURBLAND, 
+    SHURBLAND,
     TEMPERATE_DESERT,
-    TEMPERATE_RAIN_FOREST, 
+    TEMPERATE_RAIN_FOREST,
     TEMPERATE_DECIDUOUS_FOREST,
-    GRASSLAND, 
-    SUBTROPICAL_DESERT, 
+    GRASSLAND,
+    SUBTROPICAL_DESERT,
     SHRUBLAND,
     ICE,
     MARSH,
@@ -43,4 +44,32 @@ public enum Biome {
     TROPICAL_SEASONAL_FOREST,
     COAST,
     LAKESHORE;
+
+    @Override
+    public String getId() {
+        return name();
+    }
+
+    @Override
+    public String getName() {
+        return toString();
+    }
+
+    @Override
+    public float getFog() {
+        // TODO: remove this property from Biome
+        return 0;
+    }
+
+    @Override
+    public float getHumidity() {
+        // TODO: remove this property from Biome
+        return 0;
+    }
+
+    @Override
+    public float getTemperature() {
+        // TODO: remove this property from Biome
+        return 0;
+    }
 }
