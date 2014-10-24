@@ -38,8 +38,6 @@ import org.terasology.world.generation.facets.SeaLevelFacet;
 import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
 /**
@@ -52,24 +50,6 @@ public class ElevationProvider implements FacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ElevationProvider.class);
 
-    private long seed;
-
-    private final LoadingCache<Graph, TriangleLookup> lookupCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, TriangleLookup>() {
-
-        @Override
-        public TriangleLookup load(Graph graph) throws Exception {
-            return new TriangleLookup(graph);
-        }
-    });
-
-    private final LoadingCache<Graph, IslandGenerator> modelCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, IslandGenerator>() {
-
-        @Override
-        public IslandGenerator load(Graph key) throws Exception {
-            return new IslandGenerator(key, seed);
-        }
-    });
-
     private final LoadingCache<Sector, IslandLookup> islandCache;
 
     /**
@@ -81,7 +61,7 @@ public class ElevationProvider implements FacetProvider {
 
     @Override
     public void setSeed(long seed) {
-        this.seed = seed;
+        // ignore
     }
 
     @Override
@@ -100,7 +80,6 @@ public class ElevationProvider implements FacetProvider {
         }
 
         Stopwatch sw = Stopwatch.createStarted();
-        Sector sector = null;
         IslandGenerator model = null;
         TriangleLookup lookup = null;
         Triangle prevTri = null;
@@ -109,16 +88,14 @@ public class ElevationProvider implements FacetProvider {
         double wc2 = 0;
 
         for (Vector2i p : facet.getWorldRegion()) {
-            if (sector == null || !sector.getWorldBounds().contains(p)) {
+            if (lookup == null || !lookup.getBounds().contains(p)) {
                 Sector sec = Sectors.getSectorForBlock(p.x, p.y);
                 IslandLookup islandLookup = islandCache.getUnchecked(sec);
                 Graph graph = islandLookup.getGraphAt(p);
-                model = modelCache.getUnchecked(graph);
-                lookup = lookupCache.getUnchecked(graph);
-                sector = sec;
+                model = islandLookup.getGenerator(graph);
+                lookup = islandLookup.getLookupCache(graph);
             }
 
-            @SuppressWarnings("null")
             Triangle tri = lookup.findTriangleAt(p.x, p.y);
 
             if (tri != prevTri) {
@@ -131,8 +108,7 @@ public class ElevationProvider implements FacetProvider {
             }
 
             float ele = (float) tri.computeInterpolated(new Vector2d(p.x, p.y), wreg, wc1, wc2);
-            float clampedEle = Math.max(ele, -1f);
-            float blockHeight = convertModelElevation(seaLevel, seaFloor, maxHeight, clampedEle);
+            float blockHeight = convertModelElevation(seaLevel, seaFloor, maxHeight, ele);
 
             facet.setWorld(p, blockHeight);
         }

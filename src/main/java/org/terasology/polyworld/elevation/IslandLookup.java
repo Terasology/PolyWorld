@@ -30,6 +30,8 @@ import org.terasology.math.Vector2i;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
+import org.terasology.polyworld.IslandGenerator;
+import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.GraphEditor;
 import org.terasology.polyworld.voronoi.VoronoiGraph;
@@ -61,6 +63,25 @@ public class IslandLookup {
             logger.debug("Created graph for {} in {}ms.", area, sw.elapsed(TimeUnit.MILLISECONDS));
 
             return graph;
+        }
+    });
+
+    // TODO: merge with into the graph cache
+    private final LoadingCache<Graph, TriangleLookup> lookupCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, TriangleLookup>() {
+
+        @Override
+        public TriangleLookup load(Graph graph) throws Exception {
+            return new TriangleLookup(graph);
+        }
+    });
+
+    // TODO: merge with into the graph cache
+    private final LoadingCache<Graph, IslandGenerator> modelCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, IslandGenerator>() {
+
+        @Override
+        public IslandGenerator load(Graph key) throws Exception {
+            long islandSeed = seed ^ key.getBounds().hashCode();
+            return new IslandGenerator(key, islandSeed);
         }
     });
 
@@ -103,6 +124,14 @@ public class IslandLookup {
         }
 
         return null;
+    }
+
+    public IslandGenerator getGenerator(Graph graph) {
+        return modelCache.getUnchecked(graph);
+    }
+
+    public TriangleLookup getLookupCache(Graph graph) {
+        return lookupCache.getUnchecked(graph);
     }
 
     private static Graph createVoronoiGraph(Rect2i bounds, long seed) {

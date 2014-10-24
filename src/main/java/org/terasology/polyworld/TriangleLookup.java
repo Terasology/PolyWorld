@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.math.Rect2i;
 import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
@@ -52,6 +53,8 @@ public class TriangleLookup {
     //       due to binary search in region-triangle start index list
     private final List<Triangle> triangles;
 
+    private final Rect2i bounds;
+
     /**
      * Creates a lookup image for the graph's region triangles
      */
@@ -60,6 +63,8 @@ public class TriangleLookup {
         int height = DoubleMath.roundToInt(graph.getBounds().height(), RoundingMode.FLOOR);
         offsetX = DoubleMath.roundToInt(graph.getBounds().minX(), RoundingMode.FLOOR);
         offsetY = DoubleMath.roundToInt(graph.getBounds().minY(), RoundingMode.FLOOR);
+
+        bounds = Rect2i.createFromMinAndSize(offsetX, offsetY, width, height);
 
         // TODO: maybe use USHORT_GRAY instead
         image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -122,5 +127,12 @@ public class TriangleLookup {
         }
 
         return triangles;
+    }
+
+    /**
+     * @return
+     */
+    public Rect2i getBounds() {
+        return bounds;
     }
 }
