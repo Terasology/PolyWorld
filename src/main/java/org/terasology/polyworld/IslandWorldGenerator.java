@@ -49,10 +49,8 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
         return new WorldBuilder(seed)
                 .addProvider(new SeaLevelProvider(10))
                 .addProvider(new ElevationProvider(islandCache))
-                .addProvider(new WhittakerBiomeProvider(islandCache));
-//                .addRasterizer(new FloraRasterizer())
-//                .addRasterizer(new TreeRasterizer())
-//                .addRasterizer(new SolidRasterizer())
-//                .addPlugins()
+                .addProvider(new WhittakerBiomeProvider(islandCache))
+                .addRasterizer(new GroundRasterizer())
+                .addPlugins();
     }
 }
