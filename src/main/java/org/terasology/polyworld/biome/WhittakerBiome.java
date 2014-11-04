@@ -31,7 +31,6 @@ public enum WhittakerBiome implements Biome {
     BARE,
     SCORCHED,
     TAIGA,
-    SHURBLAND,
     TEMPERATE_DESERT,
     TEMPERATE_RAIN_FOREST,
     TEMPERATE_DECIDUOUS_FOREST,

@@ -27,7 +27,6 @@ import static org.terasology.polyworld.biome.WhittakerBiome.MARSH;
 import static org.terasology.polyworld.biome.WhittakerBiome.OCEAN;
 import static org.terasology.polyworld.biome.WhittakerBiome.SCORCHED;
 import static org.terasology.polyworld.biome.WhittakerBiome.SHRUBLAND;
-import static org.terasology.polyworld.biome.WhittakerBiome.SHURBLAND;
 import static org.terasology.polyworld.biome.WhittakerBiome.SNOW;
 import static org.terasology.polyworld.biome.WhittakerBiome.SUBTROPICAL_DESERT;
 import static org.terasology.polyworld.biome.WhittakerBiome.TAIGA;
@@ -63,7 +62,6 @@ public class WhittakerBiomeColors implements Function<Biome, Color> {
         biomeColors.put(BARE, new Color(0x888888));
         biomeColors.put(SCORCHED, new Color(0x555555));
         biomeColors.put(TAIGA, new Color(0x99aa77));
-        biomeColors.put(SHURBLAND, new Color(0x889977));
         biomeColors.put(TEMPERATE_DESERT, new Color(0xc9d29b));
         biomeColors.put(TEMPERATE_RAIN_FOREST, new Color(0x448855));
         biomeColors.put(TEMPERATE_DECIDUOUS_FOREST, new Color(0x679459));
