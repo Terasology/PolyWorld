@@ -22,6 +22,9 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Graph;
@@ -45,8 +48,12 @@ public class DefaultElevationModel extends AbstractElevationModel {
         this.graph = graph;
         this.waterModel = waterModel;
 
+        Predicate<Corner> isLand = c -> !waterModel.isOcean(c) && !waterModel.isCoast(c);
+        Stream<Corner> land = graph.getCorners().stream().filter(isLand);
+        List<Corner> landCorners = land.collect(Collectors.toList());
+
         assignCornerElevations();
-        redistributeElevations(waterModel.getLandCorners());
+        redistributeElevations(landCorners);
 
         for (Corner c : graph.getCorners()) {
             if (waterModel.isCoast(c)) {

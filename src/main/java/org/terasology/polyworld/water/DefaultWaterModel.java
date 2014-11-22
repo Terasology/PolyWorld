@@ -19,7 +19,6 @@ package org.terasology.polyworld.water;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.terasology.math.geom.Rect2d;
@@ -29,32 +28,28 @@ import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * TODO Type description
+ * Uses a {@link Distribution} to define how water is distributed in the graph.
+ * The result is normalized.
  * @author Martin Steiger
  */
 public class DefaultWaterModel implements WaterModel {
 
-    private Map<Corner, Boolean> cornerWater = Maps.newHashMap();
-    private Map<Corner, Boolean> cornerOcean = Maps.newHashMap();
-    private Map<Corner, Boolean> cornerCoast = Maps.newHashMap();
+    private final Map<Corner, Boolean> cornerWater = Maps.newHashMap();
+    private final Map<Corner, Boolean> cornerOcean = Maps.newHashMap();
+    private final Map<Corner, Boolean> cornerCoast = Maps.newHashMap();
 
-    private Map<Region, Boolean> regionWater = Maps.newHashMap();
-    private Map<Region, Boolean> regionOcean = Maps.newHashMap();
-    private Map<Region, Boolean> regionCoast = Maps.newHashMap();
-
-    private Graph graph;
-    private List<Corner> landCorners;
+    private final Map<Region, Boolean> regionWater = Maps.newHashMap();
+    private final Map<Region, Boolean> regionOcean = Maps.newHashMap();
+    private final Map<Region, Boolean> regionCoast = Maps.newHashMap();
 
     /**
      * @param graph the graph to use
      * @param dist the distribution of water
      */
     public DefaultWaterModel(Graph graph, Distribution dist) {
-        this.graph = graph;
 
         final double waterThreshold = .3;
 
@@ -112,18 +107,6 @@ public class DefaultWaterModel implements WaterModel {
             setOcean(c, numOcean == c.getTouches().size());
             setCoast(c, numOcean > 0 && numLand > 0);
             setWater(c, c.isBorder() || ((numLand != c.getTouches().size()) && !isCoast(c)));
-        }
-
-        findLandCorners();
-
-    }
-
-    private void findLandCorners() {
-        landCorners = Lists.newArrayList();
-        for (Corner c : graph.getCorners()) {
-            if (!isOcean(c) && !isCoast(c)) {
-                landCorners.add(c);
-            }
         }
     }
 
@@ -183,10 +166,4 @@ public class DefaultWaterModel implements WaterModel {
         Boolean val = regionOcean.get(c);
         return val == null ? false : val.booleanValue();
     }
-
-    @Override
-    public List<Corner> getLandCorners() {
-        return landCorners;
-    }
-
 }

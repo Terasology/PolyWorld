@@ -16,13 +16,11 @@
 
 package org.terasology.polyworld.water;
 
-import java.util.List;
-
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Region;
 
 /**
- * TODO Type description
+ * Defines how water is distributed in the graph
  * @author Martin Steiger
  */
 public interface WaterModel {
@@ -38,9 +36,4 @@ public interface WaterModel {
     boolean isCoast(Corner c);
 
     boolean isCoast(Region p);
-
-    /**
-     * @return all corners that are neither ocean nor coast
-     */
-    List<Corner> getLandCorners();
 }

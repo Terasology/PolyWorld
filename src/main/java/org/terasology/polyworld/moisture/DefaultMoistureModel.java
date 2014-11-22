@@ -22,6 +22,9 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.voronoi.Corner;
@@ -84,7 +87,9 @@ public class DefaultMoistureModel implements MoistureModel {
 
     private void redistributeMoisture() {
 
-        List<Corner> landCorners = waterModel.getLandCorners();
+        Predicate<? super Corner> isLand = c -> !waterModel.isOcean(c) && !waterModel.isCoast(c);
+        Stream<Corner> stream = graph.getCorners().stream().filter(isLand);
+        List<Corner> landCorners = stream.collect(Collectors.toList());
 
         Collections.sort(landCorners, new Comparator<Corner>() {
             @Override
@@ -92,13 +97,7 @@ public class DefaultMoistureModel implements MoistureModel {
                 double m1 = getMoisture(o1);
                 double m2 = getMoisture(o2);
 
-                // TODO: replace with Double.compare()
-                if (m1 > m2) {
-                    return 1;
-                } else if (m1 < m2) {
-                    return -1;
-                }
-                return 0;
+                return Double.compare(m1, m2);
             }
         });
         for (int i = 0; i < landCorners.size(); i++) {
