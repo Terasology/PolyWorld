@@ -61,20 +61,19 @@ public class WhittakerBiomeProvider implements FacetProvider {
 
         GraphFacet graphFacet = region.getRegionFacet(GraphFacet.class);
 
-        TriangleLookup lookup = null;
+        Graph graph = null;
         BiomeModel model = null;
 
         for (Vector2i pos : facet.getWorldRegion()) {
-            if (lookup == null || !lookup.getBounds().contains(pos)) {
+            if (graph == null || !graph.getBounds().contains(pos)) {
                 Sector sec = Sectors.getSectorForBlock(pos.x, pos.y);
                 IslandLookup islandLookup = islandCache.getUnchecked(sec);
-                Graph graph = graphFacet.getWorld(pos.x, 0, pos.y);
+                graph = graphFacet.getWorld(pos.x, 0, pos.y);
                 IslandGenerator generator = islandLookup.getGenerator(graph);
                 model = generator.getBiomeModel();
-                lookup = islandLookup.getLookupCache(graph);
             }
 
-            Triangle tri = lookup.findTriangleAt(pos.x, pos.y);
+            Triangle tri = graphFacet.getWorldTriangle(pos.x, 0, pos.y);
             Region r = tri.getRegion();
 
             @SuppressWarnings("null")

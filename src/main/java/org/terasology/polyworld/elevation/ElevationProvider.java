@@ -86,22 +86,21 @@ public class ElevationProvider implements FacetProvider {
 
         Stopwatch sw = Stopwatch.createStarted();
         IslandGenerator model = null;
-        TriangleLookup lookup = null;
+        Graph graph = null;
         Triangle prevTri = null;
         double wreg = 0;
         double wc1 = 0;
         double wc2 = 0;
 
         for (Vector2i p : facet.getWorldRegion()) {
-            if (lookup == null || !lookup.getBounds().contains(p)) {
+            if (graph == null || !graph.getBounds().contains(p)) {
                 Sector sec = Sectors.getSectorForBlock(p.x, p.y);
                 IslandLookup islandLookup = islandCache.getUnchecked(sec);
-                Graph graph = graphFacet.getWorld(p.x, 0, p.y);
+                graph = graphFacet.getWorld(p.x, 0, p.y);
                 model = islandLookup.getGenerator(graph);
-                lookup = islandLookup.getLookupCache(graph);
             }
 
-            Triangle tri = lookup.findTriangleAt(p.x, p.y);
+            Triangle tri = graphFacet.getWorldTriangle(p.x, 0, p.y);
 
             if (tri != prevTri) {
                 @SuppressWarnings("null")

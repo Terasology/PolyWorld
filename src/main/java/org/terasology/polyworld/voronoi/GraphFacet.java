@@ -32,4 +32,6 @@ public interface GraphFacet extends WorldFacet3D {
     Graph getWorld(int x, int y, int z);
 
     Graph getWorld(Vector3i pos);
+
+    Triangle getWorldTriangle(int x, int y, int z);
 }

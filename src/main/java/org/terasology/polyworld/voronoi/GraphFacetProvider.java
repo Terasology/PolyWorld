@@ -33,6 +33,7 @@ import org.terasology.math.Vector3i;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
+import org.terasology.polyworld.TriangleLookup;
 import org.terasology.rendering.nui.properties.Range;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
@@ -69,6 +70,15 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         }
     });
 
+    private final LoadingCache<Graph, TriangleLookup> lookupCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, TriangleLookup>() {
+
+        @Override
+        public TriangleLookup load(Graph graph) throws Exception {
+            return new TriangleLookup(graph);
+        }
+    });
+
+
     private long seed;
 
     private GraphProviderConfiguration configuration = new GraphProviderConfiguration();
@@ -88,7 +98,8 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
         for (Rect2i area : areas) {
             Graph graph = graphCache.getUnchecked(area);
-            facet.add(graph);
+            TriangleLookup lookup = lookupCache.getUnchecked(graph);
+            facet.add(graph, lookup);
         }
 
         region.setRegionFacet(GraphFacet.class, facet);

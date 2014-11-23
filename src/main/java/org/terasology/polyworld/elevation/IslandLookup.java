@@ -36,15 +36,6 @@ import com.google.common.collect.Sets;
 public class IslandLookup {
 
     // TODO: merge with into the graph cache
-    private final LoadingCache<Graph, TriangleLookup> lookupCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, TriangleLookup>() {
-
-        @Override
-        public TriangleLookup load(Graph graph) throws Exception {
-            return new TriangleLookup(graph);
-        }
-    });
-
-    // TODO: merge with into the graph cache
     private final LoadingCache<Graph, IslandGenerator> modelCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, IslandGenerator>() {
 
         @Override
@@ -66,9 +57,4 @@ public class IslandLookup {
     public IslandGenerator getGenerator(Graph graph) {
         return modelCache.getUnchecked(graph);
     }
-
-    public TriangleLookup getLookupCache(Graph graph) {
-        return lookupCache.getUnchecked(graph);
-    }
-
 }

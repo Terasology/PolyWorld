@@ -20,9 +20,11 @@ import java.util.List;
 
 import org.terasology.math.Region3i;
 import org.terasology.math.Vector3i;
+import org.terasology.polyworld.TriangleLookup;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.facets.base.SparseFacet3D;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 /**
@@ -33,6 +35,7 @@ import com.google.common.collect.Lists;
 public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
 
     private final List<Graph> graphs = Lists.newArrayList();
+    private final List<TriangleLookup> lookups = Lists.newArrayList();
 
     /**
      * @param targetRegion
@@ -45,8 +48,11 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
     /**
      * @param graph the graph to add (must overlap the facet area)
      */
-    public void add(Graph graph) {
+    public void add(Graph graph, TriangleLookup lookup) {
+        Preconditions.checkArgument(graph.getBounds().equals(lookup.getBounds()), "graph does not match triangle lookup");
+
         graphs.add(graph);
+        lookups.add(lookup);
     }
 
     @Override
@@ -57,12 +63,23 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
             }
         }
 
-       throw new IllegalArgumentException(String.format("no graph data for {}/{}/{}", x, y, z));
+       throw new IllegalArgumentException(String.format("no graph data for %d/%d/%d", x, y, z));
     }
 
     @Override
     public Graph getWorld(Vector3i pos) {
         return getWorld(pos.x, pos.y, pos.z);
+    }
+
+    @Override
+    public Triangle getWorldTriangle(int x, int y, int z) {
+        for (TriangleLookup lookup : lookups) {
+            if (lookup.getBounds().contains(x, z)) {
+                return lookup.findTriangleAt(x, z);
+            }
+        }
+
+       throw new IllegalArgumentException(String.format("no triangle lookup data for %d/%d/%d", x, y, z));
     }
 
     @Override
