@@ -23,6 +23,7 @@ import org.terasology.polyworld.biome.WhittakerBiomeProvider;
 import org.terasology.polyworld.elevation.ElevationProvider;
 import org.terasology.polyworld.elevation.IslandLookup;
 import org.terasology.polyworld.raster.WhittakerRasterizer;
+import org.terasology.polyworld.voronoi.GraphFacetProvider;
 import org.terasology.world.generation.BaseFacetedWorldGenerator;
 import org.terasology.world.generation.WorldBuilder;
 import org.terasology.world.generator.RegisterWorldGenerator;
@@ -50,6 +51,7 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
 
         return new WorldBuilder(seed)
                 .addProvider(new SeaLevelProvider(32))
+                .addProvider(new GraphFacetProvider())
                 .addProvider(new ElevationProvider(islandCache))
                 .addProvider(new WhittakerBiomeProvider(islandCache))
                 .addProvider(new FloraProvider())

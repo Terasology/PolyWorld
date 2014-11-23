@@ -23,12 +23,15 @@ import org.terasology.polyworld.IslandGenerator;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.elevation.IslandLookup;
 import org.terasology.polyworld.voronoi.Graph;
+import org.terasology.polyworld.voronoi.GraphFacet;
 import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.voronoi.Triangle;
 import org.terasology.world.generation.Border3D;
+import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
+import org.terasology.world.generation.Requires;
 
 import com.google.common.cache.LoadingCache;
 
@@ -37,6 +40,7 @@ import com.google.common.cache.LoadingCache;
  * @author Martin Steiger
  */
 @Produces(WhittakerBiomeFacet.class)
+@Requires(@Facet(GraphFacet.class))
 public class WhittakerBiomeProvider implements FacetProvider {
 
     private LoadingCache<Sector, IslandLookup> islandCache;
@@ -55,6 +59,8 @@ public class WhittakerBiomeProvider implements FacetProvider {
         Border3D border = region.getBorderForFacet(WhittakerBiomeFacet.class);
         WhittakerBiomeFacet facet = new WhittakerBiomeFacet(region.getRegion(), border);
 
+        GraphFacet graphFacet = region.getRegionFacet(GraphFacet.class);
+
         TriangleLookup lookup = null;
         BiomeModel model = null;
 
@@ -62,7 +68,7 @@ public class WhittakerBiomeProvider implements FacetProvider {
             if (lookup == null || !lookup.getBounds().contains(pos)) {
                 Sector sec = Sectors.getSectorForBlock(pos.x, pos.y);
                 IslandLookup islandLookup = islandCache.getUnchecked(sec);
-                Graph graph = islandLookup.getGraphAt(pos);
+                Graph graph = graphFacet.getWorld(pos.x, 0, pos.y);
                 IslandGenerator generator = islandLookup.getGenerator(graph);
                 model = generator.getBiomeModel();
                 lookup = islandLookup.getLookupCache(graph);

@@ -39,13 +39,16 @@ import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.cache.LoadingCache;
-
+import org.terasology.polyworld.voronoi.GraphFacet;
 /**
  * TODO Type description
  * @author Martin Steiger
  */
 @Produces(SurfaceHeightFacet.class)
-@Requires(@Facet(SeaLevelFacet.class))
+@Requires({
+        @Facet(SeaLevelFacet.class),
+        @Facet(GraphFacet.class)
+        })
 public class ElevationProvider implements FacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ElevationProvider.class);
@@ -74,6 +77,8 @@ public class ElevationProvider implements FacetProvider {
         float seaFloor = 2.0f;
         float maxHeight = 50.0f;
 
+        GraphFacet graphFacet = region.getRegionFacet(GraphFacet.class);
+
         // make sure that the sea is at least 1 block deep
         if (seaLevel <= seaFloor) {
             seaLevel = seaFloor + 1;
@@ -91,7 +96,7 @@ public class ElevationProvider implements FacetProvider {
             if (lookup == null || !lookup.getBounds().contains(p)) {
                 Sector sec = Sectors.getSectorForBlock(p.x, p.y);
                 IslandLookup islandLookup = islandCache.getUnchecked(sec);
-                Graph graph = islandLookup.getGraphAt(p);
+                Graph graph = graphFacet.getWorld(p.x, 0, p.y);
                 model = islandLookup.getGenerator(graph);
                 lookup = islandLookup.getLookupCache(graph);
             }
