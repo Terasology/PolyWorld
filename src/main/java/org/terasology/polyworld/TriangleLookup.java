@@ -20,7 +20,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -34,7 +33,6 @@ import org.terasology.polyworld.voronoi.Triangle;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
-import com.google.common.math.DoubleMath;
 
 /**
  * Creates a image-based lookup table to map individual pixel to triangles
@@ -46,8 +44,6 @@ public class TriangleLookup {
     private static final Logger logger = LoggerFactory.getLogger(TriangleLookup.class);
 
     private final BufferedImage image;
-    private final int offsetX;
-    private final int offsetY;
 
     // TODO: consider not storing this explicitly -> O(1) -> O(log n)
     //       due to binary search in region-triangle start index list
@@ -59,17 +55,13 @@ public class TriangleLookup {
      * Creates a lookup image for the graph's region triangles
      */
     public TriangleLookup(Graph graph) {
-        int width = DoubleMath.roundToInt(graph.getBounds().width(), RoundingMode.FLOOR);
-        int height = DoubleMath.roundToInt(graph.getBounds().height(), RoundingMode.FLOOR);
-        offsetX = DoubleMath.roundToInt(graph.getBounds().minX(), RoundingMode.FLOOR);
-        offsetY = DoubleMath.roundToInt(graph.getBounds().minY(), RoundingMode.FLOOR);
 
-        bounds = Rect2i.createFromMinAndSize(offsetX, offsetY, width, height);
+        bounds = graph.getBounds();
 
         // TODO: maybe use USHORT_GRAY instead
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(bounds.width(), bounds.height(), BufferedImage.TYPE_INT_RGB);
         Graphics2D g = image.createGraphics();
-        g.translate(-offsetX, -offsetY);
+        g.translate(-bounds.minX(), -bounds.minY());
 
         try {
             Stopwatch sw = Stopwatch.createStarted();
@@ -86,8 +78,8 @@ public class TriangleLookup {
      * @return the triangle that contains the point or <code>null</code>
      */
     public Triangle findTriangleAt(int x, int y) {
-        int imgX = x - offsetX;
-        int imgY = y - offsetY;
+        int imgX = x - bounds.minX();
+        int imgY = y - bounds.minY();
 
         if (imgX < 0 || imgY < 0 || imgX > image.getWidth() || imgY > image.getHeight()) {
             logger.debug("Coordinate {}/{} is out of bounds", x, y);

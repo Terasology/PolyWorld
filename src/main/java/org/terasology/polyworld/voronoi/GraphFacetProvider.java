@@ -82,7 +82,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
     @Override
     public void process(GeneratingRegion region) {
         Border3D border = region.getBorderForFacet(GraphFacet.class);
-        GraphFacet facet = new GraphFacetImpl(region.getRegion(), border);
+        GraphFacetImpl facet = new GraphFacetImpl(region.getRegion(), border);
 
         Collection<Rect2i> areas = getRegions(facet.getWorldRegion());
 

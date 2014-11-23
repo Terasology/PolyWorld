@@ -166,6 +166,8 @@ public class VoronoiGraph implements Graph {
                 onBottom |= closeEnough(p.getY(), bounds.maxY(), diff);
             }
 
+            // FIXME: corners do not know adjacent corners/edges!!
+            // TODO: change graph structure to automatically link adjacent corners
             if (onLeft && onTop) {
                 Corner c = new Corner(new Vector2d(bounds.minX(), bounds.minY()));
                 c.setBorder(true);

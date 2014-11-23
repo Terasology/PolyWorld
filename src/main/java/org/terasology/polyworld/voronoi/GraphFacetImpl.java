@@ -26,12 +26,13 @@ import org.terasology.world.generation.facets.base.SparseFacet3D;
 import com.google.common.collect.Lists;
 
 /**
- * TODO Type description
+ * Provides a collection of {@link Graph}s that
+ * cover the entire facet.
  * @author Martin Steiger
  */
 public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
 
-    private List<Graph> graphs = Lists.newArrayList();
+    private final List<Graph> graphs = Lists.newArrayList();
 
     /**
      * @param targetRegion
@@ -41,7 +42,9 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
         super(targetRegion, border);
     }
 
-    @Override
+    /**
+     * @param graph the graph to add (must overlap the facet area)
+     */
     public void add(Graph graph) {
         graphs.add(graph);
     }

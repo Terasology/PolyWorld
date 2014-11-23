@@ -25,11 +25,6 @@ import org.terasology.world.generation.WorldFacet3D;
  */
 public interface GraphFacet extends WorldFacet3D {
 
-    /**
-     * @param graph
-     */
-    void add(Graph graph);
-
     Graph get(int x, int y, int z);
 
     Graph get(Vector3i pos);
