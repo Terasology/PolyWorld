@@ -16,16 +16,19 @@
 
 package org.terasology.polyworld.voronoi;
 
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.terasology.math.Rect2i;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
+
+import com.google.common.math.DoubleMath;
 
 /**
  * VoronoiGraph.java
@@ -37,12 +40,18 @@ public class VoronoiGraph implements Graph {
     private final List<Edge> edges = new ArrayList<>();
     private final List<Corner> corners = new ArrayList<>();
     private final List<Region> regions = new ArrayList<>();
-    private final Rect2d bounds;
+    private final Rect2i bounds;
 
     public VoronoiGraph(Voronoi ov, int numLloydRelaxations) {
         Voronoi v = ov;
 
-        bounds = v.getPlotBounds();
+        int minX = DoubleMath.roundToInt(ov.getPlotBounds().minX(), RoundingMode.FLOOR);
+        int minY = DoubleMath.roundToInt(ov.getPlotBounds().minY(), RoundingMode.FLOOR);
+        int width = DoubleMath.roundToInt(ov.getPlotBounds().width(), RoundingMode.CEILING);
+        int height = DoubleMath.roundToInt(ov.getPlotBounds().height(), RoundingMode.CEILING);
+
+        bounds = Rect2i.createFromMinAndSize(minX, minY, width, height);
+
         for (int i = 0; i < numLloydRelaxations; i++) {
             List<Vector2d> points = v.siteCoords();
             for (Vector2d p : points) {
@@ -64,7 +73,7 @@ public class VoronoiGraph implements Graph {
     }
 
 
-    private static boolean liesOnAxes(Rect2d r, Vector2d p) {
+    private static boolean liesOnAxes(Rect2i r, Vector2d p) {
         int diff = 1;
         return closeEnough(p.getX(), r.minX(), diff)
             || closeEnough(p.getY(), r.minY(), diff)
@@ -195,7 +204,7 @@ public class VoronoiGraph implements Graph {
         if (p == null) {
             return null;
         }
-        int index = (int) ((int) p.getX() + (int) (p.getY()) * bounds.width() * 2);
+        int index = (int) p.getX() + (int) (p.getY()) * bounds.width() * 2;
         Corner c = pointCornerMap.get(index);
         if (c == null) {
             c = new Corner(p);
@@ -234,7 +243,7 @@ public class VoronoiGraph implements Graph {
      * @return the bounds
      */
     @Override
-    public Rect2d getBounds() {
+    public Rect2i getBounds() {
         return bounds;
     }
 }

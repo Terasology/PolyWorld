@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import org.terasology.math.geom.Rect2d;
+import org.terasology.math.Rect2i;
 import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
@@ -142,15 +142,15 @@ public class GraphPainter {
     }
 
     public void drawBounds(Graphics2D g, Graph graph) {
-        Rect2d bounds = graph.getBounds();
+        Rect2i bounds = graph.getBounds();
         g.setColor(Color.BLACK);
-        g.drawRect((int) bounds.minX(), (int) bounds.minY(), (int) bounds.width(), (int) bounds.height());
+        g.drawRect(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
     }
 
     public void fillBounds(Graphics2D g, Graph graph) {
-        Rect2d bounds = graph.getBounds();
+        Rect2i bounds = graph.getBounds();
         g.setColor(Color.MAGENTA);
-        g.fillRect((int) bounds.minX() + 1, (int) bounds.minY() + 1, (int) bounds.width() - 1, (int) bounds.height() - 1);
+        g.fillRect(bounds.minX() + 1, bounds.minY() + 1, bounds.width() - 1, bounds.height() - 1);
     }
 
 }

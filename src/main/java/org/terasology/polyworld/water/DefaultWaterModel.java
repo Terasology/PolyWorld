@@ -21,7 +21,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.terasology.math.geom.Rect2d;
+import org.terasology.math.Rect2i;
 import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.distribution.Distribution;
 import org.terasology.polyworld.voronoi.Corner;
@@ -54,7 +54,7 @@ public class DefaultWaterModel implements WaterModel {
         final double waterThreshold = .3;
 
         for (Corner c : graph.getCorners()) {
-            Rect2d bounds = graph.getBounds();
+            Rect2i bounds = graph.getBounds();
             Vector2d p2 = c.getLocation();
             double nx = (p2.getX() - bounds.minX()) / bounds.width();
             double ny = (p2.getY() - bounds.minY()) / bounds.height();

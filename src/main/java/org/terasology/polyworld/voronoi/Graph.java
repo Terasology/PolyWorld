@@ -18,7 +18,7 @@ package org.terasology.polyworld.voronoi;
 
 import java.util.List;
 
-import org.terasology.math.geom.Rect2d;
+import org.terasology.math.Rect2i;
 
 /**
  * TODO Type description
@@ -44,5 +44,5 @@ public interface Graph {
     /**
      * @return the bounds
      */
-    Rect2d getBounds();
+    Rect2i getBounds();
 }

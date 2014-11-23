@@ -19,13 +19,13 @@ package org.terasology.polyworld.voronoi;
 import java.util.Collections;
 import java.util.List;
 
-import org.terasology.math.geom.Rect2d;
+import org.terasology.math.Rect2i;
 import org.terasology.math.geom.Vector2d;
 
 import com.google.common.collect.Lists;
 
 /**
- * TODO Type description
+ * A graph that is based on a rectangular grid.
  * @author Martin Steiger
  */
 public class GridGraph implements Graph {
@@ -37,14 +37,14 @@ public class GridGraph implements Graph {
     private final List<Region> regions = Lists.newArrayList();
     private final List<Edge> edges = Lists.newArrayList();
 
-    private final Rect2d bounds;
+    private final Rect2i bounds;
 
     /**
      * @param bounds the bounding box
      * @param rows the number of rows
      * @param cols the number of columns
      */
-    public GridGraph(Rect2d bounds, int rows, int cols) {
+    public GridGraph(Rect2i bounds, int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         this.bounds = bounds;
@@ -184,7 +184,7 @@ public class GridGraph implements Graph {
     }
 
     @Override
-    public Rect2d getBounds() {
+    public Rect2i getBounds() {
         return bounds;
     }
 
