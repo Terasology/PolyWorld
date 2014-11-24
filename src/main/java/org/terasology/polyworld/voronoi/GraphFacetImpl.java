@@ -16,6 +16,8 @@
 
 package org.terasology.polyworld.voronoi;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.terasology.math.Region3i;
@@ -92,4 +94,8 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
         return get(pos.x, pos.y, pos.z);
     }
 
+    @Override
+    public Collection<Graph> getAllGraphs() {
+        return Collections.unmodifiableCollection(graphs);
+    }
 }

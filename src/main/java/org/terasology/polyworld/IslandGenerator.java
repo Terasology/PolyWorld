@@ -48,7 +48,6 @@ public class IslandGenerator {
 
         RadialDistribution waterDist = new RadialDistribution(seed);
         waterModel = new DefaultWaterModel(graph, waterDist);
-        elevationModel = new DefaultElevationModel(graph, waterModel);
 
         riverModel = new DefaultRiverModel(graph, elevationModel, waterModel);
         moistureModel = new DefaultMoistureModel(graph, riverModel, waterModel);
@@ -58,14 +57,6 @@ public class IslandGenerator {
 
     public MoistureModel getMoistureModel() {
         return moistureModel;
-    }
-
-    public ElevationModel getElevationModel() {
-        return elevationModel;
-    }
-
-    public WaterModel getWaterModel() {
-        return waterModel;
     }
 
     /**

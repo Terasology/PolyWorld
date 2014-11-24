@@ -16,18 +16,19 @@
 
 package org.terasology.polyworld.elevation;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.commonworld.Sector;
-import org.terasology.commonworld.Sectors;
 import org.terasology.math.Vector2i;
 import org.terasology.math.geom.Vector2d;
-import org.terasology.polyworld.IslandGenerator;
-import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.voronoi.Graph;
+import org.terasology.polyworld.voronoi.GraphFacet;
 import org.terasology.polyworld.voronoi.Triangle;
+import org.terasology.polyworld.water.WaterModel;
+import org.terasology.polyworld.water.WaterModelFacet;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetProvider;
@@ -38,8 +39,9 @@ import org.terasology.world.generation.facets.SeaLevelFacet;
 import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.cache.LoadingCache;
-import org.terasology.polyworld.voronoi.GraphFacet;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
 /**
  * TODO Type description
  * @author Martin Steiger
@@ -47,19 +49,19 @@ import org.terasology.polyworld.voronoi.GraphFacet;
 @Produces(SurfaceHeightFacet.class)
 @Requires({
         @Facet(SeaLevelFacet.class),
+        @Facet(WaterModelFacet.class),
         @Facet(GraphFacet.class)
         })
 public class ElevationProvider implements FacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ElevationProvider.class);
 
-    private final LoadingCache<Sector, IslandLookup> islandCache;
+    private final Cache<Graph, ElevationModel> elevationCache = CacheBuilder.newBuilder().build();
 
     /**
      *
      */
-    public ElevationProvider(LoadingCache<Sector, IslandLookup> islandCache) {
-        this.islandCache = islandCache;
+    public ElevationProvider() {
     }
 
     @Override
@@ -72,6 +74,7 @@ public class ElevationProvider implements FacetProvider {
         Border3D border = region.getBorderForFacet(SurfaceHeightFacet.class);
         SurfaceHeightFacet facet = new SurfaceHeightFacet(region.getRegion(), border);
 
+        final WaterModelFacet waterFacet = region.getRegionFacet(WaterModelFacet.class);
         SeaLevelFacet seaLevelFacet = region.getRegionFacet(SeaLevelFacet.class);
         float seaLevel = seaLevelFacet.getSeaLevel();
         float seaFloor = 2.0f;
@@ -85,26 +88,36 @@ public class ElevationProvider implements FacetProvider {
         }
 
         Stopwatch sw = Stopwatch.createStarted();
-        IslandGenerator model = null;
         Graph graph = null;
         Triangle prevTri = null;
         double wreg = 0;
         double wc1 = 0;
         double wc2 = 0;
 
+        ElevationModel elevation = null;
+
         for (Vector2i p : facet.getWorldRegion()) {
             if (graph == null || !graph.getBounds().contains(p)) {
-                Sector sec = Sectors.getSectorForBlock(p.x, p.y);
-                IslandLookup islandLookup = islandCache.getUnchecked(sec);
                 graph = graphFacet.getWorld(p.x, 0, p.y);
-                model = islandLookup.getGenerator(graph);
+                try {
+                    final Graph finalGraph = graph;
+                    elevation = elevationCache.get(finalGraph, new Callable<ElevationModel>() {
+
+                        @Override
+                        public ElevationModel call() {
+                            WaterModel waterModel = waterFacet.get(finalGraph);
+                            return new DefaultElevationModel(finalGraph, waterModel);
+                        }
+                    });
+                } catch (ExecutionException e) {
+                    logger.error("Could not create elevation model", e);
+                    return;
+                }
             }
 
             Triangle tri = graphFacet.getWorldTriangle(p.x, 0, p.y);
 
             if (tri != prevTri) {
-                @SuppressWarnings("null")
-                ElevationModel elevation = model.getElevationModel();
                 wreg = elevation.getElevation(tri.getRegion());
                 wc1 = elevation.getElevation(tri.getCorner1());
                 wc2 = elevation.getElevation(tri.getCorner2());
