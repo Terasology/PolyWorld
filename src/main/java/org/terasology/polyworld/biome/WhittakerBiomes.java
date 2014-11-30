@@ -15,8 +15,8 @@
  */
 package org.terasology.polyworld.biome;
 
-import org.terasology.world.biomes.BiomeRegistry;
 import org.terasology.world.biomes.BiomeRegistrator;
+import org.terasology.world.biomes.BiomeRegistry;
 
 /**
  * Registers all core biomes with the engine.

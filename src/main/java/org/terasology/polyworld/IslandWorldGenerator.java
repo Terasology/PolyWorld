@@ -15,23 +15,21 @@
  */
 package org.terasology.polyworld;
 
-import org.terasology.commonworld.Sector;
 import org.terasology.core.world.generator.facetProviders.SeaLevelProvider;
 import org.terasology.core.world.generator.rasterizers.FloraRasterizer;
 import org.terasology.engine.SimpleUri;
+import org.terasology.polyworld.biome.WhittakerBiomeModelProvider;
 import org.terasology.polyworld.biome.WhittakerBiomeProvider;
+import org.terasology.polyworld.elevation.ElevationModelFacetProvider;
 import org.terasology.polyworld.elevation.ElevationProvider;
-import org.terasology.polyworld.elevation.IslandLookup;
+import org.terasology.polyworld.moisture.MoistureModelFacetProvider;
 import org.terasology.polyworld.raster.WhittakerRasterizer;
+import org.terasology.polyworld.rivers.RiverModelFacetProvider;
 import org.terasology.polyworld.voronoi.GraphFacetProvider;
 import org.terasology.polyworld.water.WaterModelFacetProvider;
 import org.terasology.world.generation.BaseFacetedWorldGenerator;
 import org.terasology.world.generation.WorldBuilder;
 import org.terasology.world.generator.RegisterWorldGenerator;
-
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 @RegisterWorldGenerator(id = "island", displayName = "Island")
 public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
@@ -42,20 +40,16 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
 
     @Override
     protected WorldBuilder createWorld(final long seed) {
-        LoadingCache<Sector, IslandLookup> islandCache = CacheBuilder.newBuilder().build(new CacheLoader<Sector, IslandLookup>() {
-
-            @Override
-            public IslandLookup load(Sector sector) throws Exception {
-                return new IslandLookup(sector, seed);
-            }
-        });
-
         return new WorldBuilder(seed)
                 .addProvider(new SeaLevelProvider(32))
                 .addProvider(new GraphFacetProvider())
                 .addProvider(new WaterModelFacetProvider())
+                .addProvider(new ElevationModelFacetProvider())
                 .addProvider(new ElevationProvider())
-                .addProvider(new WhittakerBiomeProvider(islandCache))
+                .addProvider(new RiverModelFacetProvider())
+                .addProvider(new MoistureModelFacetProvider())
+                .addProvider(new WhittakerBiomeModelProvider())
+                .addProvider(new WhittakerBiomeProvider())
                 .addProvider(new FloraProvider())
                 .addRasterizer(new WhittakerRasterizer())
                 .addRasterizer(new FloraRasterizer())

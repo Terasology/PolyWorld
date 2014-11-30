@@ -17,8 +17,6 @@ package org.terasology.polyworld;
 
 import java.util.Map;
 
-import org.terasology.core.world.CoreBiome;
-import org.terasology.core.world.generator.facets.BiomeFacet;
 import org.terasology.core.world.generator.facets.PlantFacet;
 import org.terasology.math.TeraMath;
 import org.terasology.polyworld.biome.WhittakerBiome;

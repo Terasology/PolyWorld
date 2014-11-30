@@ -14,28 +14,37 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.voronoi;
+package org.terasology.polyworld.biome;
 
-import java.util.Collection;
+import java.util.Map;
 
-import org.terasology.math.Vector3i;
-import org.terasology.world.generation.WorldFacet3D;
+import org.terasology.polyworld.voronoi.Graph;
+import org.terasology.world.generation.WorldFacet;
+
+import com.google.common.collect.Maps;
 
 /**
  * TODO Type description
  * @author Martin Steiger
  */
-public interface GraphFacet extends WorldFacet3D {
+public class WhittakerBiomeModelFacet implements WorldFacet {
 
-    Graph get(int x, int y, int z);
+    private final Map<Graph, BiomeModel> map = Maps.newHashMap();
 
-    Graph get(Vector3i pos);
+    /**
+     * @param g
+     * @param unchecked
+     */
+    public void add(Graph g, BiomeModel model) {
+        map.put(g, model);
+    }
 
-    Graph getWorld(int x, int y, int z);
+    /**
+     * @param graph
+     * @return
+     */
+    public BiomeModel get(Graph graph) {
+        return map.get(graph);
+    }
 
-    Graph getWorld(Vector3i pos);
-
-    Collection<Graph> getAllGraphs();
-
-    Triangle getWorldTriangle(int x, int y, int z);
 }

@@ -16,12 +16,7 @@
 
 package org.terasology.polyworld.biome;
 
-import org.terasology.commonworld.Sector;
-import org.terasology.commonworld.Sectors;
 import org.terasology.math.Vector2i;
-import org.terasology.polyworld.IslandGenerator;
-import org.terasology.polyworld.TriangleLookup;
-import org.terasology.polyworld.elevation.IslandLookup;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.GraphFacet;
 import org.terasology.polyworld.voronoi.Region;
@@ -33,21 +28,13 @@ import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 import org.terasology.world.generation.Requires;
 
-import com.google.common.cache.LoadingCache;
-
 /**
  * TODO Type description
  * @author Martin Steiger
  */
 @Produces(WhittakerBiomeFacet.class)
-@Requires(@Facet(GraphFacet.class))
+@Requires(@Facet(WhittakerBiomeModelFacet.class))
 public class WhittakerBiomeProvider implements FacetProvider {
-
-    private LoadingCache<Sector, IslandLookup> islandCache;
-
-    public WhittakerBiomeProvider(LoadingCache<Sector, IslandLookup> islandCache) {
-        this.islandCache = islandCache;
-    }
 
     @Override
     public void setSeed(long seed) {
@@ -58,6 +45,7 @@ public class WhittakerBiomeProvider implements FacetProvider {
     public void process(GeneratingRegion region) {
         Border3D border = region.getBorderForFacet(WhittakerBiomeFacet.class);
         WhittakerBiomeFacet facet = new WhittakerBiomeFacet(region.getRegion(), border);
+        WhittakerBiomeModelFacet biomeModelFacet = region.getRegionFacet(WhittakerBiomeModelFacet.class);
 
         GraphFacet graphFacet = region.getRegionFacet(GraphFacet.class);
 
@@ -66,17 +54,13 @@ public class WhittakerBiomeProvider implements FacetProvider {
 
         for (Vector2i pos : facet.getWorldRegion()) {
             if (graph == null || !graph.getBounds().contains(pos)) {
-                Sector sec = Sectors.getSectorForBlock(pos.x, pos.y);
-                IslandLookup islandLookup = islandCache.getUnchecked(sec);
                 graph = graphFacet.getWorld(pos.x, 0, pos.y);
-                IslandGenerator generator = islandLookup.getGenerator(graph);
-                model = generator.getBiomeModel();
+                model = biomeModelFacet.get(graph);
             }
 
             Triangle tri = graphFacet.getWorldTriangle(pos.x, 0, pos.y);
             Region r = tri.getRegion();
 
-            @SuppressWarnings("null")
             WhittakerBiome biome = model.getBiome(r);
 
             facet.setWorld(pos, biome);

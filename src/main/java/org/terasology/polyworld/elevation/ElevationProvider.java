@@ -16,8 +16,6 @@
 
 package org.terasology.polyworld.elevation;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -27,8 +25,6 @@ import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.GraphFacet;
 import org.terasology.polyworld.voronoi.Triangle;
-import org.terasology.polyworld.water.WaterModel;
-import org.terasology.polyworld.water.WaterModelFacet;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetProvider;
@@ -39,24 +35,21 @@ import org.terasology.world.generation.facets.SeaLevelFacet;
 import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 
 /**
- * TODO Type description
+ * Converts graph-based elevation information of the {@link ElevationModelFacet}
+ * into a continuous area.
  * @author Martin Steiger
  */
 @Produces(SurfaceHeightFacet.class)
 @Requires({
         @Facet(SeaLevelFacet.class),
-        @Facet(WaterModelFacet.class),
+        @Facet(ElevationModelFacet.class),
         @Facet(GraphFacet.class)
         })
 public class ElevationProvider implements FacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ElevationProvider.class);
-
-    private final Cache<Graph, ElevationModel> elevationCache = CacheBuilder.newBuilder().build();
 
     /**
      *
@@ -74,7 +67,7 @@ public class ElevationProvider implements FacetProvider {
         Border3D border = region.getBorderForFacet(SurfaceHeightFacet.class);
         SurfaceHeightFacet facet = new SurfaceHeightFacet(region.getRegion(), border);
 
-        final WaterModelFacet waterFacet = region.getRegionFacet(WaterModelFacet.class);
+        ElevationModelFacet elevationModelFacet = region.getRegionFacet(ElevationModelFacet.class);
         SeaLevelFacet seaLevelFacet = region.getRegionFacet(SeaLevelFacet.class);
         float seaLevel = seaLevelFacet.getSeaLevel();
         float seaFloor = 2.0f;
@@ -87,7 +80,9 @@ public class ElevationProvider implements FacetProvider {
             seaLevel = seaFloor + 1;
         }
 
-        Stopwatch sw = Stopwatch.createStarted();
+        final boolean traceLog = logger.isTraceEnabled();
+        Stopwatch sw = traceLog ? Stopwatch.createStarted() : null;
+
         Graph graph = null;
         Triangle prevTri = null;
         double wreg = 0;
@@ -99,20 +94,7 @@ public class ElevationProvider implements FacetProvider {
         for (Vector2i p : facet.getWorldRegion()) {
             if (graph == null || !graph.getBounds().contains(p)) {
                 graph = graphFacet.getWorld(p.x, 0, p.y);
-                try {
-                    final Graph finalGraph = graph;
-                    elevation = elevationCache.get(finalGraph, new Callable<ElevationModel>() {
-
-                        @Override
-                        public ElevationModel call() {
-                            WaterModel waterModel = waterFacet.get(finalGraph);
-                            return new DefaultElevationModel(finalGraph, waterModel);
-                        }
-                    });
-                } catch (ExecutionException e) {
-                    logger.error("Could not create elevation model", e);
-                    return;
-                }
+                elevation = elevationModelFacet.get(graph);
             }
 
             Triangle tri = graphFacet.getWorldTriangle(p.x, 0, p.y);
@@ -130,7 +112,7 @@ public class ElevationProvider implements FacetProvider {
             facet.setWorld(p, blockHeight);
         }
 
-        if (logger.isTraceEnabled()) {
+        if (traceLog) {
             logger.trace("Created elevation facet for {} in {}ms.", facet.getWorldRegion(), sw.elapsed(TimeUnit.MILLISECONDS));
         }
 
