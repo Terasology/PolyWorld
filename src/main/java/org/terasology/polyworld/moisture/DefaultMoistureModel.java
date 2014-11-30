@@ -22,9 +22,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.voronoi.Corner;
@@ -32,6 +29,7 @@ import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.water.WaterModel;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
@@ -87,9 +85,12 @@ public class DefaultMoistureModel implements MoistureModel {
 
     private void redistributeMoisture() {
 
-        Predicate<? super Corner> isLand = c -> !waterModel.isOcean(c) && !waterModel.isCoast(c);
-        Stream<Corner> stream = graph.getCorners().stream().filter(isLand);
-        List<Corner> landCorners = stream.collect(Collectors.toList());
+        List<Corner> landCorners = Lists.newArrayList();
+        for (Corner c : graph.getCorners()) {
+            if (!waterModel.isOcean(c) && !waterModel.isCoast(c)) {
+                landCorners.add(c);
+            }
+        }
 
         Collections.sort(landCorners, new Comparator<Corner>() {
             @Override

@@ -81,7 +81,7 @@ public class WhittakerBiomeModelProvider implements FacetProvider {
         region.setRegionFacet(WhittakerBiomeModelFacet.class, facet);
     }
 
-    private BiomeModel getOrCreate(Graph graph, ElevationModel elevationModel, WaterModel waterModel, MoistureModel moistureModel) {
+    private BiomeModel getOrCreate(Graph graph, final ElevationModel elevationModel, final WaterModel waterModel, final MoistureModel moistureModel) {
         try {
             return modelCache.get(graph, new Callable<BiomeModel>() {
 

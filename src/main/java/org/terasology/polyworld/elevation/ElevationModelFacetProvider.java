@@ -76,7 +76,7 @@ public class ElevationModelFacetProvider implements FacetProvider {
         region.setRegionFacet(ElevationModelFacet.class, elevationFacet);
     }
 
-    private ElevationModel getOrCreate(final Graph graph, WaterModel waterModel) {
+    private ElevationModel getOrCreate(final Graph graph, final WaterModel waterModel) {
         try {
             return elevationCache.get(graph, new Callable<ElevationModel>() {
 

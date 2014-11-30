@@ -79,7 +79,7 @@ public class MoistureModelFacetProvider implements FacetProvider {
         region.setRegionFacet(MoistureModelFacet.class, moistureFacet);
     }
 
-    private MoistureModel getOrCreate(Graph graph, RiverModel riverModel, WaterModel waterModel) {
+    private MoistureModel getOrCreate(final Graph graph, final RiverModel riverModel, final WaterModel waterModel) {
         try {
             return modelCache.get(graph, new Callable<MoistureModel>() {
 

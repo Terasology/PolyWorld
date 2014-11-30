@@ -79,7 +79,7 @@ public class RiverModelFacetProvider implements FacetProvider {
         region.setRegionFacet(RiverModelFacet.class, riverFacet);
     }
 
-    private RiverModel getOrCreate(Graph graph, ElevationModel elevationModel, WaterModel waterModel) {
+    private RiverModel getOrCreate(final Graph graph, final ElevationModel elevationModel, final WaterModel waterModel) {
         try {
             return modelCache.get(graph, new Callable<RiverModel>() {
 
