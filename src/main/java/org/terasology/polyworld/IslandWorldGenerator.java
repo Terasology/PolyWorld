@@ -41,7 +41,8 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
     @Override
     protected WorldBuilder createWorld(final long seed) {
         return new WorldBuilder(seed)
-                .addProvider(new SeaLevelProvider(32))
+                .setSeaLevel(6)
+                .addProvider(new SeaLevelProvider(6))
                 .addProvider(new GraphFacetProvider())
                 .addProvider(new WaterModelFacetProvider())
                 .addProvider(new ElevationModelFacetProvider())

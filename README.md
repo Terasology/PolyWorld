@@ -2,7 +2,7 @@
 
 Based on the [map generating algorithm by Amit Patel of Red Blob Games](http://www-cs-students.stanford.edu/~amitp/game-programming/polygon-map-generation/).
 
-![image1](images/2014-11-04_plants_and_biomes_crop.png  "A screenshot of version 0.4.0")
+![image1](images/2014-12-31_lake.png "A screenshot of version 0.4.0")
 
 This module requires [TeraMath]().
 

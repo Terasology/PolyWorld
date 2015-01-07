@@ -34,6 +34,9 @@ import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.Rect2d;
 import org.terasology.math.geom.Vector2d;
 import org.terasology.polyworld.TriangleLookup;
+import org.terasology.polyworld.rp.RegionProvider;
+import org.terasology.polyworld.rp.GridRegionProvider;
+import org.terasology.polyworld.rp.SubdivRegionProvider;
 import org.terasology.rendering.nui.properties.Range;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
@@ -83,10 +86,12 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     private GraphProviderConfiguration configuration = new GraphProviderConfiguration();
 
+    private RegionProvider regionProvider;
+
     @Override
     public void setSeed(long seed) {
         this.seed = seed;
-
+        regionProvider = new SubdivRegionProvider(seed, 4, 200);
     }
 
     @Override
@@ -117,7 +122,9 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
         for (int sx = minSec.getCoords().x; sx <= maxSec.getCoords().x; sx++) {
             for (int sz = minSec.getCoords().y; sz <= maxSec.getCoords().y; sz++) {
-                for (Rect2i area : getSectorRegions(Sectors.getSector(sx, sz))) {
+                Sector sector = Sectors.getSector(sx, sz);
+                Rect2i fullArea = sector.getWorldBounds();
+                for (Rect2i area : regionProvider.getSectorRegions(fullArea)) {
                     if (area.overlaps(target)) {
                         result.add(area);
                     }
@@ -126,30 +133,6 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         }
 
         return result;
-    }
-
-
-    Collection<Rect2i> getSectorRegions(Sector sector) {
-        Rect2i fullArea = sector.getWorldBounds();
-        int width = fullArea.width() / 2;
-        int height = fullArea.height() / 2;
-
-        Collection<Rect2i> areas = Lists.newArrayList();
-
-        int x = fullArea.minX();
-        int y = fullArea.minY();
-        areas.add(Rect2i.createFromMinAndSize(x, y, width, height));
-
-        x = fullArea.minX() + width;
-        areas.add(Rect2i.createFromMinAndSize(x, y, width, height));
-
-        y = fullArea.minY() + height;
-        areas.add(Rect2i.createFromMinAndSize(x, y, width, height));
-
-        x = fullArea.minX();
-        areas.add(Rect2i.createFromMinAndSize(x, y, width, height));
-
-        return areas;
     }
 
     private Graph createVoronoiGraph(Rect2i bounds) {
