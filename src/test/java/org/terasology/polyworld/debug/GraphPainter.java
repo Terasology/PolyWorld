@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Random;
 
 import org.terasology.math.Rect2i;
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.Graph;
@@ -51,8 +52,8 @@ public class GraphPainter {
         g.setStroke(new BasicStroke(1));
         g.setColor(Color.ORANGE);
         for (Edge e : graph.getEdges()) {
-            Vector2d r0c = e.getRegion0().getCenter();
-            Vector2d r1c = e.getRegion1().getCenter();
+            Vector2f r0c = e.getRegion0().getCenter();
+            Vector2f r1c = e.getRegion1().getCenter();
             g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
         }
     }
@@ -61,8 +62,8 @@ public class GraphPainter {
         g.setStroke(new BasicStroke(1));
         g.setColor(Color.CYAN);
         for (Edge e : graph.getEdges()) {
-            Vector2d r0c = e.getCorner0().getLocation();
-            Vector2d r1c = e.getCorner1().getLocation();
+            BaseVector2f r0c = e.getCorner0().getLocation();
+            BaseVector2f r1c = e.getCorner1().getLocation();
             g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
         }
     }
@@ -109,9 +110,9 @@ public class GraphPainter {
         int[] xPoints = new int[3];
         int[] yPoints = new int[3];
 
-        Vector2d p0 = tri.getRegion().getCenter();
-        Vector2d p1 = tri.getCorner1().getLocation();
-        Vector2d p2 = tri.getCorner2().getLocation();
+        BaseVector2f p0 = tri.getRegion().getCenter();
+        BaseVector2f p1 = tri.getCorner1().getLocation();
+        BaseVector2f p2 = tri.getCorner2().getLocation();
 
         xPoints[0] = DoubleMath.roundToInt(p0.getX(), mode);
         yPoints[0] = DoubleMath.roundToInt(p0.getY(), mode);

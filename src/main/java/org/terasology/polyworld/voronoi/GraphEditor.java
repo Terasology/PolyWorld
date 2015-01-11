@@ -18,7 +18,9 @@ package org.terasology.polyworld.voronoi;
 
 import java.util.Collection;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.ImmutableVector2f;
+import org.terasology.math.geom.Vector2f;
 import org.terasology.utilities.random.Random;
 
 /**
@@ -38,19 +40,19 @@ public final class GraphEditor {
      * @param corners the collection of corners
      */
     public static void improveCorners(Collection<Corner> corners) {
-        Vector2d[] newP = new Vector2d[corners.size()];
+        ImmutableVector2f[] newP = new ImmutableVector2f[corners.size()];
         int idx = 0;
         for (Corner c : corners) {
             if (c.isBorder()) {
                 newP[idx] = c.getLocation();
             } else {
-                double x = 0;
-                double y = 0;
+                float x = 0;
+                float y = 0;
                 for (Region region : c.getTouches()) {
                     x += region.getCenter().getX();
                     y += region.getCenter().getY();
                 }
-                newP[idx] = new Vector2d(x / c.getTouches().size(), y / c.getTouches().size());
+                newP[idx] = new ImmutableVector2f(x / c.getTouches().size(), y / c.getTouches().size());
             }
             idx++;
         }
@@ -67,20 +69,19 @@ public final class GraphEditor {
      * @param random the random number gen
      * @param maxDist the maximum moving distance
      */
-    public static void jitterCorners(Collection<Corner> corners, Random random, double maxDist) {
+    public static void jitterCorners(Collection<Corner> corners, Random random, float maxDist) {
 
         for (Corner c : corners) {
             if (c.isBorder()) {
                 continue;
             }
 
-            Vector2d loc = c.getLocation();
-            double ang = random.nextDouble(0, Math.PI * 2.0);
-            double len = random.nextDouble(0, maxDist);
-            double rx = Math.cos(ang) * len;
-            double ry = Math.sin(ang) * len;
-            loc.addX(rx);
-            loc.addY(ry);
+            ImmutableVector2f loc = c.getLocation();
+            float ang = random.nextFloat(0, (float) (Math.PI * 2.0));
+            float len = random.nextFloat(0, maxDist);
+            float rx = (float) (Math.cos(ang) * len);
+            float ry = (float) (Math.sin(ang) * len);
+            c.setLocation(loc.add(rx,  ry));
         }
     }
 }

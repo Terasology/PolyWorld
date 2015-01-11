@@ -20,7 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.ImmutableVector2f;
 
 import com.google.common.collect.Sets;
 
@@ -34,14 +35,14 @@ public class Corner {
     private final Set<Region> touches = Sets.newLinkedHashSet();
     private final Set<Corner> adjacent = Sets.newLinkedHashSet();
     private final Set<Edge> protrudes = Sets.newLinkedHashSet();
-    private Vector2d loc;
+    private ImmutableVector2f loc;
     private boolean border;
 
     /**
      * @param loc
      */
-    public Corner(Vector2d loc) {
-        this.loc = loc;
+    public Corner(ImmutableVector2f loc) {
+        setLocation(loc);
     }
 
     /**
@@ -93,14 +94,14 @@ public class Corner {
     /**
      * @return the loc
      */
-    public Vector2d getLocation() {
+    public ImmutableVector2f getLocation() {
         return loc;
     }
 
     /**
      * @param nloc the loc to set
      */
-    public void setLocation(Vector2d nloc) {
+    public void setLocation(ImmutableVector2f nloc) {
         this.loc = nloc;
     }
 

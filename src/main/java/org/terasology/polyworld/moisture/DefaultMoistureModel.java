@@ -39,7 +39,7 @@ import com.google.common.collect.Maps;
 public class DefaultMoistureModel implements MoistureModel {
 
     private final Graph graph;
-    private final Map<Corner, Double> moisture = Maps.newHashMap();
+    private final Map<Corner, Float> moisture = Maps.newHashMap();
     private final RiverModel riverModel;
     private WaterModel waterModel;
 
@@ -57,17 +57,17 @@ public class DefaultMoistureModel implements MoistureModel {
         for (Corner c : graph.getCorners()) {
             int riverValue = riverModel.getRiverValue(c);
             if ((waterModel.isWater(c) || riverValue > 0) && !waterModel.isOcean(c)) {
-                moisture.put(c, riverValue > 0 ? Math.min(3.0, (0.2 * riverValue)) : 1.0);
+                moisture.put(c, riverValue > 0 ? Math.min(3.0f, (0.2f * riverValue)) : 1.0f);
                 queue.push(c);
             } else {
-                moisture.put(c, 0.0);
+                moisture.put(c, 0.0f);
             }
         }
 
         while (!queue.isEmpty()) {
             Corner c = queue.pop();
             for (Corner a : c.getAdjacent()) {
-                double newM = .9 * getMoisture(c);
+                float newM = .9f * getMoisture(c);
                 if (newM > getMoisture(a)) {
                     moisture.put(a, newM);
                     queue.add(a);
@@ -78,7 +78,7 @@ public class DefaultMoistureModel implements MoistureModel {
         // Salt water
         for (Corner c : graph.getCorners()) {
             if (waterModel.isOcean(c) || waterModel.isCoast(c)) {
-                moisture.put(c, 1.0);
+                moisture.put(c, 1.0f);
             }
         }
     }
@@ -95,20 +95,20 @@ public class DefaultMoistureModel implements MoistureModel {
         Collections.sort(landCorners, new Comparator<Corner>() {
             @Override
             public int compare(Corner o1, Corner o2) {
-                double m1 = getMoisture(o1);
-                double m2 = getMoisture(o2);
+                float m1 = getMoisture(o1);
+                float m2 = getMoisture(o2);
 
                 return Double.compare(m1, m2);
             }
         });
         for (int i = 0; i < landCorners.size(); i++) {
-            moisture.put(landCorners.get(i), (double) i / landCorners.size());
+            moisture.put(landCorners.get(i), (float) i / landCorners.size());
         }
     }
 
     @Override
-    public double getMoisture(Region r) {
-        double total = 0;
+    public float getMoisture(Region r) {
+        float total = 0;
         for (Corner c : r.getCorners()) {
             total += getMoisture(c);
         }
@@ -116,7 +116,7 @@ public class DefaultMoistureModel implements MoistureModel {
     }
 
     @Override
-    public double getMoisture(Corner c) {
+    public float getMoisture(Corner c) {
         return moisture.get(c);
     }
 }

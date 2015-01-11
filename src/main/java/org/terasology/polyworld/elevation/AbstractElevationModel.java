@@ -26,8 +26,8 @@ import org.terasology.polyworld.voronoi.Region;
 public abstract class AbstractElevationModel implements ElevationModel {
 
     @Override
-    public double getElevation(Region r) {
-        double total = 0;
+    public float getElevation(Region r) {
+        float total = 0;
         for (Corner c : r.getCorners()) {
             total += getElevation(c);
         }

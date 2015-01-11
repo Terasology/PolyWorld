@@ -25,8 +25,10 @@ import java.util.Map;
 
 import org.terasology.math.Rect2i;
 import org.terasology.math.delaunay.Voronoi;
+import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 
 import com.google.common.math.DoubleMath;
 
@@ -53,12 +55,12 @@ public class VoronoiGraph implements Graph {
         bounds = Rect2i.createFromMinAndSize(minX, minY, width, height);
 
         for (int i = 0; i < numLloydRelaxations; i++) {
-            List<Vector2d> points = v.siteCoords();
-            for (Vector2d p : points) {
-                List<Vector2d> region = v.region(p);
-                double x = 0;
-                double y = 0;
-                for (Vector2d c : region) {
+            List<Vector2f> points = v.siteCoords();
+            for (Vector2f p : points) {
+                List<Vector2f> region = v.region(p);
+                float x = 0;
+                float y = 0;
+                for (Vector2f c : region) {
                     x += c.getX();
                     y += c.getY();
                 }
@@ -73,7 +75,7 @@ public class VoronoiGraph implements Graph {
     }
 
 
-    private static boolean liesOnAxes(Rect2i r, Vector2d p) {
+    private static boolean liesOnAxes(Rect2i r, BaseVector2f p) {
         int diff = 1;
         return closeEnough(p.getX(), r.minX(), diff)
             || closeEnough(p.getY(), r.minY(), diff)
@@ -81,14 +83,14 @@ public class VoronoiGraph implements Graph {
             || closeEnough(p.getY(), r.maxY(), diff);
     }
 
-    private static boolean closeEnough(double d1, double d2, double diff) {
+    private static boolean closeEnough(float d1, float d2, float diff) {
         return Math.abs(d1 - d2) <= diff;
     }
 
     private void buildGraph(Voronoi v) {
-        final Map<Vector2d, Region> pointCenterMap = new HashMap<>();
-        final List<Vector2d> points = v.siteCoords();
-        for (Vector2d p : points) {
+        final Map<Vector2f, Region> pointCenterMap = new HashMap<>();
+        final List<Vector2f> points = v.siteCoords();
+        for (Vector2f p : points) {
             Region c = new Region(p);
             regions.add(c);
             pointCenterMap.put(p, c);
@@ -106,7 +108,7 @@ public class VoronoiGraph implements Graph {
             final LineSegment vEdge = libedge.voronoiEdge();
             final LineSegment dEdge = libedge.delaunayLine();
 
-            if (vEdge.getP0() == null || vEdge.getP1() == null) {
+            if (vEdge == null) {
                 continue;
             }
 
@@ -159,7 +161,7 @@ public class VoronoiGraph implements Graph {
 
             int diff = 1;
             for (Corner corner : region.getCorners()) {
-                Vector2d p = corner.getLocation();
+                BaseVector2f p = corner.getLocation();
                 onLeft |= closeEnough(p.getX(), bounds.minX(), diff);
                 onTop |= closeEnough(p.getY(), bounds.minY(), diff);
                 onRight |= closeEnough(p.getX(), bounds.maxX(), diff);
@@ -169,28 +171,28 @@ public class VoronoiGraph implements Graph {
             // FIXME: corners do not know adjacent corners/edges!!
             // TODO: change graph structure to automatically link adjacent corners
             if (onLeft && onTop) {
-                Corner c = new Corner(new Vector2d(bounds.minX(), bounds.minY()));
+                Corner c = new Corner(new ImmutableVector2f(bounds.minX(), bounds.minY()));
                 c.setBorder(true);
                 corners.add(c);
                 region.addCorner(c);
             }
 
             if (onLeft && onBottom) {
-                Corner c = new Corner(new Vector2d(bounds.minX(), bounds.maxY()));
+                Corner c = new Corner(new ImmutableVector2f(bounds.minX(), bounds.maxY()));
                 c.setBorder(true);
                 corners.add(c);
                 region.addCorner(c);
             }
 
             if (onRight && onTop) {
-                Corner c = new Corner(new Vector2d(bounds.maxX(), bounds.minY()));
+                Corner c = new Corner(new ImmutableVector2f(bounds.maxX(), bounds.minY()));
                 c.setBorder(true);
                 corners.add(c);
                 region.addCorner(c);
             }
 
             if (onRight && onBottom) {
-                Corner c = new Corner(new Vector2d(bounds.maxX(), bounds.maxY()));
+                Corner c = new Corner(new ImmutableVector2f(bounds.maxX(), bounds.maxY()));
                 c.setBorder(true);
                 corners.add(c);
                 region.addCorner(c);
@@ -202,7 +204,7 @@ public class VoronoiGraph implements Graph {
     /**
      * ensures that each corner is represented by only one corner object
      */
-    private Corner makeCorner(Map<Integer, Corner> pointCornerMap, Vector2d p) {
+    private Corner makeCorner(Map<Integer, Corner> pointCornerMap, ImmutableVector2f p) {
         if (p == null) {
             return null;
         }

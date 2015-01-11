@@ -29,13 +29,13 @@ public interface ElevationModel {
      * @param corner the corner of interest
      * @return the elevation at that corner
      */
-    double getElevation(Corner corner);
+    float getElevation(Corner corner);
 
     /**
      * @param r the region
      * @return the
      */
-    double getElevation(Region r);
+    float getElevation(Region r);
 
     /**
      * @param c the corner of interest

@@ -22,7 +22,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.terasology.math.Rect2i;
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.distribution.Distribution;
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Graph;
@@ -51,15 +52,15 @@ public class DefaultWaterModel implements WaterModel {
      */
     public DefaultWaterModel(Graph graph, Distribution dist) {
 
-        final double waterThreshold = .3;
+        final float waterThreshold = .3f;
 
         for (Corner c : graph.getCorners()) {
             Rect2i bounds = graph.getBounds();
-            Vector2d p2 = c.getLocation();
-            double nx = (p2.getX() - bounds.minX()) / bounds.width();
-            double ny = (p2.getY() - bounds.minY()) / bounds.height();
+            BaseVector2f p2 = c.getLocation();
+            float nx = (p2.getX() - bounds.minX()) / bounds.width();
+            float ny = (p2.getY() - bounds.minY()) / bounds.height();
 
-            setWater(c, dist.isInside(new Vector2d(nx, ny)));
+            setWater(c, dist.isInside(new Vector2f(nx, ny)));
         }
 
         Deque<Region> queue = new LinkedList<>();
@@ -76,7 +77,7 @@ public class DefaultWaterModel implements WaterModel {
                     numWater++;
                 }
             }
-            setWater(region, isOcean(region) || ((double) numWater / corners.size() >= waterThreshold));
+            setWater(region, isOcean(region) || ((float) numWater / corners.size() >= waterThreshold));
         }
         while (!queue.isEmpty()) {
             final Region region = queue.pop();

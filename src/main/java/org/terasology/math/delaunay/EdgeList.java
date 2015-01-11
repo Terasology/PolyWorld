@@ -19,18 +19,18 @@ package org.terasology.math.delaunay;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 
 final class EdgeList {
 
-    private double deltax;
-    private double xmin;
+    private float deltax;
+    private float xmin;
     private int hashsize;
     private final List<Halfedge> hash;
     private Halfedge leftEnd;
     private Halfedge rightEnd;
 
-    public EdgeList(double xmin, double deltax, int sqrtNumSites) {
+    public EdgeList(float xmin, float deltax, int sqrtNumSites) {
         this.xmin = xmin;
         this.deltax = deltax;
         this.hashsize = 2 * sqrtNumSites;
@@ -89,7 +89,7 @@ final class EdgeList {
      * @return
      *
      */
-    public Halfedge edgeListLeftNeighbor(Vector2d p) {
+    public Halfedge edgeListLeftNeighbor(Vector2f p) {
         int i;
         int bucket;
         Halfedge halfEdge;

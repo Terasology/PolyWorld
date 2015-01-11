@@ -16,7 +16,7 @@
 
 package org.terasology.polyworld.distribution;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 
 /**
  * A distribution that looks like Amit's blob (star-shape)
@@ -25,11 +25,11 @@ import org.terasology.math.geom.Vector2d;
 public class AmitBlobDistribution implements Distribution {
 
     @Override
-    public boolean isInside(Vector2d p2) {
-        Vector2d p = new Vector2d(2 * (p2.getX() - 0.5), 2 * (p2.getY() - 0.5));
+    public boolean isInside(Vector2f p2) {
+        Vector2f p = new Vector2f(2 * (p2.getX() - 0.5f), 2 * (p2.getY() - 0.5f));
 
-        boolean eye1 = new Vector2d(p.getX() - 0.2, p.getY() / 2 + 0.2).length() < 0.05;
-        boolean eye2 = new Vector2d(p.getX() + 0.2, p.getY() / 2 + 0.2).length() < 0.05;
+        boolean eye1 = new Vector2f(p.getX() - 0.2f, p.getY() / 2 + 0.2f).length() < 0.05f;
+        boolean eye2 = new Vector2f(p.getX() + 0.2f, p.getY() / 2 + 0.2f).length() < 0.05f;
         boolean body = p.length() < 0.8 - 0.18 * Math.sin(5 * Math.atan2(p.getY(), p.getX()));
         return !(body && !eye1 && !eye2);
     }

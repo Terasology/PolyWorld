@@ -31,7 +31,7 @@ import org.terasology.utilities.random.Random;
  */
 public class DefaultLavaModel implements LavaModel {
 
-    private static final double FRACTION_LAVA_FISSURES = 0.2;  // 0 to 1, probability of fissure
+    private static final float FRACTION_LAVA_FISSURES = 0.2f;  // 0 to 1, probability of fissure
 
     private Random random = new FastRandom(345345);
 

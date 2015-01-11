@@ -19,17 +19,17 @@ package org.terasology.math.delaunay;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 
 final class HalfedgePriorityQueue {
     private List<Halfedge> hash;
     private int count;
     private int minBucket;
     private int hashsize;
-    private double ymin;
-    private double deltay;
+    private float ymin;
+    private float deltay;
 
-    public HalfedgePriorityQueue(double ymin, double deltay, int sqrtNumSites) {
+    public HalfedgePriorityQueue(float ymin, float deltay, int sqrtNumSites) {
         this.ymin = ymin;
         this.deltay = deltay;
         hashsize = 4 * sqrtNumSites;
@@ -125,10 +125,10 @@ final class HalfedgePriorityQueue {
      * Voronoi diagram
      *
      */
-    public Vector2d min() {
+    public Vector2f min() {
         adjustMinBucket();
         Halfedge answer = hash.get(minBucket).nextInPriorityQueue;
-        return new Vector2d(answer.vertex.getX(), answer.ystar);
+        return new Vector2f(answer.vertex.getX(), answer.ystar);
     }
 
     /**

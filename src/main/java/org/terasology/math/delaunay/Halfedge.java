@@ -16,7 +16,7 @@
 
 package org.terasology.math.delaunay;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 
 final class Halfedge {
 
@@ -28,7 +28,7 @@ final class Halfedge {
     public Vertex vertex;
     
     // the vertex's y-coordinate in the transformed Voronoi space V*
-    public double ystar;
+    public float ystar;
 
     public Halfedge(Edge edge, LR lr) {
         this.edge = edge;
@@ -73,18 +73,18 @@ final class Halfedge {
         vertex = null;
     }
 
-    public boolean isLeftOf(Vector2d p) {
+    public boolean isLeftOf(Vector2f p) {
         Site topSite;
         boolean rightOfSite;
         boolean above;
         boolean fast;
-        double dxp;
-        double dyp;
-        double dxs;
-        double t1;
-        double t2;
-        double t3;
-        double yl;
+        float dxp;
+        float dyp;
+        float dxs;
+        float t1;
+        float t2;
+        float t3;
+        float yl;
 
         topSite = edge.getRightSite();
         rightOfSite = p.getX() > topSite.getX();

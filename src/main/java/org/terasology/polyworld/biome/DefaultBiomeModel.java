@@ -42,8 +42,8 @@ public class DefaultBiomeModel implements BiomeModel {
 
     @Override
     public WhittakerBiome getBiome(Region region) {
-        double moisture = moistureModel.getMoisture(region);
-        double elevation = elevationModel.getElevation(region);
+        float moisture = moistureModel.getMoisture(region);
+        float elevation = elevationModel.getElevation(region);
 
         if (waterModel.isOcean(region)) {
             return WhittakerBiome.OCEAN;

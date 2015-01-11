@@ -29,12 +29,12 @@ public interface MoistureModel {
      * @param c
      * @return
      */
-    double getMoisture(Corner c);
+    float getMoisture(Corner c);
 
     /**
      * @param r
      * @return
      */
-    double getMoisture(Region r);
+    float getMoisture(Region r);
 
 }

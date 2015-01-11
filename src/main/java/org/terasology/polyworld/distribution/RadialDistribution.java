@@ -18,7 +18,7 @@ package org.terasology.polyworld.distribution;
 
 import java.util.Random;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 
 /**
  * TODO Type description
@@ -26,7 +26,7 @@ import org.terasology.math.geom.Vector2d;
  */
 public class RadialDistribution implements Distribution {
 
-    private static final double ISLAND_FACTOR = 1.07;  // 1.0 means no small islands; 2.0 leads to a lot
+    private static final float ISLAND_FACTOR = 1.07f;  // 1.0 means no small islands; 2.0 leads to a lot
 
     private final int bumps;
     private final double startAngle;
@@ -46,19 +46,19 @@ public class RadialDistribution implements Distribution {
     }
 
     @Override
-    public boolean isInside(Vector2d p2) {
-        Vector2d p = new Vector2d(2 * (p2.getX() - 0.5), 2 * (p2.getY() - 0.5));
+    public boolean isInside(Vector2f p2) {
+        Vector2f p = new Vector2f(2 * (p2.getX() - 0.5f), 2 * (p2.getY() - 0.5f));
 
-        double angle = Math.atan2(p.getY(), p.getX());
-        double length = 0.5 * (Math.max(Math.abs(p.getX()), Math.abs(p.getY())) + p.length());
+        float angle = (float) Math.atan2(p.getY(), p.getX());
+        float length = 0.5f * (Math.max(Math.abs(p.getX()), Math.abs(p.getY())) + p.length());
 
-        double r1 = 0.5 + 0.40 * Math.sin(startAngle + bumps * angle + Math.cos((bumps + 3) * angle));
-        double r2 = 0.7 - 0.20 * Math.sin(startAngle + bumps * angle - Math.sin((bumps + 2) * angle));
+        float r1 = 0.5f + 0.40f * (float) Math.sin(startAngle + bumps * angle + Math.cos((bumps + 3) * angle));
+        float r2 = 0.7f - 0.20f * (float) Math.sin(startAngle + bumps * angle - Math.sin((bumps + 2) * angle));
         if (Math.abs(angle - dipAngle) < dipWidth
                 || Math.abs(angle - dipAngle + 2 * Math.PI) < dipWidth
                 || Math.abs(angle - dipAngle - 2 * Math.PI) < dipWidth) {
-            r1 = 0.2;
-            r2 = 0.2;
+            r1 = 0.2f;
+            r2 = 0.2f;
         }
         return !(length < r1 || (length > r1 * ISLAND_FACTOR && length < r2));
     }

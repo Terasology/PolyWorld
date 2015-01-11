@@ -16,8 +16,9 @@
 
 package org.terasology.polyworld.voronoi;
 
-import org.terasology.math.geom.Vector2d;
-import org.terasology.math.geom.Vector3d;
+import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.Vector2f;
+import org.terasology.math.geom.Vector3f;
 
 import com.google.common.base.Preconditions;
 
@@ -59,37 +60,37 @@ public class Triangle {
         return c2;
     }
 
-    public double computeInterpolated(Vector2d p, double wreg, double wc1, double wc2) {
-        Vector3d bary = computeBarycentricCoordinates(p);
+    public float computeInterpolated(Vector2f p, float wreg, float wc1, float wc2) {
+        Vector3f bary = computeBarycentricCoordinates(p);
         return wreg * bary.getX() + wc1 * bary.getY() + wc2 * bary.getZ();
     }
 
-    public Vector3d computeBarycentricCoordinates(Vector2d p) {
+    public Vector3f computeBarycentricCoordinates(Vector2f p) {
         return computeBarycentricCoordinates(region.getCenter(), c1.getLocation(), c2.getLocation(), p);
     }
 
-    public static boolean barycoordInsideTriangle(Vector3d bary) {
+    public static boolean barycoordInsideTriangle(Vector3f bary) {
         return bary.getX() >= 0 && bary.getY() >= 0 && bary.getX() + bary.getY() <= 1;
     }
 
-    private static Vector3d computeBarycentricCoordinates(Vector2d a, Vector2d b, Vector2d c, Vector2d p) {
+    private static Vector3f computeBarycentricCoordinates(BaseVector2f a, BaseVector2f b, BaseVector2f c, BaseVector2f p) {
 
-        Vector2d v0 = new Vector2d(b).sub(a);
-        Vector2d v1 = new Vector2d(c).sub(a);
-        Vector2d v2 = new Vector2d(p).sub(a);
+        Vector2f v0 = new Vector2f(b).sub(a);
+        Vector2f v1 = new Vector2f(c).sub(a);
+        Vector2f v2 = new Vector2f(p).sub(a);
 
-        double d00 = v0.dot(v0);
-        double d01 = v0.dot(v1);
-        double d11 = v1.dot(v1);
-        double d20 = v2.dot(v0);
-        double d21 = v2.dot(v1);
-        double denom = d00 * d11 - d01 * d01;
-        double u = (d11 * d20 - d01 * d21) / denom;
-        double v = (d00 * d21 - d01 * d20) / denom;
-        double w = 1.0 - u - v;
+        float d00 = v0.dot(v0);
+        float d01 = v0.dot(v1);
+        float d11 = v1.dot(v1);
+        float d20 = v2.dot(v0);
+        float d21 = v2.dot(v1);
+        float denom = d00 * d11 - d01 * d01;
+        float u = (d11 * d20 - d01 * d21) / denom;
+        float v = (d00 * d21 - d01 * d20) / denom;
+        float w = 1.0f - u - v;
 
         // note that w is the first parameter
-        return new Vector3d(w, u, v);
+        return new Vector3f(w, u, v);
     }
 
     @Override

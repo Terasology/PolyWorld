@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.Vector2i;
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.GraphFacet;
 import org.terasology.polyworld.voronoi.Triangle;
@@ -85,9 +85,9 @@ public class ElevationProvider implements FacetProvider {
 
         Graph graph = null;
         Triangle prevTri = null;
-        double wreg = 0;
-        double wc1 = 0;
-        double wc2 = 0;
+        float wreg = 0;
+        float wc1 = 0;
+        float wc2 = 0;
 
         ElevationModel elevation = null;
 
@@ -106,7 +106,7 @@ public class ElevationProvider implements FacetProvider {
                 prevTri = tri;
             }
 
-            float ele = (float) tri.computeInterpolated(new Vector2d(p.x, p.y), wreg, wc1, wc2);
+            float ele = tri.computeInterpolated(new Vector2f(p.x, p.y), wreg, wc1, wc2);
             float blockHeight = convertModelElevation(seaLevel, seaFloor, maxHeight, ele);
 
             facet.setWorld(p, blockHeight);

@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -35,12 +35,12 @@ public class Region {
     private final Collection<Edge> borders;
     private final Collection<Region> neighbors;
 
-    private final Vector2d center;
+    private final Vector2f center;
 
     /**
      * @param centerPos the center of the region
      */
-    public Region(Vector2d centerPos) {
+    public Region(Vector2f centerPos) {
         this.center = centerPos;
         this.corners = Sets.newTreeSet(new AngleOrdering(centerPos));
         this.borders = Sets.newLinkedHashSet();
@@ -50,7 +50,7 @@ public class Region {
     /**
      * @return the pos
      */
-    public Vector2d getCenter() {
+    public Vector2f getCenter() {
         return center;
     }
 

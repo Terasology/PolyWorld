@@ -31,11 +31,10 @@ import org.terasology.math.Rect2i;
 import org.terasology.math.Region3i;
 import org.terasology.math.Vector3i;
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.Rect2d;
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Rect2f;
+import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.rp.RegionProvider;
-import org.terasology.polyworld.rp.GridRegionProvider;
 import org.terasology.polyworld.rp.SubdivRegionProvider;
 import org.terasology.rendering.nui.properties.Range;
 import org.terasology.world.generation.Border3D;
@@ -142,14 +141,14 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         long areaSeed = seed ^ bounds.hashCode();
         final Random r = new Random(areaSeed);
 
-        List<Vector2d> points = Lists.newArrayListWithCapacity(numSites);
+        List<Vector2f> points = Lists.newArrayListWithCapacity(numSites);
         for (int i = 0; i < numSites; i++) {
-            double px = bounds.minX() + r.nextDouble() * bounds.width();
-            double py = bounds.minY() + r.nextDouble() * bounds.height();
-            points.add(new Vector2d(px, py));
+            float px = bounds.minX() + r.nextFloat() * bounds.width();
+            float py = bounds.minY() + r.nextFloat() * bounds.height();
+            points.add(new Vector2f(px, py));
         }
 
-        Rect2d doubleBounds = Rect2d.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+        Rect2f doubleBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
         final Voronoi v = new Voronoi(points, doubleBounds);
         final Graph graph = new VoronoiGraph(v, 2);
         GraphEditor.improveCorners(graph.getCorners());

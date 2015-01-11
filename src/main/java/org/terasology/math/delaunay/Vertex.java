@@ -16,19 +16,19 @@
 
 package org.terasology.math.delaunay;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 
 final class Vertex implements ICoord {
 
-    public static final Vertex VERTEX_AT_INFINITY = new Vertex(Double.NaN, Double.NaN);
-    
-    private Vector2d coord;
+    public static final Vertex VERTEX_AT_INFINITY = new Vertex(Float.NaN, Float.NaN);
 
-    private Vertex(double x, double y) {
-        coord = new Vector2d(x, y);
+    private Vector2f coord;
+
+    private Vertex(float x, float y) {
+        coord = new Vector2f(x, y);
     }
-    
-    private static Vertex create(double x, double y) {
+
+    private static Vertex create(float x, float y) {
         if (Double.isNaN(x) || Double.isNaN(y)) {
             return VERTEX_AT_INFINITY;
         } else {
@@ -37,10 +37,10 @@ final class Vertex implements ICoord {
     }
 
     @Override
-    public Vector2d getCoord() {
+    public Vector2f getCoord() {
         return coord;
     }
-    
+
     @Override
     public String toString() {
         return "Vertex (" + coord + ")";
@@ -57,9 +57,9 @@ final class Vertex implements ICoord {
         Edge edge1;
         Edge edge;
         Halfedge halfedge;
-        double determinant;
-        double intersectionX;
-        double intersectionY;
+        float determinant;
+        float intersectionX;
+        float intersectionY;
         boolean rightOfSite;
 
         edge0 = halfedge0.edge;
@@ -96,11 +96,11 @@ final class Vertex implements ICoord {
         return Vertex.create(intersectionX, intersectionY);
     }
 
-    public double getX() {
+    public float getX() {
         return coord.x();
     }
 
-    public double getY() {
+    public float getY() {
         return coord.y();
     }
 }

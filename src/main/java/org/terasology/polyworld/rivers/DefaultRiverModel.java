@@ -45,7 +45,7 @@ public class DefaultRiverModel implements RiverModel {
 
         for (int i = 0; i < count; i++) {
             Corner c = corners.get(r.nextInt(corners.size()));
-            double elevation = elevationModel.getElevation(c);
+            float elevation = elevationModel.getElevation(c);
             if (waterModel.isOcean(c) || elevation < 0.3 || elevation > 0.9) {
                 continue;
             }
@@ -59,7 +59,7 @@ public class DefaultRiverModel implements RiverModel {
                 if (!waterModel.isWater(edge.getCorner0()) || !waterModel.isWater(edge.getCorner1())) {
                     incrementEdgeVal(edge, 1);
                     incrementCornerVal(c, 1);
-                    incrementCornerVal(downslope, 1);  // TODO: fix double count
+                    incrementCornerVal(downslope, 1);  // TODO: fix float count
                 }
                 c = downslope;
             }

@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.Rect2i;
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.BaseVector2f;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.voronoi.Triangle;
@@ -102,9 +102,9 @@ public class TriangleLookup {
         int index = 0;
         for (final Region reg : regions) {
             for (Triangle tri : reg.computeTriangles()) {
-                Vector2d p0 = tri.getRegion().getCenter();
-                Vector2d p1 = tri.getCorner1().getLocation();
-                Vector2d p2 = tri.getCorner2().getLocation();
+                BaseVector2f p0 = tri.getRegion().getCenter();
+                BaseVector2f p1 = tri.getCorner1().getLocation();
+                BaseVector2f p2 = tri.getCorner2().getLocation();
 
                 Path2D path = new Path2D.Double();
                 path.moveTo(p0.getX(), p0.getY());

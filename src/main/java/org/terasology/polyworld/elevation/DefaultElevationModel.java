@@ -38,7 +38,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
 
     private Graph graph;
 
-    private final Map<Corner, Double> elevations = Maps.newHashMap();
+    private final Map<Corner, Float> elevations = Maps.newHashMap();
 
     private final WaterModel waterModel;
 
@@ -58,7 +58,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
 
         for (Corner c : graph.getCorners()) {
             if (waterModel.isCoast(c)) {
-                elevations.put(c, 0.0);
+                elevations.put(c, 0.0f);
             }
         }
     }
@@ -68,21 +68,21 @@ public class DefaultElevationModel extends AbstractElevationModel {
         Deque<Corner> queue = new LinkedList<>();
         for (Corner c : graph.getCorners()) {
             if (c.isBorder()) {
-                elevations.put(c, -1.0);
+                elevations.put(c, -1.0f);
                 queue.add(c);
             } else {
-                elevations.put(c, Double.MAX_VALUE);
+                elevations.put(c, Float.MAX_VALUE);
             }
         }
 
         while (!queue.isEmpty()) {
             Corner c = queue.pop();
             for (Corner a : c.getAdjacent()) {
-                double newElevation = elevations.get(c);
+                float newElevation = elevations.get(c);
                 if (!waterModel.isWater(c) && !waterModel.isWater(a)) {
                     newElevation += 1;
                 }
-                Double prevElevation = elevations.get(a);
+                Float prevElevation = elevations.get(a);
                 if (newElevation < prevElevation) {
                     elevations.put(a, newElevation);
                     queue.add(a);
@@ -97,8 +97,8 @@ public class DefaultElevationModel extends AbstractElevationModel {
         Collections.sort(landCorners, new Comparator<Corner>() {
             @Override
             public int compare(Corner o1, Corner o2) {
-                Double e1 = elevations.get(o1);
-                Double e2 = elevations.get(o2);
+                Float e1 = elevations.get(o1);
+                Float e2 = elevations.get(o2);
                 return e1.compareTo(e2);
             }
         });
@@ -108,14 +108,14 @@ public class DefaultElevationModel extends AbstractElevationModel {
         // --> solve for x
         // x = 1 - sqrt(1 - y)
 
-        final double scaleFactor = 1.1;
+        final float scaleFactor = 1.1f;
         for (int i = 0; i < landCorners.size(); i++) {
 
             // y is the relative position in the sorted list
-            double y = (double) i / (landCorners.size() - 1);
+            float y = (float) i / (landCorners.size() - 1);
 
             // x is the desired elevation
-            double x = Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y));
+            float x = (float) (Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y)));
 
             // clamp to max 1
             x = Math.min(x, 1);
@@ -126,7 +126,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
     }
 
     @Override
-    public double getElevation(Corner corner) {
+    public float getElevation(Corner corner) {
         return elevations.get(corner);
     }
 

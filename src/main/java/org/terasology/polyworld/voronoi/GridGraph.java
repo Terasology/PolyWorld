@@ -20,7 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.terasology.math.Rect2i;
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.ImmutableVector2f;
+import org.terasology.math.geom.Vector2f;
 
 import com.google.common.collect.Lists;
 
@@ -49,14 +50,14 @@ public class GridGraph implements Graph {
         this.cols = cols;
         this.bounds = bounds;
 
-        double dx = bounds.width() / cols;
-        double dy = bounds.height() / rows;
+        float dx = bounds.width() / cols;
+        float dy = bounds.height() / rows;
 
         for (int r = 0; r <= rows; r++) {
             for (int c = 0; c <= cols; c++) {
-                double x = bounds.minX() + c * dx;
-                double y = bounds.minY() + r * dy;
-                Corner corner = new Corner(new Vector2d(x, y));
+                float x = bounds.minX() + c * dx;
+                float y = bounds.minY() + r * dy;
+                Corner corner = new Corner(new ImmutableVector2f(x, y));
                 corner.setBorder(r == 0 || c == 0 || r == rows || c == cols);
                 corners.add(corner);
             }
@@ -74,9 +75,9 @@ public class GridGraph implements Graph {
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
-                double x = bounds.minX() + (c + 0.5) * dx;
-                double y = bounds.minY() + (r + 0.5) * dy;
-                Vector2d pos = new Vector2d(x, y);
+                float x = bounds.minX() + (c + 0.5f) * dx;
+                float y = bounds.minY() + (r + 0.5f) * dy;
+                Vector2f pos = new Vector2f(x, y);
                 Region reg = new Region(pos);
                 Corner tl = getCorner(r, c);
                 Corner tr = getCorner(r, c + 1);

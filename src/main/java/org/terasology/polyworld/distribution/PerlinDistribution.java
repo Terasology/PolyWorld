@@ -16,7 +16,7 @@
 
 package org.terasology.polyworld.distribution;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 import org.terasology.utilities.procedural.BrownianNoise3D;
 import org.terasology.utilities.procedural.PerlinNoise;
 
@@ -36,12 +36,12 @@ public class PerlinDistribution implements Distribution {
     }
 
     @Override
-    public boolean isInside(Vector2d p2) {
-        Vector2d p = new Vector2d(2 * (p2.getX() - 0.5), 2 * (p2.getY() - 0.5));
+    public boolean isInside(Vector2f p2) {
+        Vector2f p = new Vector2f(2 * (p2.getX() - 0.5f), 2 * (p2.getY() - 0.5f));
 
-        double x = (p.getX() + 1) * 128;
-        double y = (p.getY() + 1) * 128;
-        double val = noise.getScale() + noise.noise((float) x, (float) y, 0);
+        float x = (p.getX() + 1) * 128;
+        float y = (p.getY() + 1) * 128;
+        float val = (float) noise.getScale() + noise.noise(x, y, 0);
         return val < 1.3 + .7 * p.length();
     }
 }

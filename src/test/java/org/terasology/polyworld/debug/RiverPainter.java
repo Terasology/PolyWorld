@@ -20,7 +20,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.BaseVector2f;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.Graph;
@@ -44,8 +44,8 @@ public class RiverPainter {
             if (riverValue > 0) {
                 g.setStroke(new BasicStroke(1 + (int) Math.sqrt(riverValue * 2)));
                 g.setColor(riverColor);
-                Vector2d c0p = e.getCorner0().getLocation();
-                Vector2d c1p = e.getCorner1().getLocation();
+                BaseVector2f c0p = e.getCorner0().getLocation();
+                BaseVector2f c1p = e.getCorner1().getLocation();
                 g.drawLine((int) c0p.getX(), (int) c0p.getY(), (int) c1p.getX(), (int) c1p.getY());
             }
         }

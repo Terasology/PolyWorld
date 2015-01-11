@@ -19,10 +19,10 @@ package org.terasology.math.delaunay;
 import java.util.EnumMap;
 import java.util.Map;
 
-import org.terasology.math.geom.BaseVector2d;
+import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Rect2d;
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Rect2f;
+import org.terasology.math.geom.Vector2f;
 
 /**
  * The line segment connecting the two Sites is part of the Delaunay
@@ -37,10 +37,10 @@ public final class Edge {
     public static final Edge DELETED = new Edge();
 
     // the equation of the edge: ax + by = c
-    private double a;
-    private double b;
-    private double c;
-    
+    private float a;
+    private float b;
+    private float c;
+
     // the two Voronoi vertices that the edge connects
     // (if one of them is null, the edge extends to infinity)
     private Vertex leftVertex;
@@ -50,9 +50,9 @@ public final class Edge {
      * Once clipVertices() is called, this HashMap will hold two Points
      * representing the clipped coordinates of the left and right ends...
      */
-    private final Map<LR, Vector2d> clippedVertices = new EnumMap<LR, Vector2d>(LR.class);
+    private final Map<LR, Vector2f> clippedVertices = new EnumMap<LR, Vector2f>(LR.class);
 
-    /** 
+    /**
      * The two input Sites for which this Edge is a bisector:
      */
     private final Map<LR, Site> sites = new EnumMap<LR, Site>(LR.class);
@@ -70,21 +70,21 @@ public final class Edge {
      *
      */
     public static Edge createBisectingEdge(Site site0, Site site1) {
-        double a;
-        double b;
-        double c;
+        float a;
+        float b;
+        float c;
 
-        double dx = site1.getX() - site0.getX();
-        double dy = site1.getY() - site0.getY();
-        double absdx = dx > 0 ? dx : -dx;
-        double absdy = dy > 0 ? dy : -dy;
-        c = site0.getX() * dx + site0.getY() * dy + (dx * dx + dy * dy) * 0.5;
+        float dx = site1.getX() - site0.getX();
+        float dy = site1.getY() - site0.getY();
+        float absdx = dx > 0 ? dx : -dx;
+        float absdy = dy > 0 ? dy : -dy;
+        c = site0.getX() * dx + site0.getY() * dy + (dx * dx + dy * dy) * 0.5f;
         if (absdx > absdy) {
-            a = 1.0;
+            a = 1.0f;
             b = dy / dx;
             c /= dx;
         } else {
-            b = 1.0;
+            b = 1.0f;
             a = dx / dy;
             c /= dy;
         }
@@ -112,7 +112,7 @@ public final class Edge {
 
     public LineSegment voronoiEdge() {
         if (!isVisible()) {
-            return new LineSegment(null, null);
+            return null;
         }
         return new LineSegment(clippedVertices.get(LR.LEFT),
                 clippedVertices.get(LR.RIGHT));
@@ -138,13 +138,13 @@ public final class Edge {
         return (leftVertex == null || rightVertex == null);
     }
 
-    public double sitesDistance() {
-        return BaseVector2d.distance(getLeftSite().getCoord(), getRightSite().getCoord());
+    public float sitesDistance() {
+        return BaseVector2f.distance(getLeftSite().getCoord(), getRightSite().getCoord());
     }
 
-    public static double compareSitesDistancesMax(Edge edge0, Edge edge1) {
-        double length0 = edge0.sitesDistance();
-        double length1 = edge1.sitesDistance();
+    public static float compareSitesDistancesMax(Edge edge0, Edge edge1) {
+        float length0 = edge0.sitesDistance();
+        float length1 = edge1.sitesDistance();
         if (length0 < length1) {
             return 1;
         }
@@ -154,15 +154,15 @@ public final class Edge {
         return 0;
     }
 
-    public static double compareSitesDistances(Edge edge0, Edge edge1) {
+    public static float compareSitesDistances(Edge edge0, Edge edge1) {
         return -compareSitesDistancesMax(edge0, edge1);
     }
 
-    public Map<LR, Vector2d> getClippedEnds() {
+    public Map<LR, Vector2f> getClippedEnds() {
         return clippedVertices;
     }
-    
-    /** 
+
+    /**
      * @return true unless the entire Edge is outside the bounds.
      */
     public boolean isVisible() {
@@ -203,18 +203,18 @@ public final class Edge {
      * @param bounds
      *
      */
-    public void clipVertices(Rect2d bounds) {
-        double xmin = bounds.minX();
-        double ymin = bounds.minY();
-        double xmax = bounds.maxX();
-        double ymax = bounds.maxY();
+    public void clipVertices(Rect2f bounds) {
+        float xmin = bounds.minX();
+        float ymin = bounds.minY();
+        float xmax = bounds.maxX();
+        float ymax = bounds.maxY();
 
         Vertex vertex0;
         Vertex vertex1;
-        double x0;
-        double x1;
-        double y0;
-        double y1;
+        float x0;
+        float x1;
+        float y0;
+        float y1;
 
         if (getA() == 1.0 && getB() >= 0.0) {
             vertex0 = rightVertex;
@@ -304,15 +304,15 @@ public final class Edge {
 
         clippedVertices.clear();
         if (vertex0 == leftVertex) {
-            clippedVertices.put(LR.LEFT, new Vector2d(x0, y0));
-            clippedVertices.put(LR.RIGHT, new Vector2d(x1, y1));
+            clippedVertices.put(LR.LEFT, new Vector2f(x0, y0));
+            clippedVertices.put(LR.RIGHT, new Vector2f(x1, y1));
         } else {
-            clippedVertices.put(LR.RIGHT, new Vector2d(x0, y0));
-            clippedVertices.put(LR.LEFT, new Vector2d(x1, y1));
+            clippedVertices.put(LR.RIGHT, new Vector2f(x0, y0));
+            clippedVertices.put(LR.LEFT, new Vector2f(x1, y1));
         }
     }
-    
-    public void set(double na, double nb, double nc) {
+
+    public void set(float na, float nb, float nc) {
         this.a = na;
         this.b = nb;
         this.c = nc;
@@ -321,21 +321,21 @@ public final class Edge {
     /**
      * @return the a
      */
-    public double getA() {
+    public float getA() {
         return a;
     }
 
     /**
      * @return the b
      */
-    public double getB() {
+    public float getB() {
         return b;
     }
 
     /**
      * @return the c
      */
-    public double getC() {
+    public float getC() {
         return c;
     }
 }

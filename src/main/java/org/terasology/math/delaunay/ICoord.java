@@ -16,9 +16,9 @@
 
 package org.terasology.math.delaunay;
 
-import org.terasology.math.geom.Vector2d;
+import org.terasology.math.geom.Vector2f;
 
 public interface ICoord {
 
-    Vector2d getCoord();
+    Vector2f getCoord();
 }
