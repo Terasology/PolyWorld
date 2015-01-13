@@ -112,11 +112,11 @@ public class VoronoiGraph implements Graph {
                 continue;
             }
 
-            Corner c0 = makeCorner(pointCornerMap, vEdge.getP0());
-            Corner c1 = makeCorner(pointCornerMap, vEdge.getP1());
+            Corner c0 = makeCorner(pointCornerMap, vEdge.getStart());
+            Corner c1 = makeCorner(pointCornerMap, vEdge.getEnd());
 
-            Region r0 = pointCenterMap.get(dEdge.getP0());
-            Region r1 = pointCenterMap.get(dEdge.getP1());
+            Region r0 = pointCenterMap.get(dEdge.getStart());
+            Region r1 = pointCenterMap.get(dEdge.getEnd());
 
             final Edge edge = new Edge(c0, c1, r0, r1);
 

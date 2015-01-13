@@ -156,7 +156,7 @@ public final class Site implements ICoord {
         if (edgeOrientations == null) {
             reorderEdges();
             region = clipToBounds(clippingBounds);
-            if ((new Polygon(region)).winding() == Winding.CLOCKWISE) {
+            if ((Polygon.createCopy(region)).winding() == Winding.CLOCKWISE) {
                 Collections.reverse(region);
             }
         }
