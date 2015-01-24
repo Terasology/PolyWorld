@@ -17,11 +17,14 @@ package org.terasology.polyworld;
 
 import org.terasology.core.world.generator.facetProviders.SeaLevelProvider;
 import org.terasology.core.world.generator.rasterizers.FloraRasterizer;
+import org.terasology.core.world.generator.rasterizers.TreeRasterizer;
 import org.terasology.engine.SimpleUri;
 import org.terasology.polyworld.biome.WhittakerBiomeModelProvider;
 import org.terasology.polyworld.biome.WhittakerBiomeProvider;
 import org.terasology.polyworld.elevation.ElevationModelFacetProvider;
 import org.terasology.polyworld.elevation.ElevationProvider;
+import org.terasology.polyworld.flora.FloraProvider;
+import org.terasology.polyworld.flora.TreeProvider;
 import org.terasology.polyworld.moisture.MoistureModelFacetProvider;
 import org.terasology.polyworld.raster.WhittakerRasterizer;
 import org.terasology.polyworld.rivers.RiverModelFacetProvider;
@@ -51,8 +54,10 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
                 .addProvider(new MoistureModelFacetProvider())
                 .addProvider(new WhittakerBiomeModelProvider())
                 .addProvider(new WhittakerBiomeProvider())
+                .addProvider(new TreeProvider())
                 .addProvider(new FloraProvider())
                 .addRasterizer(new WhittakerRasterizer())
+                .addRasterizer(new TreeRasterizer())
                 .addRasterizer(new FloraRasterizer())
                 .addPlugins();
     }
