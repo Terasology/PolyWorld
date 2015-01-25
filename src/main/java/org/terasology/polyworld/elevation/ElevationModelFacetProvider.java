@@ -69,20 +69,21 @@ public class ElevationModelFacetProvider implements FacetProvider {
 
         for (Graph graph : graphFacet.getAllGraphs()) {
             WaterModel waterModel = waterFacet.get(graph);
-            ElevationModel elevationModel = getOrCreate(graph, waterModel);
+            float heightScale = graphFacet.getHeightScale(graph);
+            ElevationModel elevationModel = getOrCreate(graph, waterModel, heightScale);
             elevationFacet.add(graph, elevationModel);
         }
 
         region.setRegionFacet(ElevationModelFacet.class, elevationFacet);
     }
 
-    private ElevationModel getOrCreate(final Graph graph, final WaterModel waterModel) {
+    private ElevationModel getOrCreate(final Graph graph, final WaterModel waterModel, float scale) {
         try {
             return elevationCache.get(graph, new Callable<ElevationModel>() {
 
                 @Override
                 public ElevationModel call() {
-                    return new DefaultElevationModel(graph, waterModel);
+                    return new DefaultElevationModel(graph, waterModel, scale);
                 }
             });
         } catch (ExecutionException e) {

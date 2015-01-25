@@ -19,6 +19,7 @@ package org.terasology.polyworld.voronoi;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.terasology.math.Region3i;
 import org.terasology.math.Vector3i;
@@ -28,6 +29,7 @@ import org.terasology.world.generation.facets.base.SparseFacet3D;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * Provides a collection of {@link Graph}s that
@@ -38,6 +40,8 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
 
     private final List<Graph> graphs = Lists.newArrayList();
     private final List<TriangleLookup> lookups = Lists.newArrayList();
+
+    private final Map<Graph, Float> heightScales = Maps.newHashMap();
 
     /**
      * @param targetRegion
@@ -97,5 +101,21 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
     @Override
     public Collection<Graph> getAllGraphs() {
         return Collections.unmodifiableCollection(graphs);
+    }
+
+    @Override
+    public void setHeightScale(Graph g, float scale) {
+        Preconditions.checkArgument(graphs.contains(g), "g is not part of this facet");
+
+        heightScales.put(g, Float.valueOf(scale));
+    }
+
+    @Override
+    public float getHeightScale(Graph g) {
+        Preconditions.checkArgument(graphs.contains(g), "g is not part of this facet");
+
+        Float scale = heightScales.get(g);
+        // JAVA8: replace with getOrDefault
+        return scale == null ? 1.0f : scale.floatValue();
     }
 }

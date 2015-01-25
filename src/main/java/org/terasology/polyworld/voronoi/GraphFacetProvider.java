@@ -99,11 +99,14 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         GraphFacetImpl facet = new GraphFacetImpl(region.getRegion(), border);
 
         Collection<Rect2i> areas = getRegions(facet.getWorldRegion());
+        float maxArea = Sector.SIZE_X * Sector.SIZE_Z;
 
         for (Rect2i area : areas) {
             Graph graph = graphCache.getUnchecked(area);
             TriangleLookup lookup = lookupCache.getUnchecked(graph);
             facet.add(graph, lookup);
+            float scale = area.area() / maxArea;
+            facet.setHeightScale(graph, scale);
         }
 
         region.setRegionFacet(GraphFacet.class, facet);

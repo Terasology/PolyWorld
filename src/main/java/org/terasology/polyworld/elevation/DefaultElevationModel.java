@@ -42,7 +42,12 @@ public class DefaultElevationModel extends AbstractElevationModel {
 
     private final WaterModel waterModel;
 
-    public DefaultElevationModel(Graph graph, WaterModel waterModel) {
+    /**
+     * @param graph the polygon graph
+     * @param waterModel the water model that defines ocean regions
+     * @param scale a non-linear scale factor to adjust the height distribution in [0..1]
+     */
+    public DefaultElevationModel(Graph graph, WaterModel waterModel, float scale) {
         this.graph = graph;
         this.waterModel = waterModel;
 
@@ -54,7 +59,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
         }
 
         assignCornerElevations();
-        redistributeElevations(landCorners);
+        redistributeElevations(landCorners, scale);
 
         for (Corner c : graph.getCorners()) {
             if (waterModel.isCoast(c)) {
@@ -91,7 +96,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
         }
     }
 
-    private void redistributeElevations(List<Corner> landCorners) {
+    private void redistributeElevations(List<Corner> landCorners, float scale) {
 
         // sort land corners by elevation
         Collections.sort(landCorners, new Comparator<Corner>() {
@@ -112,7 +117,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
         for (int i = 0; i < landCorners.size(); i++) {
 
             // y is the relative position in the sorted list
-            float y = (float) i / (landCorners.size() - 1);
+            float y = scale * (float) i / (landCorners.size() - 1);
 
             // x is the desired elevation
             float x = (float) (Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y)));

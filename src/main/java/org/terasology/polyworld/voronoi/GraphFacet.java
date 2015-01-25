@@ -37,5 +37,9 @@ public interface GraphFacet extends WorldFacet3D {
 
     Collection<Graph> getAllGraphs();
 
+    void setHeightScale(Graph g, float scale);
+
+    float getHeightScale(Graph g);
+
     Triangle getWorldTriangle(int x, int y, int z);
 }
