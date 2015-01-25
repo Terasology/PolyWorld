@@ -50,8 +50,8 @@ public class GridGraph implements Graph {
         this.cols = cols;
         this.bounds = bounds;
 
-        float dx = bounds.width() / cols;
-        float dy = bounds.height() / rows;
+        float dx = (float) bounds.width() / cols;
+        float dy = (float) bounds.height() / rows;
 
         for (int r = 0; r <= rows; r++) {
             for (int c = 0; c <= cols; c++) {

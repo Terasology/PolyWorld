@@ -24,6 +24,7 @@ import java.util.Map;
 import org.terasology.math.Region3i;
 import org.terasology.math.Vector3i;
 import org.terasology.polyworld.TriangleLookup;
+import org.terasology.polyworld.rp.RegionType;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.facets.base.SparseFacet3D;
 
@@ -41,7 +42,9 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
     private final List<Graph> graphs = Lists.newArrayList();
     private final List<TriangleLookup> lookups = Lists.newArrayList();
 
+    // TODO: maybe refactor this into "RegionInfo" ?
     private final Map<Graph, Float> heightScales = Maps.newHashMap();
+    private final Map<Graph, RegionType> regionTypes = Maps.newHashMap();
 
     /**
      * @param targetRegion
@@ -118,4 +121,20 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
         // JAVA8: replace with getOrDefault
         return scale == null ? 1.0f : scale.floatValue();
     }
+
+    @Override
+    public void setRegionType(Graph g, RegionType type) {
+        Preconditions.checkArgument(graphs.contains(g), "g is not part of this facet");
+
+        regionTypes.put(g, type);
+    }
+
+    @Override
+    public RegionType getRegionType(Graph g) {
+        Preconditions.checkArgument(graphs.contains(g), "g is not part of this facet");
+
+        return regionTypes.get(g);
+    }
+
+
 }

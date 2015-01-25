@@ -19,6 +19,7 @@ package org.terasology.polyworld.voronoi;
 import java.util.Collection;
 
 import org.terasology.math.Vector3i;
+import org.terasology.polyworld.rp.RegionType;
 import org.terasology.world.generation.WorldFacet3D;
 
 /**
@@ -37,9 +38,16 @@ public interface GraphFacet extends WorldFacet3D {
 
     Collection<Graph> getAllGraphs();
 
+    Triangle getWorldTriangle(int x, int y, int z);
+
+    // some extra info - refactor?
+
+    void setRegionType(Graph g, RegionType type);
+
+    RegionType getRegionType(Graph g);
+
     void setHeightScale(Graph g, float scale);
 
     float getHeightScale(Graph g);
 
-    Triangle getWorldTriangle(int x, int y, int z);
 }

@@ -16,9 +16,13 @@
 
 package org.terasology.polyworld.water;
 
+import org.terasology.polyworld.distribution.Distribution;
+import org.terasology.polyworld.distribution.PerlinDistribution;
 import org.terasology.polyworld.distribution.RadialDistribution;
+import org.terasology.polyworld.rp.RegionType;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.GraphFacet;
+import org.terasology.polyworld.voronoi.VoronoiGraph;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
@@ -42,7 +46,10 @@ public class WaterModelFacetProvider implements FacetProvider {
         @Override
         public WaterModel load(Graph key) throws Exception {
             long graphSeed = seed ^ key.getBounds().hashCode();
-            RadialDistribution waterDist = new RadialDistribution(graphSeed);
+
+            Distribution waterDist = (graphSeed % 2 == 0)  // a very primitive noise function
+                    ? new PerlinDistribution(graphSeed)
+                    : new RadialDistribution(graphSeed);
 
             return new DefaultWaterModel(key, waterDist);
         }
@@ -65,7 +72,11 @@ public class WaterModelFacetProvider implements FacetProvider {
         WaterModelFacet waterFacet = new WaterModelFacet();
 
         for (Graph g : graphFacet.getAllGraphs()) {
-            waterFacet.add(g, waterModelCache.getUnchecked(g));
+            if (graphFacet.getRegionType(g) == RegionType.OCEAN) {
+                waterFacet.add(g, new PureOceanWaterModel());
+            } else {
+                waterFacet.add(g, waterModelCache.getUnchecked(g));
+            }
         }
 
         region.setRegionFacet(WaterModelFacet.class, waterFacet);

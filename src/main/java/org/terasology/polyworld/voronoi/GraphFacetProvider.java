@@ -19,7 +19,6 @@ package org.terasology.polyworld.voronoi;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -35,8 +34,13 @@ import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.rp.RegionProvider;
+import org.terasology.polyworld.rp.RegionType;
 import org.terasology.polyworld.rp.SubdivRegionProvider;
 import org.terasology.rendering.nui.properties.Range;
+import org.terasology.utilities.procedural.FastNoise;
+import org.terasology.utilities.procedural.Noise2D;
+import org.terasology.utilities.random.FastRandom;
+import org.terasology.utilities.random.Random;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
@@ -58,13 +62,15 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(GraphFacetProvider.class);
 
+    private Noise2D islandRatioNoise;
+
     private LoadingCache<Rect2i, Graph> graphCache = CacheBuilder.newBuilder().build(new CacheLoader<Rect2i, Graph>() {
 
         @Override
         public Graph load(Rect2i area) throws Exception {
             Stopwatch sw = Stopwatch.createStarted();
 
-            Graph graph = createVoronoiGraph(area);
+            Graph graph = createGraph(area);
 
             logger.debug("Created graph for {} in {}ms.", area, sw.elapsed(TimeUnit.MILLISECONDS));
 
@@ -91,6 +97,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
     public void setSeed(long seed) {
         this.seed = seed;
         regionProvider = new SubdivRegionProvider(seed, 4, 200);
+        islandRatioNoise = new FastNoise(seed);
     }
 
     @Override
@@ -107,6 +114,11 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
             facet.add(graph, lookup);
             float scale = area.area() / maxArea;
             facet.setHeightScale(graph, scale);
+
+            // HACK: refactor this
+            RegionType type = (graph instanceof GridGraph) ? RegionType.OCEAN : RegionType.ISLAND;
+
+            facet.setRegionType(graph, type);
         }
 
         region.setRegionFacet(GraphFacet.class, facet);
@@ -137,12 +149,33 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         return result;
     }
 
-    private Graph createVoronoiGraph(Rect2i bounds) {
-        int numSites = DoubleMath.roundToInt(bounds.area() / configuration.density, RoundingMode.HALF_UP);
+    private Graph createGraph(Rect2i bounds) {
+        float rnd = islandRatioNoise.noise(bounds.minX(), bounds.minY());
+        if (rnd < configuration.islandDensity) {
+            int numSites = DoubleMath.roundToInt(bounds.area() / configuration.graphDensity, RoundingMode.HALF_UP);
+            return createVoronoiGraph(bounds, numSites);
+        } else {
+            double cellSize = 50;
+
+            int rows = DoubleMath.roundToInt(bounds.height() / cellSize, RoundingMode.HALF_UP);
+            int cols = DoubleMath.roundToInt(bounds.width() / cellSize, RoundingMode.HALF_UP);
+            return createGridGraph(bounds, rows, cols);
+        }
+    }
+
+    private static Graph createGridGraph(Rect2i bounds, int rows, int cols) {
+
+        Rect2i doubleBounds = Rect2i.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+        final Graph graph = new GridGraph(doubleBounds, rows, cols);
+
+        return graph;
+    }
+
+    private Graph createVoronoiGraph(Rect2i bounds, int numSites) {
 
         // use different seeds for different areas
         long areaSeed = seed ^ bounds.hashCode();
-        final Random r = new Random(areaSeed);
+        final Random r = new FastRandom(areaSeed);
 
         List<Vector2f> points = Lists.newArrayListWithCapacity(numSites);
         for (int i = 0; i < numSites; i++) {
@@ -176,6 +209,9 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     private static class GraphProviderConfiguration implements Component {
         @Range(min = 100, max = 5000f, increment = 100f, precision = 0, description = "Define the density for graph cells")
-        private float density = 500f;
+        private float graphDensity = 500f;
+
+        @Range(min = 0.1f, max = 1.0f, increment = 0.1f, precision = 1, description = "Define the ratio islands/water")
+        private float islandDensity = 0.7f;
     }
 }
