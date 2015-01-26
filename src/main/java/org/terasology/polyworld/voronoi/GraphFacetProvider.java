@@ -33,6 +33,7 @@ import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.TriangleLookup;
+import org.terasology.polyworld.rp.RegionFacet;
 import org.terasology.polyworld.rp.RegionProvider;
 import org.terasology.polyworld.rp.RegionType;
 import org.terasology.polyworld.rp.SubdivRegionProvider;
@@ -43,8 +44,10 @@ import org.terasology.utilities.random.FastRandom;
 import org.terasology.utilities.random.Random;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
+import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
+import org.terasology.world.generation.Requires;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.cache.CacheBuilder;
@@ -58,6 +61,7 @@ import com.google.common.math.DoubleMath;
  * @author Martin Steiger
  */
 @Produces(GraphFacet.class)
+@Requires(@Facet(RegionFacet.class))
 public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(GraphFacetProvider.class);
@@ -91,12 +95,9 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     private GraphProviderConfiguration configuration = new GraphProviderConfiguration();
 
-    private RegionProvider regionProvider;
-
     @Override
     public void setSeed(long seed) {
         this.seed = seed;
-        regionProvider = new SubdivRegionProvider(seed, 4, 200);
         islandRatioNoise = new FastNoise(seed);
     }
 
@@ -104,8 +105,10 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
     public void process(GeneratingRegion region) {
         Border3D border = region.getBorderForFacet(GraphFacet.class);
         GraphFacetImpl facet = new GraphFacetImpl(region.getRegion(), border);
+        RegionFacet regionFacet = region.getRegionFacet(RegionFacet.class);
 
-        Collection<Rect2i> areas = getRegions(facet.getWorldRegion());
+        Collection<Rect2i> areas = regionFacet.getRegions();
+
         float maxArea = Sector.SIZE_X * Sector.SIZE_Z;
 
         for (Rect2i area : areas) {
@@ -122,31 +125,6 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         }
 
         region.setRegionFacet(GraphFacet.class, facet);
-    }
-
-    private Collection<Rect2i> getRegions(Region3i worldRegion) {
-        Vector3i min = worldRegion.min();
-        Vector3i max = worldRegion.max();
-        Sector minSec = Sectors.getSectorForBlock(min.x, min.z);
-        Sector maxSec = Sectors.getSectorForBlock(max.x, max.z);
-
-        Rect2i target = Rect2i.createFromMinAndMax(min.x, min.z, max.x, max.z);
-
-        Collection<Rect2i> result = Lists.newArrayList();
-
-        for (int sx = minSec.getCoords().x; sx <= maxSec.getCoords().x; sx++) {
-            for (int sz = minSec.getCoords().y; sz <= maxSec.getCoords().y; sz++) {
-                Sector sector = Sectors.getSector(sx, sz);
-                Rect2i fullArea = sector.getWorldBounds();
-                for (Rect2i area : regionProvider.getSectorRegions(fullArea)) {
-                    if (area.overlaps(target)) {
-                        result.add(area);
-                    }
-                }
-            }
-        }
-
-        return result;
     }
 
     private Graph createGraph(Rect2i bounds) {

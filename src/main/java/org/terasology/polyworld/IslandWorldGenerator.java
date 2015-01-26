@@ -28,6 +28,7 @@ import org.terasology.polyworld.flora.TreeProvider;
 import org.terasology.polyworld.moisture.MoistureModelFacetProvider;
 import org.terasology.polyworld.raster.WhittakerRasterizer;
 import org.terasology.polyworld.rivers.RiverModelFacetProvider;
+import org.terasology.polyworld.rp.RegionFacetProvider;
 import org.terasology.polyworld.voronoi.GraphFacetProvider;
 import org.terasology.polyworld.water.WaterModelFacetProvider;
 import org.terasology.world.generation.BaseFacetedWorldGenerator;
@@ -46,6 +47,7 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
         return new WorldBuilder(seed)
                 .setSeaLevel(6)
                 .addProvider(new SeaLevelProvider(6))
+                .addProvider(new RegionFacetProvider())
                 .addProvider(new GraphFacetProvider())
                 .addProvider(new WaterModelFacetProvider())
                 .addProvider(new ElevationModelFacetProvider())
