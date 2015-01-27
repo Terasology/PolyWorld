@@ -24,7 +24,7 @@ import java.util.Map;
 import org.terasology.math.Region3i;
 import org.terasology.math.Vector3i;
 import org.terasology.polyworld.TriangleLookup;
-import org.terasology.polyworld.rp.RegionType;
+import org.terasology.polyworld.rp.WorldRegion;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.facets.base.SparseFacet3D;
 
@@ -39,12 +39,8 @@ import com.google.common.collect.Maps;
  */
 public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
 
-    private final List<Graph> graphs = Lists.newArrayList();
+    private final Map<WorldRegion, Graph> graphs = Maps.newLinkedHashMap();
     private final List<TriangleLookup> lookups = Lists.newArrayList();
-
-    // TODO: maybe refactor this into "RegionInfo" ?
-    private final Map<Graph, Float> heightScales = Maps.newHashMap();
-    private final Map<Graph, RegionType> regionTypes = Maps.newHashMap();
 
     /**
      * @param targetRegion
@@ -57,16 +53,17 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
     /**
      * @param graph the graph to add (must overlap the facet area)
      */
-    public void add(Graph graph, TriangleLookup lookup) {
+    public void add(WorldRegion wr, Graph graph, TriangleLookup lookup) {
+        Preconditions.checkArgument(wr.getArea().equals(graph.getBounds()), "region does not match graph");
         Preconditions.checkArgument(graph.getBounds().equals(lookup.getBounds()), "graph does not match triangle lookup");
 
-        graphs.add(graph);
+        graphs.put(wr, graph);
         lookups.add(lookup);
     }
 
     @Override
     public Graph getWorld(int x, int y, int z) {
-        for (Graph g : graphs) {
+        for (Graph g : graphs.values()) {
             if (g.getBounds().contains(x, z)) {
                 return g;
             }
@@ -102,39 +99,12 @@ public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
     }
 
     @Override
+    public Graph getGraph(WorldRegion wr) {
+        return graphs.get(wr);
+    }
+
+    @Override
     public Collection<Graph> getAllGraphs() {
-        return Collections.unmodifiableCollection(graphs);
+        return Collections.unmodifiableCollection(graphs.values());
     }
-
-    @Override
-    public void setHeightScale(Graph g, float scale) {
-        Preconditions.checkArgument(graphs.contains(g), "g is not part of this facet");
-
-        heightScales.put(g, Float.valueOf(scale));
-    }
-
-    @Override
-    public float getHeightScale(Graph g) {
-        Preconditions.checkArgument(graphs.contains(g), "g is not part of this facet");
-
-        Float scale = heightScales.get(g);
-        // JAVA8: replace with getOrDefault
-        return scale == null ? 1.0f : scale.floatValue();
-    }
-
-    @Override
-    public void setRegionType(Graph g, RegionType type) {
-        Preconditions.checkArgument(graphs.contains(g), "g is not part of this facet");
-
-        regionTypes.put(g, type);
-    }
-
-    @Override
-    public RegionType getRegionType(Graph g) {
-        Preconditions.checkArgument(graphs.contains(g), "g is not part of this facet");
-
-        return regionTypes.get(g);
-    }
-
-
 }

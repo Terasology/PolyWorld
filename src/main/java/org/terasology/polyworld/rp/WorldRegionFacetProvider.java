@@ -17,6 +17,9 @@
 package org.terasology.polyworld.rp;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import org.terasology.commonworld.Sector;
 import org.terasology.commonworld.Sectors;
@@ -25,30 +28,66 @@ import org.terasology.math.Rect2i;
 import org.terasology.math.Region3i;
 import org.terasology.math.Vector3i;
 import org.terasology.rendering.nui.properties.Range;
+import org.terasology.utilities.procedural.FastNoise;
+import org.terasology.utilities.procedural.Noise2D;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Lists;
+
 /**
  * TODO Type description
  * @author Martin Steiger
  */
-@Produces(RegionFacet.class)
-public class RegionFacetProvider implements ConfigurableFacetProvider {
+@Produces(WorldRegionFacet.class)
+public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
     private RegionProvider regionProvider;
     private Configuration configuration = new Configuration();
 
+    private Noise2D islandRatioNoise;
+
+    private LoadingCache<Rect2i, Collection<WorldRegion>> cache = CacheBuilder.newBuilder().build(
+            new CacheLoader<Rect2i, Collection<WorldRegion>>() {
+
+                @Override
+                public Collection<WorldRegion> load(Rect2i fullArea) throws Exception {
+                    float maxArea = Sector.SIZE_X * Sector.SIZE_Z;
+
+                    List<WorldRegion> result = Lists.newArrayList();
+                    for (Rect2i area : regionProvider.getSectorRegions(fullArea)) {
+                        float rnd = islandRatioNoise.noise(area.minX(), area.minY());
+                        float scale = area.area() / maxArea;
+
+                        WorldRegion wr = new WorldRegion(area);
+                        wr.setHeightScaleFactor(scale);
+                        if (rnd < configuration.islandDensity) {
+                            wr.setType(RegionType.ISLAND);
+                        } else {
+                            wr.setType(RegionType.OCEAN);
+                        }
+                        result.add(wr);
+                    }
+                    return result;
+                }
+            });
+
     @Override
     public void setSeed(long seed) {
         regionProvider = new SubdivRegionProvider(seed, 4, configuration.minSize);
+        islandRatioNoise = new FastNoise(seed);
     }
 
     @Override
     public void process(GeneratingRegion region) {
-        Border3D border = region.getBorderForFacet(RegionFacet.class);
-        RegionFacet facet = new RegionFacet(region.getRegion(), border);
+        Border3D border = region.getBorderForFacet(WorldRegionFacet.class);
+        WorldRegionFacet facet = new WorldRegionFacet(region.getRegion(), border);
 
         Region3i worldRegion = facet.getWorldRegion();
 
@@ -63,15 +102,16 @@ public class RegionFacetProvider implements ConfigurableFacetProvider {
             for (int sz = minSec.getCoords().y; sz <= maxSec.getCoords().y; sz++) {
                 Sector sector = Sectors.getSector(sx, sz);
                 Rect2i fullArea = sector.getWorldBounds();
-                for (Rect2i area : regionProvider.getSectorRegions(fullArea)) {
-                    if (area.overlaps(target)) {
-                        facet.addRegion(area);
+                Collection<WorldRegion> collection = cache.getUnchecked(fullArea);
+                for (WorldRegion wr : collection) {
+                    if (wr.getArea().overlaps(target)) {
+                        facet.addRegion(wr);
                     }
                 }
             }
         }
 
-        region.setRegionFacet(RegionFacet.class, facet);
+        region.setRegionFacet(WorldRegionFacet.class, facet);
     }
 
     @Override
@@ -93,5 +133,8 @@ public class RegionFacetProvider implements ConfigurableFacetProvider {
 
         @Range(min = 50, max = 500f, increment = 10f, precision = 0, description = "Minimum size of a region")
         private int minSize = 200;
+
+        @Range(min = 0.1f, max = 1.0f, increment = 0.1f, precision = 1, description = "Define the ratio islands/water")
+        private float islandDensity = 0.7f;
     }
 }

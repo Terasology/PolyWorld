@@ -19,10 +19,11 @@ package org.terasology.polyworld.water;
 import org.terasology.polyworld.distribution.Distribution;
 import org.terasology.polyworld.distribution.PerlinDistribution;
 import org.terasology.polyworld.distribution.RadialDistribution;
+import org.terasology.polyworld.rp.WorldRegionFacet;
 import org.terasology.polyworld.rp.RegionType;
+import org.terasology.polyworld.rp.WorldRegion;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.GraphFacet;
-import org.terasology.polyworld.voronoi.VoronoiGraph;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
@@ -38,7 +39,7 @@ import com.google.common.cache.LoadingCache;
  * @author Martin Steiger
  */
 @Produces(WaterModelFacet.class)
-@Requires(@Facet(GraphFacet.class))
+@Requires({@Facet(WorldRegionFacet.class), @Facet(GraphFacet.class)})
 public class WaterModelFacetProvider implements FacetProvider {
 
     private final LoadingCache<Graph, WaterModel> waterModelCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, WaterModel>() {
@@ -69,10 +70,13 @@ public class WaterModelFacetProvider implements FacetProvider {
     @Override
     public void process(GeneratingRegion region) {
         GraphFacet graphFacet = region.getRegionFacet(GraphFacet.class);
+        WorldRegionFacet regionFacet = region.getRegionFacet(WorldRegionFacet.class);
         WaterModelFacet waterFacet = new WaterModelFacet();
 
-        for (Graph g : graphFacet.getAllGraphs()) {
-            if (graphFacet.getRegionType(g) == RegionType.OCEAN) {
+        for (WorldRegion wr : regionFacet.getRegions()) {
+            // TODO: move to loading cache
+            Graph g = graphFacet.getGraph(wr);
+            if (wr.getType() == RegionType.OCEAN) {
                 waterFacet.add(g, new PureOceanWaterModel());
             } else {
                 waterFacet.add(g, waterModelCache.getUnchecked(g));
@@ -81,5 +85,4 @@ public class WaterModelFacetProvider implements FacetProvider {
 
         region.setRegionFacet(WaterModelFacet.class, waterFacet);
     }
-
 }

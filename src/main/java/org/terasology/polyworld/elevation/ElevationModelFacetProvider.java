@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.polyworld.rp.WorldRegionFacet;
+import org.terasology.polyworld.rp.WorldRegion;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.GraphFacet;
 import org.terasology.polyworld.water.WaterModel;
@@ -40,6 +42,7 @@ import com.google.common.cache.CacheBuilder;
  */
 @Produces(ElevationModelFacet.class)
 @Requires({
+        @Facet(WorldRegionFacet.class),
         @Facet(WaterModelFacet.class),
         @Facet(GraphFacet.class)
         })
@@ -64,12 +67,14 @@ public class ElevationModelFacetProvider implements FacetProvider {
     public void process(GeneratingRegion region) {
         ElevationModelFacet elevationFacet = new ElevationModelFacet();
 
+        WorldRegionFacet regionFacet = region.getRegionFacet(WorldRegionFacet.class);
         GraphFacet graphFacet = region.getRegionFacet(GraphFacet.class);
         WaterModelFacet waterFacet = region.getRegionFacet(WaterModelFacet.class);
 
-        for (Graph graph : graphFacet.getAllGraphs()) {
+        for (WorldRegion wr : regionFacet.getRegions()) {
+            Graph graph = graphFacet.getGraph(wr);
             WaterModel waterModel = waterFacet.get(graph);
-            float heightScale = graphFacet.getHeightScale(graph);
+            float heightScale = wr.getHeightScaleFactor();
             ElevationModel elevationModel = getOrCreate(graph, waterModel, heightScale);
             elevationFacet.add(graph, elevationModel);
         }

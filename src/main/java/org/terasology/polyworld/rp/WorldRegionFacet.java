@@ -19,7 +19,6 @@ package org.terasology.polyworld.rp;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.terasology.math.Rect2i;
 import org.terasology.math.Region3i;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.facets.base.SparseFacet3D;
@@ -30,19 +29,19 @@ import com.google.common.collect.Lists;
  * TODO Type description
  * @author Martin Steiger
  */
-public class RegionFacet extends SparseFacet3D {
+public class WorldRegionFacet extends SparseFacet3D {
 
-    private Collection<Rect2i> regions = Lists.newArrayList();
+    private final Collection<WorldRegion> regions = Lists.newArrayList();
 
-    public RegionFacet(Region3i targetRegion, Border3D border) {
+    public WorldRegionFacet(Region3i targetRegion, Border3D border) {
         super(targetRegion, border);
     }
 
-    public void addRegion(Rect2i region) {
+    public void addRegion(WorldRegion region) {
         regions.add(region);
     }
 
-    public Collection<Rect2i> getRegions() {
+    public Collection<WorldRegion> getRegions() {
         return Collections.unmodifiableCollection(regions);
     }
 }
