@@ -27,8 +27,8 @@ import org.terasology.math.Vector3i;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeFacet;
 import org.terasology.rendering.nui.properties.Range;
-import org.terasology.utilities.procedural.FastNoise;
-import org.terasology.utilities.procedural.Noise3D;
+import org.terasology.utilities.procedural.Noise;
+import org.terasology.utilities.procedural.WhiteNoise;
 import org.terasology.world.biomes.Biome;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.Facet;
@@ -49,7 +49,7 @@ import com.google.common.collect.Lists;
 @Requires({@Facet(SurfaceHeightFacet.class), @Facet(WhittakerBiomeFacet.class)})
 public class FloraProvider extends SurfaceObjectProvider<Biome, FloraType> implements ConfigurableFacetProvider {
 
-    private Noise3D densityNoiseGen;
+    private Noise densityNoiseGen;
 
     private DensityConfiguration configuration = new DensityConfiguration();
 
@@ -91,7 +91,7 @@ public class FloraProvider extends SurfaceObjectProvider<Biome, FloraType> imple
     public void setSeed(long seed) {
         super.setSeed(seed);
 
-        densityNoiseGen = new FastNoise(seed);
+        densityNoiseGen = new WhiteNoise(seed);
     }
 
     @Override

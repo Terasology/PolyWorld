@@ -18,8 +18,6 @@ package org.terasology.polyworld.rp;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 import org.terasology.commonworld.Sector;
 import org.terasology.commonworld.Sectors;
@@ -28,14 +26,13 @@ import org.terasology.math.Rect2i;
 import org.terasology.math.Region3i;
 import org.terasology.math.Vector3i;
 import org.terasology.rendering.nui.properties.Range;
-import org.terasology.utilities.procedural.FastNoise;
-import org.terasology.utilities.procedural.Noise2D;
+import org.terasology.utilities.procedural.Noise;
+import org.terasology.utilities.procedural.WhiteNoise;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -51,7 +48,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
     private RegionProvider regionProvider;
     private Configuration configuration = new Configuration();
 
-    private Noise2D islandRatioNoise;
+    private Noise islandRatioNoise;
 
     private LoadingCache<Rect2i, Collection<WorldRegion>> cache = CacheBuilder.newBuilder().build(
             new CacheLoader<Rect2i, Collection<WorldRegion>>() {
@@ -81,7 +78,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
     @Override
     public void setSeed(long seed) {
         regionProvider = new SubdivRegionProvider(seed, 4, configuration.minSize);
-        islandRatioNoise = new FastNoise(seed);
+        islandRatioNoise = new WhiteNoise(seed);
     }
 
     @Override

@@ -27,8 +27,8 @@ import org.terasology.math.Vector3i;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeFacet;
 import org.terasology.rendering.nui.properties.Range;
-import org.terasology.utilities.procedural.FastNoise;
-import org.terasology.utilities.procedural.Noise3D;
+import org.terasology.utilities.procedural.Noise;
+import org.terasology.utilities.procedural.WhiteNoise;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.Facet;
@@ -53,7 +53,7 @@ import com.google.common.collect.Lists;
 })
 public class TreeProvider extends SurfaceObjectProvider<WhittakerBiome, TreeGenerator> implements ConfigurableFacetProvider {
 
-    private Noise3D densityNoiseGen;
+    private Noise densityNoiseGen;
 
     private TreeProviderConfiguration configuration = new TreeProviderConfiguration();
 
@@ -65,7 +65,7 @@ public class TreeProvider extends SurfaceObjectProvider<WhittakerBiome, TreeGene
         register(WhittakerBiome.TROPICAL_RAIN_FOREST, Trees.pineTree(), 0.10f);
         register(WhittakerBiome.TROPICAL_SEASONAL_FOREST, Trees.oakVariationTree(), 0.25f);
 
-        register(WhittakerBiome.SNOW, Trees.birkTree(), 0.02f);
+        register(WhittakerBiome.SNOW, Trees.birchTree(), 0.02f);
 
         register(WhittakerBiome.LAKESHORE, Trees.redTree(), 0.01f);
         register(WhittakerBiome.GRASSLAND, Trees.oakTree(), 0.02f);
@@ -78,7 +78,7 @@ public class TreeProvider extends SurfaceObjectProvider<WhittakerBiome, TreeGene
     public void setSeed(long seed) {
         super.setSeed(seed);
 
-        densityNoiseGen = new FastNoise(seed);
+        densityNoiseGen = new WhiteNoise(seed);
     }
 
     @Override
