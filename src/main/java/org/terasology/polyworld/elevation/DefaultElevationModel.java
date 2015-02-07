@@ -22,13 +22,16 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.terasology.polyworld.voronoi.Corner;
 import org.terasology.polyworld.voronoi.Graph;
+import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * TODO Type description
@@ -60,12 +63,51 @@ public class DefaultElevationModel extends AbstractElevationModel {
 
         assignCornerElevations();
         redistributeElevations(landCorners, scale);
+        flattenLakes();
 
         for (Corner c : graph.getCorners()) {
             if (waterModel.isCoast(c)) {
                 elevations.put(c, 0.0f);
             }
         }
+    }
+
+    private void flattenLakes() {
+        Set<Region> isFlat = Sets.newHashSet();
+        for (Region r : graph.getRegions()) {
+            boolean isLake = waterModel.isWater(r) && !waterModel.isOcean(r);
+            if (isLake && !isFlat.contains(r)) {
+                flattenLake(r);
+                isFlat.add(r);
+                isFlat.addAll(r.getNeighbors());
+            }
+        }
+    }
+
+    private void flattenLake(Region r) {
+        float avgHeight = getAverageHeight(r);
+        for (Region neigh : r.getNeighbors()) {
+            avgHeight += getAverageHeight(neigh);
+        }
+        float targetHeight = avgHeight / (r.getNeighbors().size() + 1);
+
+        // assign target height to all corner
+        for (Corner c : r.getCorners()) {
+            elevations.put(c, targetHeight);
+        }
+        for (Region neigh : r.getNeighbors()) {
+            for (Corner c : neigh.getCorners()) {
+                elevations.put(c, targetHeight);
+            }
+        }
+    }
+
+    private float getAverageHeight(Region r) {
+        float sum = 0;
+        for (Corner c : r.getCorners()) {
+            sum += elevations.get(c).floatValue();
+        }
+        return sum / r.getCorners().size();
     }
 
     private void assignCornerElevations() {
