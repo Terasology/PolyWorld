@@ -40,7 +40,7 @@ public abstract class AbstractElevationModel implements ElevationModel {
         Corner down = c;
 
         for (Corner a : c.getAdjacent()) {
-            if (getElevation(a) <= getElevation(down)) {
+            if (getElevation(a) < getElevation(down)) {
                 down = a;
             }
         }
