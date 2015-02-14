@@ -159,10 +159,10 @@ public class DefaultElevationModel extends AbstractElevationModel {
         for (int i = 0; i < landCorners.size(); i++) {
 
             // y is the relative position in the sorted list
-            float y = scale * (float) i / (landCorners.size() - 1);
+            float y = (float) i / (landCorners.size() - 1);
 
             // x is the desired elevation
-            float x = (float) (Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y)));
+            float x = scale * (float) (Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y)));
 
             // clamp to max 1
             x = Math.min(x, 1);

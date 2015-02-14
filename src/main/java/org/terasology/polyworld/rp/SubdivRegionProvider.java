@@ -20,6 +20,7 @@ import java.util.Collection;
 
 import org.terasology.math.Rect2i;
 import org.terasology.utilities.random.MersenneRandom;
+import org.terasology.utilities.random.Random;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -30,23 +31,23 @@ import com.google.common.collect.Lists;
  */
 public class SubdivRegionProvider implements RegionProvider {
 
-    private int maxDepth;
     private int minEdgeLen;
+    private float baseSplitProb;
     private long seed;
 
     /**
-     * maxDepth = 4
+     * splitProb = 1
      * <br/>
      * minEdgeLen = 16
      */
     public SubdivRegionProvider(long seed) {
-        this(seed, 4, 16);
+        this(seed, 4, 1f);
     }
 
-    public SubdivRegionProvider(long seed, int maxDepth, int minEdgeLen) {
+    public SubdivRegionProvider(long seed, int minEdgeLen, float splitProb) {
         this.seed = seed;
 
-        setMaxDepth(maxDepth);
+        setSplitProb(splitProb);
         setMinEdgeLen(minEdgeLen);
     }
 
@@ -59,13 +60,10 @@ public class SubdivRegionProvider implements RegionProvider {
         this.minEdgeLen = minEdgeLen;
     }
 
-    public int getMaxDepth() {
-        return maxDepth;
-    }
-
-    public void setMaxDepth(int maxDepth) {
-        Preconditions.checkArgument(maxDepth > 0);
-        this.maxDepth = maxDepth;
+    public void setSplitProb(float splitProb) {
+        Preconditions.checkArgument(splitProb >= 0);
+        Preconditions.checkArgument(splitProb <= 1);
+        this.baseSplitProb = splitProb;
     }
 
     @Override
@@ -75,17 +73,26 @@ public class SubdivRegionProvider implements RegionProvider {
 
         Collection<Rect2i> areas = Lists.newArrayList();
 
-        split(areas, random, fullArea);
+        split(areas, random, baseSplitProb, fullArea);
 
         return areas;
     }
 
-    private void split(Collection<Rect2i> areas, MersenneRandom random, Rect2i fullArea) {
-        boolean splitX = fullArea.width() >= fullArea.height();
+    private void split(Collection<Rect2i> areas, Random random, float splitProb, Rect2i fullArea) {
+        int maxWidth = fullArea.width();
+        int maxHeight = fullArea.height();
 
-        int range = (splitX ? fullArea.width() : fullArea.height()) - 2 * minEdgeLen;
+        boolean splitX = maxWidth >= maxHeight;
+        int range = (splitX ? maxWidth : maxHeight) - 2 * minEdgeLen;
 
-        if (range <= 0) {
+        float ratio = (float) Math.min(maxWidth, maxHeight) / Math.max(maxWidth, maxHeight);
+        float badRatioSplitProb = (1 - ratio * ratio);
+        float realSplitProb = splitProb + badRatioSplitProb * 0.5f;
+
+        float rnd = random.nextFloat();
+        boolean stop = (range <= 0) || (rnd > realSplitProb);
+
+        if (stop) {
             areas.add(fullArea);
         } else {
 
@@ -96,11 +103,11 @@ public class SubdivRegionProvider implements RegionProvider {
             int height;
             if (splitX) {
                 width = splitPos;
-                height = fullArea.height();
+                height = maxHeight;
                 x = fullArea.minX() + width;
                 y = fullArea.minY();
             } else {
-                width = fullArea.width();
+                width = maxWidth;
                 height = splitPos;
                 x = fullArea.minX();
                 y = fullArea.minY() + height;
@@ -109,8 +116,9 @@ public class SubdivRegionProvider implements RegionProvider {
             Rect2i first = Rect2i.createFromMinAndSize(fullArea.minX(), fullArea.minY(), width, height);
             Rect2i second = Rect2i.createFromMinAndMax(x, y, fullArea.maxX(), fullArea.maxY());
 
-            split(areas, random, first);
-            split(areas, random, second);
+            float childSplitProb = splitProb / 2f;
+            split(areas, random, childSplitProb, first);
+            split(areas, random, childSplitProb, second);
         }
     }
 

@@ -55,7 +55,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
                 @Override
                 public Collection<WorldRegion> load(Rect2i fullArea) throws Exception {
-                    float maxArea = Sector.SIZE_X * Sector.SIZE_Z;
+                    float maxArea = 0.75f * Sector.SIZE_X * Sector.SIZE_Z;
 
                     List<WorldRegion> result = Lists.newArrayList();
                     for (Rect2i area : regionProvider.getSectorRegions(fullArea)) {
@@ -77,7 +77,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
     @Override
     public void setSeed(long seed) {
-        regionProvider = new SubdivRegionProvider(seed, 4, configuration.minSize);
+        regionProvider = new SubdivRegionProvider(seed, configuration.minSize, 0.95f);
         islandRatioNoise = new WhiteNoise(seed);
     }
 
@@ -129,7 +129,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
     private static class Configuration implements Component {
 
         @Range(min = 50, max = 500f, increment = 10f, precision = 0, description = "Minimum size of a region")
-        private int minSize = 200;
+        private int minSize = 100;
 
         @Range(min = 0.1f, max = 1.0f, increment = 0.1f, precision = 1, description = "Define the ratio islands/water")
         private float islandDensity = 0.7f;
