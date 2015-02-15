@@ -18,9 +18,7 @@ package org.terasology.polyworld.voronoi;
 
 import java.util.Collection;
 
-import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.utilities.random.Random;
 
 /**

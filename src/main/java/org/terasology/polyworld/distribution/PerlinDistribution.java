@@ -17,7 +17,7 @@
 package org.terasology.polyworld.distribution;
 
 import org.terasology.math.geom.Vector2f;
-import org.terasology.utilities.procedural.BrownianNoise3D;
+import org.terasology.utilities.procedural.BrownianNoise;
 import org.terasology.utilities.procedural.PerlinNoise;
 
 /**
@@ -26,13 +26,13 @@ import org.terasology.utilities.procedural.PerlinNoise;
  */
 public class PerlinDistribution implements Distribution {
 
-    private final BrownianNoise3D noise;
+    private final BrownianNoise noise;
 
     /**
      * @param seed a random seed value
      */
     public PerlinDistribution(long seed) {
-        this.noise = new BrownianNoise3D(new PerlinNoise(seed), 8);
+        this.noise = new BrownianNoise(new PerlinNoise(seed), 8);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PerlinDistribution implements Distribution {
 
         float x = (p.getX() + 1) * 128;
         float y = (p.getY() + 1) * 128;
-        float val = (float) noise.getScale() + noise.noise(x, y, 0);
+        float val = noise.noise(x, y, 0) * 2.1f;
         return val < 1.3 + .7 * p.length();
     }
 }
