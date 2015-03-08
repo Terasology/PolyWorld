@@ -16,7 +16,9 @@
 
 package org.terasology.polyworld.rivers;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.world.generation.WorldFacet;
@@ -37,6 +39,13 @@ public class RiverModelFacet implements WorldFacet {
      */
     public void add(Graph g, RiverModel model) {
         map.put(g, model);
+    }
+
+    /**
+     * @return an unmodifiable set of valid graph entries
+     */
+    public Set<Graph> getKeys() {
+        return Collections.unmodifiableSet(map.keySet());
     }
 
     /**
