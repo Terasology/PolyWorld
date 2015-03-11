@@ -26,6 +26,7 @@ import org.terasology.polyworld.elevation.ElevationProvider;
 import org.terasology.polyworld.flora.FloraProvider;
 import org.terasology.polyworld.flora.TreeProvider;
 import org.terasology.polyworld.moisture.MoistureModelFacetProvider;
+import org.terasology.polyworld.raster.RiverRasterizer;
 import org.terasology.polyworld.raster.WhittakerRasterizer;
 import org.terasology.polyworld.rivers.RiverModelFacetProvider;
 import org.terasology.polyworld.rp.WorldRegionFacetProvider;
@@ -59,6 +60,7 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
                 .addProvider(new TreeProvider())
                 .addProvider(new FloraProvider())
                 .addRasterizer(new WhittakerRasterizer())
+                .addRasterizer(new RiverRasterizer())
                 .addRasterizer(new TreeRasterizer())
                 .addRasterizer(new FloraRasterizer())
                 .addPlugins();
