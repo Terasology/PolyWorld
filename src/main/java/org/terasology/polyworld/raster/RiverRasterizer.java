@@ -15,16 +15,17 @@
  */
 package org.terasology.polyworld.raster;
 
+import java.util.Collection;
 import java.util.EnumSet;
-import java.util.List;
+import org.terasology.commonworld.geom.BresenhamCollectorVisitor;
+import org.terasology.commonworld.geom.BresenhamLineIterator;
 import org.terasology.math.ChunkMath;
 import org.terasology.math.Region3i;
 import org.terasology.math.TeraMath;
-import org.terasology.math.Vector2i;
+import org.terasology.math.geom.Vector2i;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.rivers.RiverModelFacet;
-import org.terasology.polyworld.util.BresenhamLine;
 import org.terasology.polyworld.voronoi.Edge;
 import org.terasology.polyworld.voronoi.Graph;
 import org.terasology.polyworld.voronoi.GraphFacet;
@@ -59,6 +60,8 @@ public class RiverRasterizer implements WorldRasterizer {
         RiverModelFacet riverModelFacet = chunkRegion.getFacet(RiverModelFacet.class);
         SurfaceHeightFacet surfaceHeightData = chunkRegion.getFacet(SurfaceHeightFacet.class);
 
+        BresenhamLineIterator bresenhamLineIterator = new BresenhamLineIterator();
+
         Region3i region = chunkRegion.getRegion();
 
         for (Graph graph : graphFacet.getAllGraphs()) {
@@ -75,14 +78,16 @@ public class RiverRasterizer implements WorldRasterizer {
                     int x1 = TeraMath.floorToInt(e.getCorner1().getLocation().x());
                     int z1 = TeraMath.floorToInt(e.getCorner1().getLocation().y());
 
-                    List<Vector2i> line = BresenhamLine.getLine2D(new Vector2i(x0, z0), new Vector2i(x1, z1), EnumSet.allOf(BresenhamLine.Overlap.class));
+                    BresenhamCollectorVisitor bresenhamCollector = new BresenhamCollectorVisitor();
+                    BresenhamLineIterator.iterateLine2D(x0, z0, x1, z1, bresenhamCollector, EnumSet.allOf(BresenhamLineIterator.Overlap.class));
+                    Collection<Vector2i> line = bresenhamCollector.getLinePoints();
 
                     for (Vector2i p : line) {
-                        if (p.x >= region.minX() && p.x <= region.maxX() && p.y >= region.minZ() && p.y <= region.maxZ()) {
-                            int x = ChunkMath.calcBlockPosX(p.x, ChunkConstants.INNER_CHUNK_POS_FILTER.x);
-                            int z = ChunkMath.calcBlockPosZ(p.y, ChunkConstants.INNER_CHUNK_POS_FILTER.z);
+                        if (p.getX() >= region.minX() && p.getX() <= region.maxX() && p.getY() >= region.minZ() && p.getY() <= region.maxZ()) {
+                            int x = ChunkMath.calcBlockPosX(p.getX(), ChunkConstants.INNER_CHUNK_POS_FILTER.x);
+                            int z = ChunkMath.calcBlockPosZ(p.getY(), ChunkConstants.INNER_CHUNK_POS_FILTER.z);
                             int y = TeraMath.floorToInt(surfaceHeightData.get(x, z));
-                            Vector3i worldPos = new Vector3i(p.x, y, p.y);
+                            Vector3i worldPos = new Vector3i(p.getX(), y, p.getY());
 
                             placeWaterBody(chunk, region, worldPos, structElem);
                         }
