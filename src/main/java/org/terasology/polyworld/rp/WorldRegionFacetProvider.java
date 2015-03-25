@@ -24,7 +24,7 @@ import org.terasology.commonworld.Sectors;
 import org.terasology.entitySystem.Component;
 import org.terasology.math.Rect2i;
 import org.terasology.math.Region3i;
-import org.terasology.math.Vector3i;
+import org.terasology.math.geom.Vector3i;
 import org.terasology.rendering.nui.properties.Range;
 import org.terasology.utilities.procedural.Noise;
 import org.terasology.utilities.procedural.WhiteNoise;
