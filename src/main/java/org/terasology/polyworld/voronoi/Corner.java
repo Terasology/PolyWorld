@@ -123,7 +123,7 @@ public class Corner {
     @Override
     public String toString() {
         String borderStr = border ? " (border)" : "";
-        String format = "Corner [%s%s, touches %d regions, protrudes %d edges, %d adjacent corners]";
+        String format = "Corner [%s%s]";
         return String.format(format, loc, borderStr, touches.size(), protrudes.size(), adjacent.size());
     }
 }

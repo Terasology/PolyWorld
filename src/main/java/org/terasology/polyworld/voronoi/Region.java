@@ -129,7 +129,7 @@ public class Region {
 
     @Override
     public String toString() {
-        return String.format("Region [center=%s, corners=%s, borders=%s, neighbors=%s]", center, corners.size(), borders.size(), neighbors.size());
+        return String.format("Region [%s]", center.toString());
     }
 
 
