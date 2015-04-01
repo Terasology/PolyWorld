@@ -60,14 +60,12 @@ public class RiverRasterizer implements WorldRasterizer {
         RiverModelFacet riverModelFacet = chunkRegion.getFacet(RiverModelFacet.class);
         SurfaceHeightFacet surfaceHeightData = chunkRegion.getFacet(SurfaceHeightFacet.class);
 
-        BresenhamLineIterator bresenhamLineIterator = new BresenhamLineIterator();
-
         Region3i region = chunkRegion.getRegion();
 
         for (Graph graph : graphFacet.getAllGraphs()) {
             RiverModel riverModel = riverModelFacet.get(graph);
 
-            for(Edge e : graph.getEdges()) {
+            for (Edge e : graph.getEdges()) {
                 int riverValue = riverModel.getRiverValue(e);
                 if (riverValue > 0) {
                     int[][] structElem = getStructuringElement(riverValue);
@@ -109,13 +107,15 @@ public class RiverRasterizer implements WorldRasterizer {
      * @return the matrix of the structuring element
      */
     static int[][] getStructuringElement(int radius) {
-        int[][] structElem = new int[2*radius+1][2*radius+1];
-        for(int y = -radius; y <= radius; y++)
+        int[][] structElem = new int[2 * radius + 1][2 * radius + 1];
+        for (int y = -radius; y <= radius; y++) {
             for (int x = -radius; x <= radius; x++) {
-                if (x * x + y * y <= radius * radius){
+                if (x * x + y * y <= radius * radius) {
                     structElem[x + radius][y + radius] = 1;
                 }
             }
+        }
+
         return structElem;
     }
 
@@ -128,7 +128,7 @@ public class RiverRasterizer implements WorldRasterizer {
      * @param structElem the structuring element for block placement
      */
     private void placeWaterBody(CoreChunk chunk, Region3i region, Vector3i worldPos, int[][] structElem) {
-        int radius = (structElem.length-1)/2;
+        int radius = (structElem.length - 1) / 2;
         Vector3i pos;
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
