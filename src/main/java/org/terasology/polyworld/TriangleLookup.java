@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +45,7 @@ public class TriangleLookup {
     private static final Logger logger = LoggerFactory.getLogger(TriangleLookup.class);
 
     private final BufferedImage image;
+    private final DataBufferInt dataBuffer;
 
     // TODO: consider not storing this explicitly -> O(1) -> O(log n)
     //       due to binary search in region-triangle start index list
@@ -70,6 +72,8 @@ public class TriangleLookup {
         } finally {
             g.dispose();
         }
+
+        dataBuffer = (DataBufferInt) image.getRaster().getDataBuffer();
     }
 
     /**
@@ -81,25 +85,28 @@ public class TriangleLookup {
         int imgX = x - bounds.minX();
         int imgY = y - bounds.minY();
 
-        if (imgX < 0 || imgY < 0 || imgX > image.getWidth() || imgY > image.getHeight()) {
-            logger.debug("Coordinate {}/{} is out of bounds", x, y);
+        if (imgX < 0 || imgY < 0 || imgX >= image.getWidth() || imgY >= image.getHeight()) {
+            logger.warn("Coordinate {}/{} is out of bounds", x, y);
             return null;
         }
 
-        int index = image.getRGB(imgX, imgY) & 0xFFFFFF;
-        if (index < 0 || index >= triangles.size()) {
-            logger.debug("Could not find a triangle for {}/{}", x, y);
+        // index 0 is reserved for missing coverage
+        // we need to subtract 1 to get the real list index
+        int index1 = dataBuffer.getElem(imgY * image.getWidth() + imgX) & 0xFFFFFF;
+        if (index1 < 1 || index1 > triangles.size()) {
+            logger.warn("Could not find a triangle for {}/{}", x, y);
             return null;
         }
 
-        return triangles.get(index);
+        return triangles.get(index1 - 1);
     }
 
     private static List<Triangle> drawTriangles(Graphics2D g, Graph graph) {
         List<Region> regions = graph.getRegions();
         List<Triangle> triangles = Lists.newArrayList();
 
-        int index = 0;
+        // index 0 is reserved for missing coverage
+        int index = 1;
         for (final Region reg : regions) {
             for (Triangle tri : reg.computeTriangles()) {
                 BaseVector2f p0 = tri.getRegion().getCenter();
