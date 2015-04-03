@@ -32,7 +32,7 @@ public class PerlinDistribution implements Distribution {
      * @param seed a random seed value
      */
     public PerlinDistribution(long seed) {
-        this.noise = new BrownianNoise(new PerlinNoise(seed), 8);
+        this.noise = new BrownianNoise(new PerlinNoise(seed), 7);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PerlinDistribution implements Distribution {
 
         float x = (p.getX() + 1) * 128;
         float y = (p.getY() + 1) * 128;
-        float val = noise.noise(x, y, 0) * 2.1f;
+        float val = (noise.noise(x, y, 0) + 1) * 2f;
         return val < 1.3 + .7 * p.length();
     }
 }
