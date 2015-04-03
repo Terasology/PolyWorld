@@ -69,6 +69,11 @@ public class DefaultElevationModel extends AbstractElevationModel {
             if (waterModel.isCoast(c)) {
                 elevations.put(c, 0.0f);
             }
+            // some of ocean corners that are part of a bay are elevated
+            // this is more of a workaround rather than a required operation
+            if (waterModel.isOcean(c)) {
+                elevations.put(c, -1f);
+            }
         }
     }
 
