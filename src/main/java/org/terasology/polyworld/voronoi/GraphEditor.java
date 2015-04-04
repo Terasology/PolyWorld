@@ -17,8 +17,11 @@
 package org.terasology.polyworld.voronoi;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.ImmutableVector2f;
+import org.terasology.math.geom.Vector2f;
 import org.terasology.utilities.random.Random;
 
 /**
@@ -81,5 +84,29 @@ public final class GraphEditor {
             float ry = (float) (Math.sin(ang) * len);
             c.setLocation(loc.add(rx,  ry));
         }
+    }
+
+    /**
+     * Perform Lloyd's algorithm to achieve well-shaped
+     * and uniformly sized convex cells.
+     * @param v the Voronoi diagram to relax
+     * @return a new Voronoi diagram
+     */
+    public static Voronoi lloydRelaxation(Voronoi v) {
+        List<Vector2f> points = v.siteCoords();
+        for (Vector2f p : points) {
+            List<Vector2f> region = v.region(p);
+            float x = 0;
+            float y = 0;
+            for (Vector2f c : region) {
+                x += c.getX();
+                y += c.getY();
+            }
+            x /= region.size();
+            y /= region.size();
+            p.setX(x);
+            p.setY(y);
+        }
+        return new Voronoi(points, v.getPlotBounds());
     }
 }

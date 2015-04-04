@@ -28,6 +28,7 @@ import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.LineSegment;
+import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 
 import com.google.common.math.DoubleMath;
@@ -42,40 +43,24 @@ public class VoronoiGraph implements Graph {
     private final List<Edge> edges = new ArrayList<>();
     private final List<Corner> corners = new ArrayList<>();
     private final List<Region> regions = new ArrayList<>();
-    private final Rect2i bounds;
+    private final Rect2f realBounds;
+    private final Rect2i intBounds;
 
-    public VoronoiGraph(Voronoi ov, int numLloydRelaxations) {
-        Voronoi v = ov;
+    public VoronoiGraph(Voronoi v) {
 
-        int minX = DoubleMath.roundToInt(ov.getPlotBounds().minX(), RoundingMode.FLOOR);
-        int minY = DoubleMath.roundToInt(ov.getPlotBounds().minY(), RoundingMode.FLOOR);
-        int width = DoubleMath.roundToInt(ov.getPlotBounds().width(), RoundingMode.CEILING);
-        int height = DoubleMath.roundToInt(ov.getPlotBounds().height(), RoundingMode.CEILING);
+        int minX = DoubleMath.roundToInt(v.getPlotBounds().minX(), RoundingMode.HALF_UP);
+        int minY = DoubleMath.roundToInt(v.getPlotBounds().minY(), RoundingMode.HALF_UP);
+        int width = DoubleMath.roundToInt(v.getPlotBounds().width(), RoundingMode.HALF_UP);
+        int height = DoubleMath.roundToInt(v.getPlotBounds().height(), RoundingMode.HALF_UP);
 
-        bounds = Rect2i.createFromMinAndSize(minX, minY, width, height);
+        intBounds = Rect2i.createFromMinAndSize(minX, minY, width, height);
+        realBounds = v.getPlotBounds();
 
-        for (int i = 0; i < numLloydRelaxations; i++) {
-            List<Vector2f> points = v.siteCoords();
-            for (Vector2f p : points) {
-                List<Vector2f> region = v.region(p);
-                float x = 0;
-                float y = 0;
-                for (Vector2f c : region) {
-                    x += c.getX();
-                    y += c.getY();
-                }
-                x /= region.size();
-                y /= region.size();
-                p.setX(x);
-                p.setY(y);
-            }
-            v = new Voronoi(points, v.getPlotBounds());
-        }
         buildGraph(v);
     }
 
 
-    private static boolean liesOnAxes(Rect2i r, BaseVector2f p) {
+    private static boolean liesOnAxes(Rect2f r, BaseVector2f p) {
         int diff = 1;
         return closeEnough(p.getX(), r.minX(), diff)
             || closeEnough(p.getY(), r.minY(), diff)
@@ -162,37 +147,37 @@ public class VoronoiGraph implements Graph {
             int diff = 1;
             for (Corner corner : region.getCorners()) {
                 BaseVector2f p = corner.getLocation();
-                onLeft |= closeEnough(p.getX(), bounds.minX(), diff);
-                onTop |= closeEnough(p.getY(), bounds.minY(), diff);
-                onRight |= closeEnough(p.getX(), bounds.maxX(), diff);
-                onBottom |= closeEnough(p.getY(), bounds.maxY(), diff);
+                onLeft |= closeEnough(p.getX(), realBounds.minX(), diff);
+                onTop |= closeEnough(p.getY(), realBounds.minY(), diff);
+                onRight |= closeEnough(p.getX(), realBounds.maxX(), diff);
+                onBottom |= closeEnough(p.getY(), realBounds.maxY(), diff);
             }
 
             // FIXME: corners do not know adjacent corners/edges!!
             // TODO: change graph structure to automatically link adjacent corners
             if (onLeft && onTop) {
-                Corner c = new Corner(new ImmutableVector2f(bounds.minX(), bounds.minY()));
+                Corner c = new Corner(new ImmutableVector2f(realBounds.minX(), realBounds.minY()));
                 c.setBorder(true);
                 corners.add(c);
                 region.addCorner(c);
             }
 
             if (onLeft && onBottom) {
-                Corner c = new Corner(new ImmutableVector2f(bounds.minX(), bounds.maxY()));
+                Corner c = new Corner(new ImmutableVector2f(realBounds.minX(), realBounds.maxY()));
                 c.setBorder(true);
                 corners.add(c);
                 region.addCorner(c);
             }
 
             if (onRight && onTop) {
-                Corner c = new Corner(new ImmutableVector2f(bounds.maxX(), bounds.minY()));
+                Corner c = new Corner(new ImmutableVector2f(realBounds.maxX(), realBounds.minY()));
                 c.setBorder(true);
                 corners.add(c);
                 region.addCorner(c);
             }
 
             if (onRight && onBottom) {
-                Corner c = new Corner(new ImmutableVector2f(bounds.maxX(), bounds.maxY()));
+                Corner c = new Corner(new ImmutableVector2f(realBounds.maxX(), realBounds.maxY()));
                 c.setBorder(true);
                 corners.add(c);
                 region.addCorner(c);
@@ -208,11 +193,11 @@ public class VoronoiGraph implements Graph {
         if (p == null) {
             return null;
         }
-        int index = (int) p.getX() + (int) (p.getY()) * bounds.width() * 2;
+        int index = (int) p.getX() + (int) (p.getY()) * intBounds.width() * 2;
         Corner c = pointCornerMap.get(index);
         if (c == null) {
             c = new Corner(p);
-            c.setBorder(liesOnAxes(bounds, p));
+            c.setBorder(liesOnAxes(realBounds, p));
             corners.add(c);
             pointCornerMap.put(index, c);
         }
@@ -248,6 +233,6 @@ public class VoronoiGraph implements Graph {
      */
     @Override
     public Rect2i getBounds() {
-        return bounds;
+        return intBounds;
     }
 }

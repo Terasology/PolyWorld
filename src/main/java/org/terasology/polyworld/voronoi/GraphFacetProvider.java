@@ -142,8 +142,12 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         }
 
         Rect2f doubleBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
-        final Voronoi v = new Voronoi(points, doubleBounds);
-        final Graph graph = new VoronoiGraph(v, 2);
+
+        Voronoi v = new Voronoi(points, doubleBounds);
+        v = GraphEditor.lloydRelaxation(v);
+        v = GraphEditor.lloydRelaxation(v);
+
+        final Graph graph = new VoronoiGraph(v);
         GraphEditor.improveCorners(graph.getCorners());
 
         return graph;
