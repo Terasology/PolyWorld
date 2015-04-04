@@ -28,9 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.Rect2i;
 import org.terasology.math.geom.BaseVector2f;
-import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.Region;
-import org.terasology.polyworld.voronoi.Triangle;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.Triangle;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;

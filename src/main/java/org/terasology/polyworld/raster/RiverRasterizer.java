@@ -17,6 +17,7 @@ package org.terasology.polyworld.raster;
 
 import java.util.Collection;
 import java.util.EnumSet;
+
 import org.terasology.commonworld.geom.BresenhamCollectorVisitor;
 import org.terasology.commonworld.geom.BresenhamLineIterator;
 import org.terasology.math.ChunkMath;
@@ -24,11 +25,11 @@ import org.terasology.math.Region3i;
 import org.terasology.math.TeraMath;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.math.geom.Vector3i;
+import org.terasology.polyworld.graph.Edge;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.rivers.RiverModelFacet;
-import org.terasology.polyworld.voronoi.Edge;
-import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.GraphFacet;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockManager;

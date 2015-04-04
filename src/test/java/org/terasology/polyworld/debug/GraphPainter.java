@@ -27,11 +27,11 @@ import java.util.Random;
 import org.terasology.math.Rect2i;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.Vector2f;
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Edge;
-import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.Region;
-import org.terasology.polyworld.voronoi.Triangle;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Edge;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.Triangle;
 
 import com.google.common.base.Function;
 import com.google.common.math.DoubleMath;

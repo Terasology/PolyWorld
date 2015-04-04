@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.voronoi;
+package org.terasology.polyworld.graph;
 
 import java.math.RoundingMode;
 import java.util.ArrayList;

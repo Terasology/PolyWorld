@@ -29,9 +29,9 @@ import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeModelFacet;
 import org.terasology.polyworld.elevation.ElevationModel;
 import org.terasology.polyworld.elevation.ElevationModelFacet;
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.GraphFacet;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.World;
 
@@ -65,7 +65,7 @@ public class FlatLakeTest {
         boolean tested = false;
         for (Graph graph : graphFacet.getAllGraphs()) {
             BiomeModel biomeModel = biomeModelFacet.get(graph);
-            for (org.terasology.polyworld.voronoi.Region reg : graph.getRegions()) {
+            for (org.terasology.polyworld.graph.Region reg : graph.getRegions()) {
                 WhittakerBiome biome = biomeModel.getBiome(reg);
                 if (biome == WhittakerBiome.LAKE) {
                     testRegion(elevationModelFacet.get(graph), reg);
@@ -79,7 +79,7 @@ public class FlatLakeTest {
         }
     }
 
-    private void testRegion(ElevationModel elevationModel, org.terasology.polyworld.voronoi.Region reg) {
+    private void testRegion(ElevationModel elevationModel, org.terasology.polyworld.graph.Region reg) {
         logger.info("Testing lake at {}", reg);
 
         float centerElevation = elevationModel.getElevation(reg);

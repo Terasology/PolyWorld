@@ -16,7 +16,7 @@
 
 package org.terasology.polyworld.lava;
 
-import org.terasology.polyworld.voronoi.Edge;
+import org.terasology.polyworld.graph.Edge;
 
 /**
  * TODO Type description

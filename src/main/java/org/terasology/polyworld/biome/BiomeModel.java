@@ -16,7 +16,7 @@
 
 package org.terasology.polyworld.biome;
 
-import org.terasology.polyworld.voronoi.Region;
+import org.terasology.polyworld.graph.Region;
 
 /**
  * TODO Type description

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.voronoi;
+package org.terasology.polyworld.graph;
 
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.Vector2f;

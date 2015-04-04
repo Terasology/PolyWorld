@@ -17,10 +17,10 @@
 package org.terasology.polyworld.lava;
 
 import org.terasology.polyworld.elevation.ElevationModel;
+import org.terasology.polyworld.graph.Edge;
+import org.terasology.polyworld.graph.Region;
 import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.rivers.RiverModel;
-import org.terasology.polyworld.voronoi.Edge;
-import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.water.WaterModel;
 import org.terasology.utilities.random.FastRandom;
 import org.terasology.utilities.random.Random;

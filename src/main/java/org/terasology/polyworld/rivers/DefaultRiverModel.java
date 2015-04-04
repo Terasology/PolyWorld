@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.Random;
 
 import org.terasology.polyworld.elevation.ElevationModel;
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Edge;
-import org.terasology.polyworld.voronoi.Graph;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Edge;
+import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Maps;

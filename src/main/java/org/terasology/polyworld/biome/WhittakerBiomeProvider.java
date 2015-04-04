@@ -17,10 +17,10 @@
 package org.terasology.polyworld.biome;
 
 import org.terasology.math.Vector2i;
-import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.GraphFacet;
-import org.terasology.polyworld.voronoi.Region;
-import org.terasology.polyworld.voronoi.Triangle;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.GraphFacet;
+import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.Triangle;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.FacetProvider;

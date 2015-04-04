@@ -21,10 +21,10 @@ import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.rivers.RiverModelFacet;
-import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.GraphFacet;
 import org.terasology.polyworld.water.WaterModel;
 import org.terasology.polyworld.water.WaterModelFacet;
 import org.terasology.world.generation.Facet;

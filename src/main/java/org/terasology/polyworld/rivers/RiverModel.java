@@ -16,8 +16,8 @@
 
 package org.terasology.polyworld.rivers;
 
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Edge;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Edge;
 
 /**
  * TODO Type description

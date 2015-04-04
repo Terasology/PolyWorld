@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.terasology.polyworld.voronoi;
+package org.terasology.polyworld.graph;
 
 import com.google.common.base.Preconditions;
 

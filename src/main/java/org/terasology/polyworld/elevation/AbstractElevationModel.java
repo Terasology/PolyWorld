@@ -16,8 +16,8 @@
 
 package org.terasology.polyworld.elevation;
 
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Region;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Region;
 
 /**
  * Implementation-independent methods for {@link ElevationModel}s

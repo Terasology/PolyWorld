@@ -18,7 +18,7 @@ package org.terasology.polyworld.water;
 
 import java.util.Map;
 
-import org.terasology.polyworld.voronoi.Graph;
+import org.terasology.polyworld.graph.Graph;
 import org.terasology.world.generation.WorldFacet;
 
 import com.google.common.collect.Maps;

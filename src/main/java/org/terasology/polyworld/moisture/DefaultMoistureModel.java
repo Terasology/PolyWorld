@@ -23,10 +23,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.Region;
 import org.terasology.polyworld.rivers.RiverModel;
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Graph;
-import org.terasology.polyworld.voronoi.Region;
 import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Lists;

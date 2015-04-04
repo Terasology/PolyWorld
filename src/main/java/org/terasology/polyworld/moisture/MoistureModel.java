@@ -16,8 +16,8 @@
 
 package org.terasology.polyworld.moisture;
 
-import org.terasology.polyworld.voronoi.Corner;
-import org.terasology.polyworld.voronoi.Region;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Region;
 
 /**
  * TODO Type description

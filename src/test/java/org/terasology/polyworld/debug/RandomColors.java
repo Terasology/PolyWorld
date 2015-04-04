@@ -19,7 +19,7 @@ package org.terasology.polyworld.debug;
 import java.awt.Color;
 import java.util.Random;
 
-import org.terasology.polyworld.voronoi.Region;
+import org.terasology.polyworld.graph.Region;
 
 import com.google.common.base.Function;
 
