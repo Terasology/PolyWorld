@@ -59,15 +59,6 @@ public class VoronoiGraph implements Graph {
         buildGraph(v);
     }
 
-
-    private static boolean liesOnAxes(Rect2f r, BaseVector2f p) {
-        int diff = 1;
-        return closeEnough(p.getX(), r.minX(), diff)
-            || closeEnough(p.getY(), r.minY(), diff)
-            || closeEnough(p.getX(), r.maxX(), diff)
-            || closeEnough(p.getY(), r.maxY(), diff);
-    }
-
     private static boolean closeEnough(float d1, float d2, float diff) {
         return Math.abs(d1 - d2) <= diff;
     }
@@ -193,11 +184,37 @@ public class VoronoiGraph implements Graph {
         if (p == null) {
             return null;
         }
+
+        // I doubt that this index mapping is always correct, in particular
+        // if the clamping to the border is active
         int index = (int) p.getX() + (int) (p.getY()) * intBounds.width() * 2;
         Corner c = pointCornerMap.get(index);
+        int diff = 1;
         if (c == null) {
-            c = new Corner(p);
-            c.setBorder(liesOnAxes(realBounds, p));
+            boolean onLeft = closeEnough(p.getX(), realBounds.minX(), diff);
+            boolean onTop = closeEnough(p.getY(), realBounds.minY(), diff);
+            boolean onRight = closeEnough(p.getX(), realBounds.maxX(), diff);
+            boolean onBottom = closeEnough(p.getY(), realBounds.maxY(), diff);
+            boolean isBorder = onLeft || onTop || onRight || onBottom;
+            float px = p.getX();
+            float py = p.getY();
+
+            // clamp to border to avoid creating degenerate triangles
+            if (onLeft) {
+                px = realBounds.minX();
+            }
+            if (onTop) {
+                py = realBounds.minY();
+            }
+            if (onRight) {
+                px = realBounds.maxX();
+            }
+            if (onBottom) {
+                py = realBounds.maxY();
+            }
+            ImmutableVector2f loc = isBorder ? new ImmutableVector2f(px, py) : p;
+            c = new Corner(loc);
+            c.setBorder(isBorder);
             corners.add(c);
             pointCornerMap.put(index, c);
         }
