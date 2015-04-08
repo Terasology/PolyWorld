@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.Component;
 import org.terasology.math.Rect2i;
+import org.terasology.math.Vector2i;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
@@ -32,6 +33,8 @@ import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.rp.WorldRegionFacet;
 import org.terasology.polyworld.rp.RegionType;
 import org.terasology.polyworld.rp.WorldRegion;
+import org.terasology.polyworld.sampling.PointSampling;
+import org.terasology.polyworld.sampling.PoissonDiscSampling;
 import org.terasology.rendering.nui.properties.Range;
 import org.terasology.utilities.random.FastRandom;
 import org.terasology.utilities.random.Random;
@@ -115,7 +118,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 //            int cols = DoubleMath.roundToInt(area.width() / cellSize, RoundingMode.HALF_UP);
             return createGridGraph(area, 1, 1);
         } else {
-            int numSites = DoubleMath.roundToInt(area.area() / configuration.graphDensity, RoundingMode.HALF_UP);
+            int numSites = DoubleMath.roundToInt(area.area() * configuration.graphDensity / 1000, RoundingMode.HALF_UP);
             return createVoronoiGraph(area, numSites);
         }
     }
@@ -132,20 +135,21 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
         // use different seeds for different areas
         long areaSeed = seed ^ bounds.hashCode();
-        final Random r = new FastRandom(areaSeed);
+        final Random rng = new FastRandom(areaSeed);
 
-        List<Vector2f> points = Lists.newArrayListWithCapacity(numSites);
-        for (int i = 0; i < numSites; i++) {
-            float px = bounds.minX() + r.nextFloat() * bounds.width();
-            float py = bounds.minY() + r.nextFloat() * bounds.height();
-            points.add(new Vector2f(px, py));
-        }
+        PointSampling sampling = new PoissonDiscSampling();
+
+        // avoid very small triangles at the border by adding a 5 block border
+        Rect2i islandBounds = bounds.expand(new Vector2i(-5, -5));
+        List<Vector2f> points = sampling.create(islandBounds, numSites, rng);
 
         Rect2f doubleBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
 
         Voronoi v = new Voronoi(points, doubleBounds);
-        v = GraphEditor.lloydRelaxation(v);
-        v = GraphEditor.lloydRelaxation(v);
+
+        // Lloyd relaxation makes regions more uniform
+//        v = GraphEditor.lloydRelaxation(v);
+//        v = GraphEditor.lloydRelaxation(v);
 
         final Graph graph = new VoronoiGraph(v);
         GraphEditor.improveCorners(graph.getCorners());
@@ -169,7 +173,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
     }
 
     private static class GraphProviderConfiguration implements Component {
-        @Range(min = 100, max = 5000f, increment = 100f, precision = 0, description = "Define the density for graph cells")
-        private float graphDensity = 500f;
+        @Range(min = 0.1f, max = 10f, increment = 0.1f, precision = 1, description = "Define the density for graph cells")
+        private float graphDensity = 2f;
     }
 }
