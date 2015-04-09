@@ -42,7 +42,7 @@ import com.google.common.cache.LoadingCache;
 @Requires({@Facet(WorldRegionFacet.class), @Facet(GraphFacet.class)})
 public class WaterModelFacetProvider implements FacetProvider {
 
-    private final LoadingCache<Graph, WaterModel> waterModelCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, WaterModel>() {
+    private final CacheLoader<Graph, WaterModel> loader = new CacheLoader<Graph, WaterModel>() {
 
         @Override
         public WaterModel load(Graph key) throws Exception {
@@ -55,9 +55,18 @@ public class WaterModelFacetProvider implements FacetProvider {
             return new DefaultWaterModel(key, waterDist);
         }
 
-    });
+    };
+
+    private final LoadingCache<Graph, WaterModel> waterModelCache;
 
     private long seed;
+
+    /**
+     * @param maxCacheSize maximum number of cached models
+     */
+    public WaterModelFacetProvider(int maxCacheSize) {
+        waterModelCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(loader);
+    }
 
     @Override
     public void setSeed(long seed) {

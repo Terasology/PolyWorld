@@ -62,7 +62,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(GraphFacetProvider.class);
 
-    private LoadingCache<WorldRegion, Graph> graphCache = CacheBuilder.newBuilder().build(new CacheLoader<WorldRegion, Graph>() {
+    private final CacheLoader<WorldRegion, Graph> graphLoader = new CacheLoader<WorldRegion, Graph>() {
 
         @Override
         public Graph load(WorldRegion wr) throws Exception {
@@ -74,20 +74,30 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
             return graph;
         }
-    });
+    };
 
-    private final LoadingCache<Graph, TriangleLookup> lookupCache = CacheBuilder.newBuilder().build(new CacheLoader<Graph, TriangleLookup>() {
+    private final CacheLoader<Graph, TriangleLookup> lookupLoader = new CacheLoader<Graph, TriangleLookup>() {
 
         @Override
         public TriangleLookup load(Graph graph) throws Exception {
             return new TriangleLookup(graph);
         }
-    });
+    };
 
+    private final LoadingCache<WorldRegion, Graph> graphCache;
+    private final LoadingCache<Graph, TriangleLookup> lookupCache;
 
     private long seed;
 
     private GraphProviderConfiguration configuration = new GraphProviderConfiguration();
+
+    /**
+     * @param maxCacheSize maximum number of cached graphs
+     */
+    public GraphFacetProvider(int maxCacheSize) {
+        graphCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(graphLoader);
+        lookupCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(lookupLoader);
+    }
 
     @Override
     public void setSeed(long seed) {

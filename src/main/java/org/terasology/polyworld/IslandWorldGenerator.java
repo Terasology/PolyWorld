@@ -36,7 +36,7 @@ import org.terasology.world.generation.BaseFacetedWorldGenerator;
 import org.terasology.world.generation.WorldBuilder;
 import org.terasology.world.generator.RegisterWorldGenerator;
 
-@RegisterWorldGenerator(id = "island", displayName = "Island")
+@RegisterWorldGenerator(id = "island", displayName = "Island World")
 public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
 
     public IslandWorldGenerator(SimpleUri uri) {
@@ -45,17 +45,18 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
 
     @Override
     protected WorldBuilder createWorld(final long seed) {
+        int maxCacheSize = 20;
         return new WorldBuilder(seed)
                 .setSeaLevel(6)
                 .addProvider(new SeaLevelProvider(6))
-                .addProvider(new WorldRegionFacetProvider())
-                .addProvider(new GraphFacetProvider())
-                .addProvider(new WaterModelFacetProvider())
-                .addProvider(new ElevationModelFacetProvider())
+                .addProvider(new WorldRegionFacetProvider(maxCacheSize))
+                .addProvider(new GraphFacetProvider(maxCacheSize))
+                .addProvider(new WaterModelFacetProvider(maxCacheSize))
+                .addProvider(new ElevationModelFacetProvider(maxCacheSize))
                 .addProvider(new ElevationProvider())
-                .addProvider(new RiverModelFacetProvider())
-                .addProvider(new MoistureModelFacetProvider())
-                .addProvider(new WhittakerBiomeModelProvider())
+                .addProvider(new RiverModelFacetProvider(maxCacheSize))
+                .addProvider(new MoistureModelFacetProvider(maxCacheSize))
+                .addProvider(new WhittakerBiomeModelProvider(maxCacheSize))
                 .addProvider(new WhittakerBiomeProvider())
                 .addProvider(new TreeProvider())
                 .addProvider(new FloraProvider())

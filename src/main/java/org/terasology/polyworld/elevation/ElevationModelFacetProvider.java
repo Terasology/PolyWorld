@@ -50,12 +50,13 @@ public class ElevationModelFacetProvider implements FacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(ElevationModelFacetProvider.class);
 
-    private final Cache<Graph, ElevationModel> elevationCache = CacheBuilder.newBuilder().build();
+    private final Cache<Graph, ElevationModel> elevationCache;
 
     /**
-     *
+     * @param maxCacheSize maximum number of cached models
      */
-    public ElevationModelFacetProvider() {
+    public ElevationModelFacetProvider(int maxCacheSize) {
+        elevationCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build();
     }
 
     @Override

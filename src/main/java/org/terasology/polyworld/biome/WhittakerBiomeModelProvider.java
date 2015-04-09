@@ -53,7 +53,14 @@ public class WhittakerBiomeModelProvider implements FacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(WhittakerBiomeModelProvider.class);
 
-    private final Cache<Graph, BiomeModel> modelCache = CacheBuilder.newBuilder().build();
+    private final Cache<Graph, BiomeModel> modelCache;
+
+    /**
+     * @param maxCacheSize maximum number of cached models
+     */
+    public WhittakerBiomeModelProvider(int maxCacheSize) {
+        modelCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build();
+    }
 
     @Override
     public void setSeed(long seed) {

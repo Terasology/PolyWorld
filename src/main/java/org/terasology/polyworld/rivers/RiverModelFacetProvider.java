@@ -50,9 +50,16 @@ public class RiverModelFacetProvider implements FacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(RiverModelFacetProvider.class);
 
-    private final Cache<Graph, RiverModel> modelCache = CacheBuilder.newBuilder().build();
+    private final Cache<Graph, RiverModel> modelCache;
 
     private long seed;
+
+    /**
+     * @param maxCacheSize maximum number of cached models
+     */
+    public RiverModelFacetProvider(int maxCacheSize) {
+        modelCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build();
+    }
 
     @Override
     public void setSeed(long seed) {

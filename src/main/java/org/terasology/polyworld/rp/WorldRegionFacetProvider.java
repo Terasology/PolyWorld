@@ -50,30 +50,38 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
     private Noise islandRatioNoise;
 
-    private LoadingCache<Rect2i, Collection<WorldRegion>> cache = CacheBuilder.newBuilder().build(
-            new CacheLoader<Rect2i, Collection<WorldRegion>>() {
+    private final CacheLoader<Rect2i, Collection<WorldRegion>> loader = new CacheLoader<Rect2i, Collection<WorldRegion>>() {
 
-                @Override
-                public Collection<WorldRegion> load(Rect2i fullArea) throws Exception {
-                    float maxArea = 0.75f * Sector.SIZE_X * Sector.SIZE_Z;
+        @Override
+        public Collection<WorldRegion> load(Rect2i fullArea) throws Exception {
+            float maxArea = 0.75f * Sector.SIZE_X * Sector.SIZE_Z;
 
-                    List<WorldRegion> result = Lists.newArrayList();
-                    for (Rect2i area : regionProvider.getSectorRegions(fullArea)) {
-                        float rnd = islandRatioNoise.noise(area.minX(), area.minY());
-                        float scale = area.area() / maxArea;
+            List<WorldRegion> result = Lists.newArrayList();
+            for (Rect2i area : regionProvider.getSectorRegions(fullArea)) {
+                float rnd = islandRatioNoise.noise(area.minX(), area.minY());
+                float scale = area.area() / maxArea;
 
-                        WorldRegion wr = new WorldRegion(area);
-                        wr.setHeightScaleFactor(scale);
-                        if (rnd < configuration.islandDensity) {
-                            wr.setType(RegionType.ISLAND);
-                        } else {
-                            wr.setType(RegionType.OCEAN);
-                        }
-                        result.add(wr);
-                    }
-                    return result;
+                WorldRegion wr = new WorldRegion(area);
+                wr.setHeightScaleFactor(scale);
+                if (rnd < configuration.islandDensity) {
+                    wr.setType(RegionType.ISLAND);
+                } else {
+                    wr.setType(RegionType.OCEAN);
                 }
-            });
+                result.add(wr);
+            }
+            return result;
+        }
+    };
+
+    private final LoadingCache<Rect2i, Collection<WorldRegion>> cache;
+
+    /**
+     * @param maxCacheSize maximum number of cached regions
+     */
+    public WorldRegionFacetProvider(int maxCacheSize) {
+        cache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(loader);
+    }
 
     @Override
     public void setSeed(long seed) {
