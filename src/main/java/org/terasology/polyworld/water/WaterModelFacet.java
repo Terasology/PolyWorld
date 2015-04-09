@@ -33,7 +33,7 @@ public class WaterModelFacet implements WorldFacet {
 
     /**
      * @param g
-     * @param unchecked
+     * @param model the water model for the graph
      */
     public void add(Graph g, WaterModel model) {
         map.put(g, model);

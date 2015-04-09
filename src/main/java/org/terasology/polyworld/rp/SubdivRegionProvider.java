@@ -37,7 +37,7 @@ public class SubdivRegionProvider implements RegionProvider {
 
     /**
      * splitProb = 1
-     * <br/>
+     * <br>
      * minEdgeLen = 16
      */
     public SubdivRegionProvider(long seed) {

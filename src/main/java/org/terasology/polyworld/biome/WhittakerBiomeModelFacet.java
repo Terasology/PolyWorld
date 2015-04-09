@@ -33,7 +33,7 @@ public class WhittakerBiomeModelFacet implements WorldFacet {
 
     /**
      * @param g
-     * @param unchecked
+     * @param model the biome model to add
      */
     public void add(Graph g, BiomeModel model) {
         map.put(g, model);

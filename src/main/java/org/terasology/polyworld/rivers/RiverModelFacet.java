@@ -35,7 +35,7 @@ public class RiverModelFacet implements WorldFacet {
 
     /**
      * @param g
-     * @param unchecked
+     * @param model the river model for the graph
      */
     public void add(Graph g, RiverModel model) {
         map.put(g, model);

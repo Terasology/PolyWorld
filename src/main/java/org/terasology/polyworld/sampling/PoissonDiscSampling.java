@@ -25,7 +25,7 @@ import org.terasology.math.geom.Vector2f;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.utilities.random.Random;
 
-import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import com.google.common.base.Preconditions;
 import com.google.common.math.DoubleMath;
 
 /**

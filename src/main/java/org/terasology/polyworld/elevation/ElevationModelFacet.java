@@ -32,8 +32,8 @@ public class ElevationModelFacet implements WorldFacet {
     private final Map<Graph, ElevationModel> map = Maps.newHashMap();
 
     /**
-     * @param g
-     * @param unchecked
+     * @param g the graph
+     * @param model the elevation model to add
      */
     public void add(Graph g, ElevationModel model) {
         map.put(g, model);

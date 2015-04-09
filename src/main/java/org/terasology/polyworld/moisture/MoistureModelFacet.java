@@ -35,7 +35,7 @@ public class MoistureModelFacet implements WorldFacet {
 
     /**
      * @param g
-     * @param unchecked
+     * @param model the moisture model for the graph
      */
     public void add(Graph g, MoistureModel model) {
         map.put(g, model);

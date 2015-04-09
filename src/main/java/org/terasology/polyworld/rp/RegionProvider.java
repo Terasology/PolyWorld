@@ -27,8 +27,8 @@ import org.terasology.math.Rect2i;
 public interface RegionProvider {
 
     /**
-     * @param sector
-     * @return
+     * @param fullArea the area that contains all sub-regions
+     * @return a collection of regions that lie inside the given area
      */
     Collection<Rect2i> getSectorRegions(Rect2i fullArea);
 }
