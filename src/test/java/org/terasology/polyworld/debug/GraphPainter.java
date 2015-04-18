@@ -19,6 +19,7 @@ package org.terasology.polyworld.debug;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Path2D;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.List;
@@ -59,7 +60,7 @@ public class GraphPainter {
     }
 
     public void drawEdges(Graphics2D g, Graph graph) {
-        g.setStroke(new BasicStroke(1));
+        g.setStroke(new BasicStroke(0));
         g.setColor(Color.CYAN);
         for (Edge e : graph.getEdges()) {
             BaseVector2f r0c = e.getCorner0().getLocation();
@@ -97,33 +98,20 @@ public class GraphPainter {
         Random r = new Random(12332434);
 
         for (final Region reg : regions) {
-            for (Triangle t : reg.computeTriangles()) {
+            for (Triangle tri : reg.computeTriangles()) {
                 g.setColor(new Color(r.nextInt(0xFFFFFF)));
-                drawTriangle(g, t);
+                BaseVector2f p0 = tri.getRegion().getCenter();
+                BaseVector2f p1 = tri.getCorner1().getLocation();
+                BaseVector2f p2 = tri.getCorner2().getLocation();
+
+                Path2D path = new Path2D.Double();
+                path.moveTo(p0.getX(), p0.getY());
+                path.lineTo(p1.getX(), p1.getY());
+                path.lineTo(p2.getX(), p2.getY());
+
+                g.fill(path);
             }
         }
-    }
-
-    public void drawTriangle(Graphics2D g, Triangle tri) {
-
-        RoundingMode mode = RoundingMode.HALF_UP;
-        int[] xPoints = new int[3];
-        int[] yPoints = new int[3];
-
-        BaseVector2f p0 = tri.getRegion().getCenter();
-        BaseVector2f p1 = tri.getCorner1().getLocation();
-        BaseVector2f p2 = tri.getCorner2().getLocation();
-
-        xPoints[0] = DoubleMath.roundToInt(p0.getX(), mode);
-        yPoints[0] = DoubleMath.roundToInt(p0.getY(), mode);
-
-        xPoints[1] = DoubleMath.roundToInt(p1.getX(), mode);
-        yPoints[1] = DoubleMath.roundToInt(p1.getY(), mode);
-
-        xPoints[2] = DoubleMath.roundToInt(p2.getX(), mode);
-        yPoints[2] = DoubleMath.roundToInt(p2.getY(), mode);
-
-        g.fillPolygon(xPoints, yPoints, 3);
     }
 
     public void drawSites(Graphics2D g, Graph graph) {
