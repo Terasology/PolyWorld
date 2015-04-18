@@ -157,8 +157,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         Voronoi v = new Voronoi(points, doubleBounds);
 
         // Lloyd relaxation makes regions more uniform
-//        v = GraphEditor.lloydRelaxation(v);
-//        v = GraphEditor.lloydRelaxation(v);
+        v = GraphEditor.lloydRelaxation(v);
 
         final Graph graph = new VoronoiGraph(v);
         GraphEditor.improveCorners(graph.getCorners());

@@ -78,7 +78,7 @@ public class VoronoiGraph implements Graph {
         }
 
         final List<org.terasology.math.delaunay.Edge> libedges = v.edges();
-        final Map<Integer, Corner> pointCornerMap = new HashMap<>();
+        final Map<BaseVector2f, Corner> pointCornerMap = new HashMap<>();
 
         for (org.terasology.math.delaunay.Edge libedge : libedges) {
             final LineSegment vEdge = libedge.voronoiEdge();
@@ -135,7 +135,7 @@ public class VoronoiGraph implements Graph {
             boolean onTop = false;
             boolean onBottom = false;
 
-            int diff = 1;
+            float diff = 0.1f;
             for (Corner corner : region.getCorners()) {
                 BaseVector2f p = corner.getLocation();
                 onLeft |= closeEnough(p.getX(), realBounds.minX(), diff);
@@ -180,44 +180,29 @@ public class VoronoiGraph implements Graph {
     /**
      * ensures that each corner is represented by only one corner object
      */
-    private Corner makeCorner(Map<Integer, Corner> pointCornerMap, ImmutableVector2f p) {
+    private Corner makeCorner(Map<BaseVector2f, Corner> pointCornerMap, ImmutableVector2f p) {
         if (p == null) {
             return null;
         }
 
-        // I doubt that this index mapping is always correct, in particular
-        // if the clamping to the border is active
-        int index = (int) p.getX() + (int) (p.getY()) * intBounds.width() * 2;
-        Corner c = pointCornerMap.get(index);
-        int diff = 1;
-        if (c == null) {
-            boolean onLeft = closeEnough(p.getX(), realBounds.minX(), diff);
-            boolean onTop = closeEnough(p.getY(), realBounds.minY(), diff);
-            boolean onRight = closeEnough(p.getX(), realBounds.maxX(), diff);
-            boolean onBottom = closeEnough(p.getY(), realBounds.maxY(), diff);
-            boolean isBorder = onLeft || onTop || onRight || onBottom;
-            float px = p.getX();
-            float py = p.getY();
-
-            // clamp to border to avoid creating degenerate triangles
-            if (onLeft) {
-                px = realBounds.minX();
+        for (BaseVector2f oc : pointCornerMap.keySet()) {
+            if (oc.distanceSquared(p) < 0.01f) {
+                return pointCornerMap.get(oc);
             }
-            if (onTop) {
-                py = realBounds.minY();
-            }
-            if (onRight) {
-                px = realBounds.maxX();
-            }
-            if (onBottom) {
-                py = realBounds.maxY();
-            }
-            ImmutableVector2f loc = isBorder ? new ImmutableVector2f(px, py) : p;
-            c = new Corner(loc);
-            c.setBorder(isBorder);
-            corners.add(c);
-            pointCornerMap.put(index, c);
         }
+
+        Corner c = new Corner(p);
+        corners.add(c);
+        pointCornerMap.put(p, c);
+        float diff = 0.01f;
+        boolean onLeft = closeEnough(p.getX(), realBounds.minX(), diff);
+        boolean onTop = closeEnough(p.getY(), realBounds.minY(), diff);
+        boolean onRight = closeEnough(p.getX(), realBounds.maxX(), diff);
+        boolean onBottom = closeEnough(p.getY(), realBounds.maxY(), diff);
+        if (onLeft || onTop || onRight || onBottom) {
+            c.setBorder(true);
+        }
+
         return c;
     }
 
