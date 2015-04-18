@@ -58,19 +58,32 @@ public class TreeProvider extends SurfaceObjectProvider<WhittakerBiome, TreeGene
     private TreeProviderConfiguration configuration = new TreeProviderConfiguration();
 
     public TreeProvider() {
-        register(WhittakerBiome.TEMPERATE_RAIN_FOREST, Trees.oakTree(), 0.04f);
-        register(WhittakerBiome.TEMPERATE_DECIDUOUS_FOREST, Trees.pineTree(), 0.02f);
+        register(WhittakerBiome.TEMPERATE_RAIN_FOREST, Trees.oakTree(), 0.05f);
+        register(WhittakerBiome.TEMPERATE_RAIN_FOREST, Trees.pineTree(), 0.03f);
+        register(WhittakerBiome.TEMPERATE_RAIN_FOREST, Trees.redTree(), 0.05f);
 
-        register(WhittakerBiome.LAKESHORE, Trees.oakTree(), 0.25f);
-        register(WhittakerBiome.TROPICAL_RAIN_FOREST, Trees.pineTree(), 0.10f);
-        register(WhittakerBiome.TROPICAL_SEASONAL_FOREST, Trees.oakVariationTree(), 0.25f);
+        register(WhittakerBiome.TEMPERATE_DECIDUOUS_FOREST, Trees.pineTree(), 0.08f);
+        register(WhittakerBiome.TEMPERATE_DECIDUOUS_FOREST, Trees.redTree(), 0.05f);
 
-        register(WhittakerBiome.SNOW, Trees.birchTree(), 0.02f);
+        register(WhittakerBiome.TROPICAL_RAIN_FOREST, Trees.pineTree(), 0.07f);
+        register(WhittakerBiome.TROPICAL_RAIN_FOREST, Trees.redTree(), 0.08f);
 
-        register(WhittakerBiome.LAKESHORE, Trees.redTree(), 0.01f);
-        register(WhittakerBiome.GRASSLAND, Trees.oakTree(), 0.02f);
+        register(WhittakerBiome.TROPICAL_SEASONAL_FOREST, Trees.oakVariationTree(), 0.15f);
+
+        register(WhittakerBiome.LAKESHORE, Trees.oakTree(), 0.15f);
+        register(WhittakerBiome.LAKESHORE, Trees.redTree(), 0.1f);
+
+        register(WhittakerBiome.SHRUBLAND, Trees.birchTree(), 0.02f);
+
+        register(WhittakerBiome.TAIGA, Trees.pineTree(), 0.08f);
+
+        register(WhittakerBiome.TUNDRA, Trees.birchTree(), 0.01f);
+        register(WhittakerBiome.TUNDRA, Trees.pineTree(), 0.01f);
+
+        register(WhittakerBiome.GRASSLAND, Trees.oakTree(), 0.03f);
 
         register(WhittakerBiome.SUBTROPICAL_DESERT, Trees.cactus(), 0.02f);
+
         register(WhittakerBiome.TEMPERATE_DESERT, Trees.cactus(), 0.04f);
     }
 
@@ -90,7 +103,6 @@ public class TreeProvider extends SurfaceObjectProvider<WhittakerBiome, TreeGene
         List<Predicate<Vector3i>> filters = Lists.newArrayList();
 
         filters.add(PositionFilters.minHeight(seaLevel.getSeaLevel()));
-        filters.add(PositionFilters.maxHeight(seaLevel.getSeaLevel() + 15));
         filters.add(PositionFilters.probability(densityNoiseGen, configuration.density * 0.1f));
         filters.add(PositionFilters.flatness(surface, 1, 1));
 

@@ -27,17 +27,37 @@ public enum WhittakerBiome implements Biome {
     LAKE,
     BEACH,
     SNOW,
+
+    /**
+     * Mostly shrubs, and grasses, mosses, and lichens as well as some scattered trees.
+     */
     TUNDRA,
     BARE,
     SCORCHED,
+
+    /**
+     * Boreal forest or snowforest, consisting mostly of pines, spruces and larches.
+     */
     TAIGA,
     TEMPERATE_DESERT,
     TEMPERATE_RAIN_FOREST,
+
+    /**
+     * Trees or shrubs lose their leaves seasonally (most commonly during autumn).
+     */
     TEMPERATE_DECIDUOUS_FOREST,
+
+    /**
+     * Dominated by grasses, however sedge and rush, shrubs and trees can also be found.
+     */
     GRASSLAND,
     SUBTROPICAL_DESERT,
     SHRUBLAND,
     ICE,
+
+    /**
+     * Wetland that is dominated by mostly herbaceous plant species.
+     */
     MARSH,
     TROPICAL_RAIN_FOREST,
     TROPICAL_SEASONAL_FOREST,
