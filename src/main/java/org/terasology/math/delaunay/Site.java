@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.Polygon;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
@@ -97,7 +96,7 @@ public final class Site implements ICoord {
     }
 
     private static boolean closeEnough(Vector2f p0, Vector2f p1) {
-        return BaseVector2f.distance(p0, p1) < EPSILON;
+        return p0.distanceSquared(p1) < EPSILON * EPSILON;
     }
 
     @Override
