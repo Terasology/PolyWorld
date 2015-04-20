@@ -7,7 +7,8 @@
     "dependencies" : [
         {
             "id" : "Core",
-            "minVersion" : "0.1.0"
+            "minVersion" : "0.53.0",
+            "maxVersion" : "1.0.0"
         },
         {
             "id" : "CommonWorld",
