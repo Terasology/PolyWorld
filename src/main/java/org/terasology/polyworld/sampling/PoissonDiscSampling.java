@@ -37,9 +37,18 @@ import com.google.common.math.DoubleMath;
 public class PoissonDiscSampling implements PointSampling {
 
     protected Vector2i getGridDimensions(Rect2i bounds, int numSites) {
+
         float ratio = (float) bounds.width() / bounds.height();
-        int rows = DoubleMath.roundToInt(Math.sqrt(numSites / ratio), RoundingMode.FLOOR);
-        int cols = DoubleMath.roundToInt(rows * ratio, RoundingMode.FLOOR);
+        double perRow = Math.sqrt(numSites / ratio);
+
+        int rows = DoubleMath.roundToInt(perRow, RoundingMode.FLOOR);
+        int cols = DoubleMath.roundToInt(perRow * ratio, RoundingMode.FLOOR);
+
+        // clamp to a minimum value of 2 to avoid polygons that touch
+        // two opposing borders of the bounding rectangle
+        rows = Math.max(rows, 2);
+        cols = Math.max(cols, 2);
+
         return new Vector2i(cols, rows);
     }
 
