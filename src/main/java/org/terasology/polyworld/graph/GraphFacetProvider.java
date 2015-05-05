@@ -148,18 +148,18 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
         PointSampling sampling = new PoissonDiscSampling();
 
-        // avoid very small triangles at the border by adding a 5 block border
-        Rect2i islandBounds = bounds.expand(new Vector2i(-5, -5));
-        List<Vector2f> points = sampling.create(islandBounds, numSites, rng);
+        Rect2f doubleBounds = Rect2f.createFromMinAndSize(0, 0, bounds.width(), bounds.height());
 
-        Rect2f doubleBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+        // avoid very small triangles at the border by adding a 5 block border
+        Rect2f islandBounds = Rect2f.createFromMinAndSize(5, 5, bounds.width() - 10, bounds.height() - 10);
+        List<Vector2f> points = sampling.create(islandBounds, numSites, rng);
 
         Voronoi v = new Voronoi(points, doubleBounds);
 
         // Lloyd relaxation makes regions more uniform
         v = GraphEditor.lloydRelaxation(v);
 
-        final Graph graph = new VoronoiGraph(v);
+        final Graph graph = new VoronoiGraph(bounds, v);
         GraphEditor.improveCorners(graph.getCorners());
 
         return graph;

@@ -77,7 +77,7 @@ public class GridGraph implements Graph {
             for (int c = 0; c < cols; c++) {
                 float x = bounds.minX() + (c + 0.5f) * dx;
                 float y = bounds.minY() + (r + 0.5f) * dy;
-                Vector2f pos = new Vector2f(x, y);
+                ImmutableVector2f pos = new ImmutableVector2f(x, y);
                 Region reg = new Region(pos);
                 Corner tl = getCorner(r, c);
                 Corner tr = getCorner(r, c + 1);

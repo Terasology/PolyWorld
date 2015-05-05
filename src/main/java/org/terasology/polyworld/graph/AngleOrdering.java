@@ -17,6 +17,7 @@
 package org.terasology.polyworld.graph;
 
 import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Vector2f;
 
 import com.google.common.collect.Ordering;
@@ -27,12 +28,12 @@ import com.google.common.collect.Ordering;
  */
 final class AngleOrdering extends Ordering<Corner> {
 
-    private final Vector2f center;
+    private final ImmutableVector2f center;
 
     /**
      * @param center the center point
      */
-    AngleOrdering(Vector2f center) {
+    AngleOrdering(ImmutableVector2f center) {
         this.center = center;
     }
 

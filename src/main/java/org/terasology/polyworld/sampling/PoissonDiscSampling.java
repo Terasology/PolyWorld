@@ -20,7 +20,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.utilities.random.Random;
@@ -36,9 +36,9 @@ import com.google.common.math.DoubleMath;
  */
 public class PoissonDiscSampling implements PointSampling {
 
-    protected Vector2i getGridDimensions(Rect2i bounds, int numSites) {
+    protected Vector2i getGridDimensions(Rect2f bounds, int numSites) {
 
-        float ratio = (float) bounds.width() / bounds.height();
+        float ratio = bounds.width() / bounds.height();
         double perRow = Math.sqrt(numSites / ratio);
 
         int rows = DoubleMath.roundToInt(perRow, RoundingMode.FLOOR);
@@ -52,26 +52,28 @@ public class PoissonDiscSampling implements PointSampling {
         return new Vector2i(cols, rows);
     }
 
-    protected float getMinRadius(Rect2i bounds, int numSites) {
+    protected float getMinRadius(Rect2f bounds, int numSites) {
         Vector2i dims = getGridDimensions(bounds, numSites);
         int cols = dims.getX();
         int rows = dims.getY();
 
-        float cellWidth = (float) bounds.width() / cols;
-        float cellHeight = (float) bounds.height() / rows;
+        float cellWidth = bounds.width() / cols;
+        float cellHeight = bounds.height() / rows;
         float minRad = Math.min(cellHeight, cellWidth) * 0.5f; // they should be identical
         return minRad;
     }
 
     @Override
-    public List<Vector2f> create(Rect2i bounds, int numSites, Random rng) {
+    public List<Vector2f> create(Rect2f bounds, int numSites, Random rng) {
+
         Vector2i dims = getGridDimensions(bounds, numSites);
         int cols = dims.getX();
         int rows = dims.getY();
 
-        float cellWidth = (float) bounds.width() / cols;
-        float cellHeight = (float) bounds.height() / rows;
+        float cellWidth = bounds.width() / cols;
+        float cellHeight = bounds.height() / rows;
         float minRad = getMinRadius(bounds, numSites);
+
 
         Preconditions.checkState(minRad < cellWidth);
         Preconditions.checkState(minRad < cellHeight);

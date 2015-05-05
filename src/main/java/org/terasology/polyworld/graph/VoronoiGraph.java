@@ -46,36 +46,26 @@ public class VoronoiGraph implements Graph {
     private final Rect2f realBounds;
     private final Rect2i intBounds;
 
-    public VoronoiGraph(Voronoi v) {
+    /**
+     * @param bounds bounds of the target area (points from Voronoi will be scaled and translated accordingly)
+     * @param v the Voronoi diagram to use
+     */
+    public VoronoiGraph(Rect2i bounds, Voronoi v) {
 
-        int minX = DoubleMath.roundToInt(v.getPlotBounds().minX(), RoundingMode.HALF_UP);
-        int minY = DoubleMath.roundToInt(v.getPlotBounds().minY(), RoundingMode.HALF_UP);
-        int width = DoubleMath.roundToInt(v.getPlotBounds().width(), RoundingMode.HALF_UP);
-        int height = DoubleMath.roundToInt(v.getPlotBounds().height(), RoundingMode.HALF_UP);
+        intBounds = bounds;
+        realBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
 
-        intBounds = Rect2i.createFromMinAndSize(minX, minY, width, height);
-        realBounds = v.getPlotBounds();
-
-        buildGraph(v);
-    }
-
-    private static boolean closeEnough(float d1, float d2, float diff) {
-        return Math.abs(d1 - d2) <= diff;
-    }
-
-    private void buildGraph(Voronoi v) {
         final Map<Vector2f, Region> pointCenterMap = new HashMap<>();
         final List<Vector2f> points = v.siteCoords();
-        for (Vector2f p : points) {
-            Region c = new Region(p);
+        for (Vector2f vorSite : points) {
+            Vector2f site = transform(v.getPlotBounds(), realBounds, vorSite);
+            Region c = new Region(new ImmutableVector2f(site));
             regions.add(c);
-            pointCenterMap.put(p, c);
+            pointCenterMap.put(site, c);
         }
 
-        //bug fix
-        for (Region c : regions) {
-            v.region(c.getCenter());
-        }
+        // bugfix
+        v.regions();
 
         final List<org.terasology.math.delaunay.Edge> libedges = v.edges();
         final Map<BaseVector2f, Corner> pointCornerMap = new HashMap<>();
@@ -88,11 +78,17 @@ public class VoronoiGraph implements Graph {
                 continue;
             }
 
-            Corner c0 = makeCorner(pointCornerMap, vEdge.getStart());
-            Corner c1 = makeCorner(pointCornerMap, vEdge.getEnd());
+            Vector2f cp0 = transform(v.getPlotBounds(), realBounds, vEdge.getStart());
+            Vector2f cp1 = transform(v.getPlotBounds(), realBounds, vEdge.getEnd());
 
-            Region r0 = pointCenterMap.get(dEdge.getStart());
-            Region r1 = pointCenterMap.get(dEdge.getEnd());
+            Corner c0 = makeCorner(pointCornerMap, cp0);
+            Corner c1 = makeCorner(pointCornerMap, cp1);
+
+            Vector2f rp0 = transform(v.getPlotBounds(), realBounds, dEdge.getStart());
+            Vector2f rp1 = transform(v.getPlotBounds(), realBounds, dEdge.getEnd());
+
+            Region r0 = pointCenterMap.get(rp0);
+            Region r1 = pointCenterMap.get(rp1);
 
             final Edge edge = new Edge(c0, c1, r0, r1);
 
@@ -180,7 +176,7 @@ public class VoronoiGraph implements Graph {
     /**
      * ensures that each corner is represented by only one corner object
      */
-    private Corner makeCorner(Map<BaseVector2f, Corner> pointCornerMap, ImmutableVector2f p) {
+    private Corner makeCorner(Map<BaseVector2f, Corner> pointCornerMap, Vector2f p) {
         if (p == null) {
             return null;
         }
@@ -191,7 +187,7 @@ public class VoronoiGraph implements Graph {
             }
         }
 
-        Corner c = new Corner(p);
+        Corner c = new Corner(new ImmutableVector2f(p));
         corners.add(c);
         pointCornerMap.put(p, c);
         float diff = 0.01f;
@@ -236,5 +232,29 @@ public class VoronoiGraph implements Graph {
     @Override
     public Rect2i getBounds() {
         return intBounds;
+    }
+
+    /**
+     * Transforms the given point from the source rectangle into the destination rectangle.
+     * @param srcRc The source rectangle
+     * @param dstRc The destination rectangle
+     * @param pt The point to transform
+     * @return The new, transformed point
+     */
+    private static Vector2f transform(Rect2f srcRc, Rect2f dstRc, BaseVector2f pt) {
+
+        // TODO: move this to a better place
+
+        float x = (pt.getX() - srcRc.minX()) / srcRc.width();
+        float y = (pt.getY() - srcRc.minY()) / srcRc.height();
+
+        x = dstRc.minX() + x * dstRc.width();
+        y = dstRc.minY() + y * dstRc.height();
+
+        return new Vector2f(x, y);
+    }
+
+    private static boolean closeEnough(float d1, float d2, float diff) {
+        return Math.abs(d1 - d2) <= diff;
     }
 }

@@ -62,16 +62,15 @@ final class SwingPreview {
         final long seed = "asdf".hashCode(); //System.nanoTime();
 
         Rect2i bounds = Rect2i.createFromMinAndSize(0, 0, width, height);
+        Rect2f doubleBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
 
         PointSampling sampling = new PoissonDiscSampling();
         int numSites = 1000;
         Random rng = new FastRandom(seed);
-        List<Vector2f> points = sampling.create(bounds, numSites, rng);
-
-        Rect2f doubleBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+        List<Vector2f> points = sampling.create(doubleBounds, numSites, rng);
 
         Voronoi v = new Voronoi(points, doubleBounds);
-        VoronoiGraph graph = new VoronoiGraph(v);
+        VoronoiGraph graph = new VoronoiGraph(bounds, v);
 
         final GraphPainter graphPainter = new GraphPainter();
         TriangleLookup lookup = new TriangleLookup(graph);

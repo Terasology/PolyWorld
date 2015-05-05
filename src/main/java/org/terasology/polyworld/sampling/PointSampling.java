@@ -18,7 +18,7 @@ package org.terasology.polyworld.sampling;
 
 import java.util.List;
 
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.utilities.random.FastRandom;
 import org.terasology.utilities.random.Random;
@@ -31,7 +31,7 @@ public interface PointSampling {
      * @param numSites the number of desired points. Implementations need not return this exact number of points.
      * @return a list of points with a length of about <code>numSites</code>.
      */
-    default List<Vector2f> create(Rect2i bounds, int numSites) {
+    default List<Vector2f> create(Rect2f bounds, int numSites) {
         return create(bounds, numSites, new FastRandom(2343289));
     }
 
@@ -42,5 +42,5 @@ public interface PointSampling {
      * @param rng the random number generator that should be used
      * @return a list of points with a length of about <code>numSites</code>.
      */
-    List<Vector2f> create(Rect2i bounds, int numSites, Random rng);
+    List<Vector2f> create(Rect2f bounds, int numSites, Random rng);
 }

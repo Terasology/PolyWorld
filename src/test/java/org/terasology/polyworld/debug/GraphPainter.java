@@ -53,8 +53,8 @@ public class GraphPainter {
         g.setStroke(new BasicStroke(1));
         g.setColor(Color.ORANGE);
         for (Edge e : graph.getEdges()) {
-            Vector2f r0c = e.getRegion0().getCenter();
-            Vector2f r1c = e.getRegion1().getCenter();
+            BaseVector2f r0c = e.getRegion0().getCenter();
+            BaseVector2f r1c = e.getRegion1().getCenter();
             g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
         }
     }

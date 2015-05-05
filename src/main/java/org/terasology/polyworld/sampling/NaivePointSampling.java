@@ -18,7 +18,7 @@ package org.terasology.polyworld.sampling;
 
 import java.util.List;
 
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.utilities.random.Random;
 
@@ -33,7 +33,7 @@ import com.google.common.collect.Lists;
 public class NaivePointSampling implements PointSampling {
 
     @Override
-    public List<Vector2f> create(Rect2i bounds, int numSites, Random rng) {
+    public List<Vector2f> create(Rect2f bounds, int numSites, Random rng) {
         List<Vector2f> points = Lists.newArrayListWithCapacity(numSites);
         for (int i = 0; i < numSites; i++) {
             float px = bounds.minX() + rng.nextFloat() * bounds.width();

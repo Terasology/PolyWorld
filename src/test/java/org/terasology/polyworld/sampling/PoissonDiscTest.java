@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 
 import com.google.common.math.DoubleMath;
@@ -33,7 +33,7 @@ public class PoissonDiscTest {
 
         float graphDensity = 100f;
 
-        Rect2i area = Rect2i.createFromMinAndSize(0, 0, 512, 256);
+        Rect2f area = Rect2f.createFromMinAndSize(0, 0, 512, 256);
         int numSites = DoubleMath.roundToInt(area.area() * graphDensity / 1000, RoundingMode.HALF_UP);
 
         PoissonDiscSampling sampling = new PoissonDiscSampling();
