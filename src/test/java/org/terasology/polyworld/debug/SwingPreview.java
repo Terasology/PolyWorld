@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -45,6 +46,7 @@ import org.terasology.utilities.random.Random;
 
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 /**
  * Preview generated world in Swing
@@ -64,10 +66,14 @@ final class SwingPreview {
         Rect2i bounds = Rect2i.createFromMinAndSize(0, 0, width, height);
         Rect2f doubleBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
 
-        PointSampling sampling = new PoissonDiscSampling();
-        int numSites = 1000;
-        Random rng = new FastRandom(seed);
-        List<Vector2f> points = sampling.create(doubleBounds, numSites, rng);
+//        PointSampling sampling = new PoissonDiscSampling();
+//        int numSites = 1000;
+//        Random rng = new FastRandom(seed);
+//        List<Vector2f> points = sampling.create(doubleBounds, numSites, rng);
+        List<Vector2f> points = Arrays.asList(
+                new Vector2f(128, 64), new Vector2f(384, 96),
+                new Vector2f(224, 72), new Vector2f(256, 192),
+                new Vector2f(128, 192), new Vector2f(384, 224));
 
         Voronoi v = new Voronoi(points, doubleBounds);
         VoronoiGraph graph = new VoronoiGraph(bounds, v);

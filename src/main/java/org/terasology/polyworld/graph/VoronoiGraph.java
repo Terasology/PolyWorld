@@ -16,7 +16,6 @@
 
 package org.terasology.polyworld.graph;
 
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,8 +29,6 @@ import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
-
-import com.google.common.math.DoubleMath;
 
 /**
  * VoronoiGraph.java
@@ -56,19 +53,28 @@ public class VoronoiGraph implements Graph {
         realBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
 
         final Map<Vector2f, Region> pointCenterMap = new HashMap<>();
-        final List<Vector2f> points = v.siteCoords();
-        for (Vector2f vorSite : points) {
+        final Map<BaseVector2f, Corner> pointCornerMap = new HashMap<>();
+
+        for (Vector2f vorSite : v.siteCoords()) {
             Vector2f site = transform(v.getPlotBounds(), realBounds, vorSite);
-            Region c = new Region(new ImmutableVector2f(site));
-            regions.add(c);
-            pointCenterMap.put(site, c);
+            Region region = new Region(new ImmutableVector2f(site));
+            regions.add(region);
+            pointCenterMap.put(site, region);
+
+            for (Vector2f cput : v.region(vorSite)) {
+                Vector2f cpt = transform(v.getPlotBounds(), realBounds, cput);
+
+                Corner c0 = makeCorner(pointCornerMap, cpt);
+
+                region.addCorner(c0);
+                c0.addTouches(region);
+            }
         }
 
         // bugfix
         v.regions();
 
         final List<org.terasology.math.delaunay.Edge> libedges = v.edges();
-        final Map<BaseVector2f, Corner> pointCornerMap = new HashMap<>();
 
         for (org.terasology.math.delaunay.Edge libedge : libedges) {
             final LineSegment vEdge = libedge.voronoiEdge();
@@ -109,67 +115,6 @@ public class VoronoiGraph implements Graph {
             // Corners point to corners
             c0.addAdjacent(c1);
             c1.addAdjacent(c0);
-
-            // Centers point to corners
-            r0.addCorner(c0);
-            r0.addCorner(c1);
-            r1.addCorner(c0);
-            r1.addCorner(c1);
-
-            // Corners point to centers
-            c0.addTouches(r0);
-            c0.addTouches(r1);
-
-            c1.addTouches(r0);
-            c1.addTouches(r1);
-        }
-
-        // add corners
-        for (Region region : regions) {
-            boolean onLeft = false;
-            boolean onRight = false;
-            boolean onTop = false;
-            boolean onBottom = false;
-
-            float diff = 0.1f;
-            for (Corner corner : region.getCorners()) {
-                BaseVector2f p = corner.getLocation();
-                onLeft |= closeEnough(p.getX(), realBounds.minX(), diff);
-                onTop |= closeEnough(p.getY(), realBounds.minY(), diff);
-                onRight |= closeEnough(p.getX(), realBounds.maxX(), diff);
-                onBottom |= closeEnough(p.getY(), realBounds.maxY(), diff);
-            }
-
-            // FIXME: corners do not know adjacent corners/edges!!
-            // TODO: change graph structure to automatically link adjacent corners
-            if (onLeft && onTop) {
-                Corner c = new Corner(new ImmutableVector2f(realBounds.minX(), realBounds.minY()));
-                c.setBorder(true);
-                corners.add(c);
-                region.addCorner(c);
-            }
-
-            if (onLeft && onBottom) {
-                Corner c = new Corner(new ImmutableVector2f(realBounds.minX(), realBounds.maxY()));
-                c.setBorder(true);
-                corners.add(c);
-                region.addCorner(c);
-            }
-
-            if (onRight && onTop) {
-                Corner c = new Corner(new ImmutableVector2f(realBounds.maxX(), realBounds.minY()));
-                c.setBorder(true);
-                corners.add(c);
-                region.addCorner(c);
-            }
-
-            if (onRight && onBottom) {
-                Corner c = new Corner(new ImmutableVector2f(realBounds.maxX(), realBounds.maxY()));
-                c.setBorder(true);
-                corners.add(c);
-                region.addCorner(c);
-            }
-
         }
     }
 
