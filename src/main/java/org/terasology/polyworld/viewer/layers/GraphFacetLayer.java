@@ -55,6 +55,7 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     private Config config = new Config();
 
     public GraphFacetLayer() {
+        setVisible(false);
         // use default settings
     }
 

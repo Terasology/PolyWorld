@@ -56,7 +56,8 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
     private float scale = 4f;
 
     public MoistureModelFacetLayer() {
-     // use default settings
+        setVisible(false);
+        // use default settings
     }
 
     @Override
