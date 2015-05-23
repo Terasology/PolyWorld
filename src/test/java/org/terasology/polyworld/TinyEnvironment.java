@@ -16,18 +16,20 @@
 
 package org.terasology.polyworld;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.terasology.config.Config;
+import org.terasology.context.Context;
+import org.terasology.context.internal.ContextImpl;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.BlockUri;
 import org.terasology.world.generator.plugin.WorldGeneratorPlugin;
 import org.terasology.world.generator.plugin.WorldGeneratorPluginLibrary;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Setup a tiny Terasology environment
@@ -41,32 +43,38 @@ public final class TinyEnvironment {
 
     /**
      * Default setup order
+     *
+     * @return a terasology environment: The return context contains a {@link Config}, {@link BlockManager} and
+     * {@link }WorldGeneratorPluginLibrary} mock.
+     * mock.
      */
-    public static void setup() {
+    public static Context setup() {
+        Context context = new ContextImpl();
+        CoreRegistry.setContext(context);
+        setupConfig(context);
 
-        setupConfig();
+        setupBlockManager(context);
 
-        setupBlockManager();
-
-        setupWorldGen();
+        setupWorldGen(context);
+        return context;
     }
 
-    private static void setupConfig() {
+    private static void setupConfig(Context context) {
         Config config = new Config();
-        CoreRegistry.put(Config.class, config);
+        context.put(Config.class, config);
     }
 
-    private static void setupBlockManager() {
+    private static void setupBlockManager(Context context) {
         BlockManager blockManager = Mockito.mock(BlockManager.class);
         Block air = BlockManager.getAir();
         Mockito.when(blockManager.getBlock(Matchers.<BlockUri>any())).thenReturn(air);
         Mockito.when(blockManager.getBlock(Matchers.<String>any())).thenReturn(air);
 
-        CoreRegistry.put(BlockManager.class, blockManager);
+        context.put(BlockManager.class, blockManager);
     }
 
-    private static void setupWorldGen() {
-        CoreRegistry.putPermanently(WorldGeneratorPluginLibrary.class, new WorldGeneratorPluginLibrary() {
+    private static void setupWorldGen(Context context) {
+        context.put(WorldGeneratorPluginLibrary.class, new WorldGeneratorPluginLibrary() {
 
             @Override
             public <U extends WorldGeneratorPlugin> List<U> instantiateAllOfType(Class<U> ofType) {
