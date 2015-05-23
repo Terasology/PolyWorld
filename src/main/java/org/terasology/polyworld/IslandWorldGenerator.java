@@ -44,9 +44,9 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
     }
 
     @Override
-    protected WorldBuilder createWorld(final long seed) {
+    protected WorldBuilder createWorld() {
         int maxCacheSize = 20;
-        return new WorldBuilder(seed)
+        return new WorldBuilder()
                 .setSeaLevel(6)
                 .addProvider(new SeaLevelProvider(6))
                 .addProvider(new WorldRegionFacetProvider(maxCacheSize))
