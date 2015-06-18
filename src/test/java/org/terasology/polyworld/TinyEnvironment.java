@@ -66,7 +66,17 @@ public final class TinyEnvironment {
 
     private static void setupBlockManager(Context context) {
         BlockManager blockManager = Mockito.mock(BlockManager.class);
-        Block air = BlockManager.getAir();
+        Block air = new Block();
+        air.setTranslucent(true);
+        air.setTargetable(false);
+        air.setPenetrable(true);
+        air.setReplacementAllowed(true);
+        air.setShadowCasting(false);
+        air.setAttachmentAllowed(false);
+        air.setHardness(0);
+        air.setId((short) 0);
+        air.setDisplayName("Air");
+        air.setUri(BlockManager.AIR_ID);
         Mockito.when(blockManager.getBlock(Matchers.<BlockUri>any())).thenReturn(air);
         Mockito.when(blockManager.getBlock(Matchers.<String>any())).thenReturn(air);
 

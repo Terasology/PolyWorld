@@ -32,9 +32,11 @@ import org.terasology.polyworld.raster.WhittakerRasterizer;
 import org.terasology.polyworld.rivers.RiverModelFacetProvider;
 import org.terasology.polyworld.rp.WorldRegionFacetProvider;
 import org.terasology.polyworld.water.WaterModelFacetProvider;
+import org.terasology.registry.CoreRegistry;
 import org.terasology.world.generation.BaseFacetedWorldGenerator;
 import org.terasology.world.generation.WorldBuilder;
 import org.terasology.world.generator.RegisterWorldGenerator;
+import org.terasology.world.generator.plugin.WorldGeneratorPluginLibrary;
 
 @RegisterWorldGenerator(id = "island", displayName = "Island World")
 public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
@@ -44,9 +46,9 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
     }
 
     @Override
-    protected WorldBuilder createWorld(final long seed) {
+    protected WorldBuilder createWorld() {
         int maxCacheSize = 20;
-        return new WorldBuilder(seed)
+        return new WorldBuilder(CoreRegistry.get(WorldGeneratorPluginLibrary.class))
                 .setSeaLevel(6)
                 .addProvider(new SeaLevelProvider(6))
                 .addProvider(new WorldRegionFacetProvider(maxCacheSize))
