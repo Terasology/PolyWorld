@@ -43,6 +43,9 @@ public class Edge {
         Preconditions.checkArgument(r0 != null);
         Preconditions.checkArgument(r1 != null);
 
+        Preconditions.checkArgument(!r0.equals(r1));
+        Preconditions.checkArgument(!c0.equals(c1));
+
         this.c0 = c0;
         this.c1 = c1;
         this.r0 = r0;
@@ -79,6 +82,6 @@ public class Edge {
 
     @Override
     public String toString() {
-        return String.format("Edge [%s -> %s, separating %s and %s]", c0, c1, r0, r1);
+        return String.format("Edge [%s -> %s]", c0.getLocation(), c1.getLocation());
     }
 }
