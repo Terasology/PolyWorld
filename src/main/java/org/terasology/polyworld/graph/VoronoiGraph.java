@@ -52,49 +52,37 @@ public class VoronoiGraph implements Graph {
         intBounds = bounds;
         realBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
 
-        final Map<Vector2f, Region> pointCenterMap = new HashMap<>();
+        final Map<Vector2f, Region> regionMap = new HashMap<>();
         final Map<BaseVector2f, Corner> pointCornerMap = new HashMap<>();
 
         for (Vector2f vorSite : v.siteCoords()) {
             Vector2f site = transform(v.getPlotBounds(), realBounds, vorSite);
             Region region = new Region(new ImmutableVector2f(site));
             regions.add(region);
-            pointCenterMap.put(site, region);
+            regionMap.put(vorSite, region);
 
-            for (Vector2f cput : v.region(vorSite)) {
-                Vector2f cpt = transform(v.getPlotBounds(), realBounds, cput);
-
-                Corner c0 = makeCorner(pointCornerMap, cpt);
+            for (Vector2f pt : v.region(vorSite)) {
+                Corner c0 = makeCorner(pointCornerMap, v.getPlotBounds(), pt);
 
                 region.addCorner(c0);
                 c0.addTouches(region);
             }
         }
 
-        // bugfix
-        v.regions();
+        for (org.terasology.math.delaunay.Edge libedge : v.edges()) {
 
-        final List<org.terasology.math.delaunay.Edge> libedges = v.edges();
-
-        for (org.terasology.math.delaunay.Edge libedge : libedges) {
-            final LineSegment vEdge = libedge.voronoiEdge();
-            final LineSegment dEdge = libedge.delaunayLine();
-
-            if (vEdge == null) {
+            if (!libedge.isVisible()) {
                 continue;
             }
 
-            Vector2f cp0 = transform(v.getPlotBounds(), realBounds, vEdge.getStart());
-            Vector2f cp1 = transform(v.getPlotBounds(), realBounds, vEdge.getEnd());
+            final LineSegment dEdge = libedge.delaunayLine();
+            final LineSegment vEdge = libedge.voronoiEdge();
 
-            Corner c0 = makeCorner(pointCornerMap, cp0);
-            Corner c1 = makeCorner(pointCornerMap, cp1);
+            Corner c0 = makeCorner(pointCornerMap, v.getPlotBounds(), vEdge.getStart());
+            Corner c1 = makeCorner(pointCornerMap, v.getPlotBounds(), vEdge.getEnd());
 
-            Vector2f rp0 = transform(v.getPlotBounds(), realBounds, dEdge.getStart());
-            Vector2f rp1 = transform(v.getPlotBounds(), realBounds, dEdge.getEnd());
-
-            Region r0 = pointCenterMap.get(rp0);
-            Region r1 = pointCenterMap.get(rp1);
+            Region r0 = regionMap.get(dEdge.getStart());
+            Region r1 = regionMap.get(dEdge.getEnd());
 
             final Edge edge = new Edge(c0, c1, r0, r1);
 
@@ -121,20 +109,18 @@ public class VoronoiGraph implements Graph {
     /**
      * ensures that each corner is represented by only one corner object
      */
-    private Corner makeCorner(Map<BaseVector2f, Corner> pointCornerMap, Vector2f p) {
-        if (p == null) {
-            return null;
+    private Corner makeCorner(Map<BaseVector2f, Corner> pointCornerMap, Rect2f srcRc, BaseVector2f orgPt) {
+
+        Corner exist = pointCornerMap.get(orgPt);
+        if (exist != null) {
+            return exist;
         }
 
-        for (BaseVector2f oc : pointCornerMap.keySet()) {
-            if (oc.distanceSquared(p) < 0.01f) {
-                return pointCornerMap.get(oc);
-            }
-        }
+        Vector2f p = transform(srcRc, realBounds, orgPt);
 
         Corner c = new Corner(new ImmutableVector2f(p));
         corners.add(c);
-        pointCornerMap.put(p, c);
+        pointCornerMap.put(orgPt, c);
         float diff = 0.01f;
         boolean onLeft = closeEnough(p.getX(), realBounds.minX(), diff);
         boolean onTop = closeEnough(p.getY(), realBounds.minY(), diff);

@@ -99,7 +99,10 @@ public final class Edge {
         edge.leftVertex = null;
         edge.rightVertex = null;
 
-        edge.set(a, b, c);
+        edge.a = a;
+        edge.b = b;
+        edge.c = c;
+
         //trace("createBisectingEdge: a ", edge.a, "b", edge.b, "c", edge.c);
 
         return edge;
@@ -310,12 +313,17 @@ public final class Edge {
             clippedVertices.put(LR.RIGHT, new Vector2f(x0, y0));
             clippedVertices.put(LR.LEFT, new Vector2f(x1, y1));
         }
-    }
 
-    public void set(float na, float nb, float nc) {
-        this.a = na;
-        this.b = nb;
-        this.c = nc;
+        // overwrite previously computed coordinates with exact vertex locations
+        // where possible. This avoids rounding errors and ensures that equals() works properly.
+        // TODO: check before computing the clipped vertices
+        if (leftVertex != null && bounds.contains(leftVertex.getX(), leftVertex.getY())) {
+            clippedVertices.put(LR.LEFT, leftVertex.getCoord());
+        }
+
+        if (rightVertex != null && bounds.contains(rightVertex.getX(), rightVertex.getY())) {
+            clippedVertices.put(LR.RIGHT, rightVertex.getCoord());
+        }
     }
 
     /**
