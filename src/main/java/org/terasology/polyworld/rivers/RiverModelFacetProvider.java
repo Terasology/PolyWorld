@@ -32,6 +32,7 @@ import org.terasology.world.generation.FacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 import org.terasology.world.generation.Requires;
+import org.terasology.world.generation.facets.SeaLevelFacet;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -44,7 +45,8 @@ import com.google.common.cache.CacheBuilder;
 @Requires({
         @Facet(GraphFacet.class),
         @Facet(WaterModelFacet.class),
-        @Facet(ElevationModelFacet.class)
+        @Facet(ElevationModelFacet.class),
+        @Facet(SeaLevelFacet.class)
         })
 public class RiverModelFacetProvider implements FacetProvider {
 

@@ -37,6 +37,7 @@ import org.terasology.world.chunks.ChunkConstants;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.WorldRasterizer;
+import org.terasology.world.generation.facets.SeaLevelFacet;
 import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 /**
@@ -48,20 +49,25 @@ import org.terasology.world.generation.facets.SurfaceHeightFacet;
 public class RiverRasterizer implements WorldRasterizer {
 
     private Block water;
+    private Block air;
 
     @Override
     public void initialize() {
         BlockManager blockManager = CoreRegistry.get(BlockManager.class);
         water = blockManager.getBlock("core:water");
+        air = blockManager.getBlock(BlockManager.AIR_ID);
     }
 
     @Override
     public void generateChunk(CoreChunk chunk, Region chunkRegion) {
         GraphFacet graphFacet = chunkRegion.getFacet(GraphFacet.class);
+        SeaLevelFacet seaLevelFacet = chunkRegion.getFacet(SeaLevelFacet.class);
         RiverModelFacet riverModelFacet = chunkRegion.getFacet(RiverModelFacet.class);
         SurfaceHeightFacet surfaceHeightData = chunkRegion.getFacet(SurfaceHeightFacet.class);
 
         Region3i region = chunkRegion.getRegion();
+        int seaLevel = seaLevelFacet.getSeaLevel();
+
 
         for (Graph graph : graphFacet.getAllGraphs()) {
             RiverModel riverModel = riverModelFacet.get(graph);
@@ -88,7 +94,7 @@ public class RiverRasterizer implements WorldRasterizer {
                             int y = TeraMath.floorToInt(surfaceHeightData.get(x, z));
                             Vector3i worldPos = new Vector3i(p.getX(), y, p.getY());
 
-                            placeWaterBody(chunk, region, worldPos, structElem);
+                            placeWaterBody(chunk, region, worldPos, structElem, seaLevel);
                         }
                     }
                 }
@@ -127,14 +133,26 @@ public class RiverRasterizer implements WorldRasterizer {
      * @param region chunk region being affected
      * @param worldPos the central position of the water body
      * @param structElem the structuring element for block placement
+     * @param seaLevel
      */
-    private void placeWaterBody(CoreChunk chunk, Region3i region, Vector3i worldPos, int[][] structElem) {
+    private void placeWaterBody(CoreChunk chunk, Region3i region, Vector3i worldPos, int[][] structElem, int seaLevel) {
         int radius = (structElem.length - 1) / 2;
         Vector3i pos;
+
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
                 if (structElem[dx + radius][dz + radius] != 0) {
-                    pos = worldPos.add(dx, 0, dz);
+                    pos = new Vector3i(worldPos.add(dx, 0, dz));
+
+                    // remove top layer (soil)
+                    if (region.encompasses(pos.x, pos.y, pos.z)) {
+                        chunk.setBlock(ChunkMath.calcBlockPos(pos.x, pos.y, pos.z), air);
+                    }
+
+                    // don't dig below the sea level
+                    if (pos.y > seaLevel) {
+                        pos.y -= 1;
+                    }
                     if (region.encompasses(pos.x, pos.y, pos.z)) {
                         chunk.setBlock(ChunkMath.calcBlockPos(pos.x, pos.y, pos.z), water);
                     }
