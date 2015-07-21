@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.graph.Corner;

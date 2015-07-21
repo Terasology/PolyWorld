@@ -17,7 +17,7 @@
 package org.terasology.polyworld;
 
 import org.junit.Before;
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.polyworld.graph.GridGraph;
 

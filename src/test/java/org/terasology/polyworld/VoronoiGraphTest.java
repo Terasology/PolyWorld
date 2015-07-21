@@ -23,7 +23,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;

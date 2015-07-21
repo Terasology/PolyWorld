@@ -22,7 +22,7 @@ import java.util.List;
 import org.terasology.commonworld.Sector;
 import org.terasology.commonworld.Sectors;
 import org.terasology.entitySystem.Component;
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.rendering.nui.properties.Range;
@@ -106,7 +106,11 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         for (int sx = minSec.getCoords().x; sx <= maxSec.getCoords().x; sx++) {
             for (int sz = minSec.getCoords().y; sz <= maxSec.getCoords().y; sz++) {
                 Sector sector = Sectors.getSector(sx, sz);
-                Rect2i fullArea = sector.getWorldBounds();
+
+                // TODO: use geom.Rect2i in CommonWorld.Sector
+                org.terasology.math.Rect2i sb = sector.getWorldBounds();
+                Rect2i fullArea = Rect2i.createFromMinAndSize(sb.minX(), sb.minY(), sb.width(), sb.height());
+
                 Collection<WorldRegion> collection = cache.getUnchecked(fullArea);
                 for (WorldRegion wr : collection) {
                     if (wr.getArea().overlaps(target)) {

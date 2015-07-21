@@ -27,7 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.Region3i;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;

@@ -29,9 +29,10 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.Vector2i;
 import org.terasology.math.delaunay.Voronoi;
+import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.TriangleLookup;
@@ -94,8 +95,8 @@ final class SwingPreview {
 
                 graphPainter.fillBounds(g, graph);
 //                graphPainter.drawTriangles(g, graph);
-                for (Vector2i l : bounds) {
-                    Triangle tri = lookup.findTriangleAt(l.x, l.y);
+                for (BaseVector2i l : bounds.contents()) {
+                    Triangle tri = lookup.findTriangleAt(l.getX(), l.getY());
                     Color color;
                     if (tri == null) {
                         color = Color.MAGENTA;
@@ -103,7 +104,7 @@ final class SwingPreview {
                         color = new Color(0x7F7F7F & tri.hashCode());
                     }
                     g.setColor(color);
-                    g.drawLine(l.x, l.y, l.x, l.y);
+                    g.drawLine(l.getX(), l.getY(), l.getX(), l.getY());
                 }
 
 //                graphPainter.drawSites(g, graph);

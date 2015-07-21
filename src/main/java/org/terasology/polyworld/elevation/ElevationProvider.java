@@ -92,7 +92,7 @@ public class ElevationProvider implements FacetProvider {
         ElevationModel elevation = null;
 
         for (Vector2i p : facet.getWorldRegion()) {
-            if (graph == null || !graph.getBounds().contains(p)) {
+            if (graph == null || !graph.getBounds().contains(p.x, p.y)) {
                 graph = graphFacet.getWorld(p.x, 0, p.y);
                 elevation = elevationModelFacet.get(graph);
             }

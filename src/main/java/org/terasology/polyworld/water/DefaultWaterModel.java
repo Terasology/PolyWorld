@@ -21,7 +21,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.distribution.Distribution;

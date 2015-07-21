@@ -16,7 +16,7 @@
 
 package org.terasology.polyworld.rp;
 
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2i;
 
 /**
  * TODO Type description

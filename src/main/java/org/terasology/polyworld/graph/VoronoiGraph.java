@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.terasology.math.Rect2i;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2f;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2f;
 
 /**

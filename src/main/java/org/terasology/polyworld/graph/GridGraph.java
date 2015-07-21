@@ -19,7 +19,7 @@ package org.terasology.polyworld.graph;
 import java.util.Collections;
 import java.util.List;
 
-import org.terasology.math.Rect2i;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Vector2f;
 
