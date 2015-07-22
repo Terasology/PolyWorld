@@ -16,13 +16,16 @@
 
 package org.terasology.polyworld.elevation;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
@@ -78,41 +81,58 @@ public class DefaultElevationModel extends AbstractElevationModel {
     }
 
     private void flattenLakes() {
-        Set<Region> isFlat = Sets.newHashSet();
+        Set<Region> found = Sets.newHashSet();
+        Predicate<Region> isLake = r -> waterModel.isWater(r) && !waterModel.isOcean(r);
+
         for (Region r : graph.getRegions()) {
-            boolean isLake = waterModel.isWater(r) && !waterModel.isOcean(r);
-            if (isLake && !isFlat.contains(r)) {
-                flattenLake(r);
-                isFlat.add(r);
-                isFlat.addAll(r.getNeighbors());
+            if (isLake.test(r) && !found.contains(r)) {
+                Collection<Region> lake = floodFill(r, isLake);
+                flattenLake(lake);
+                found.addAll(lake);
             }
         }
     }
 
-    private void flattenLake(Region r) {
-        float avgHeight = getAverageHeight(r);
-        for (Region neigh : r.getNeighbors()) {
-            avgHeight += getAverageHeight(neigh);
-        }
-        float targetHeight = avgHeight / (r.getNeighbors().size() + 1);
+    private Collection<Region> floodFill(Region start, Predicate<Region> pred) {
+        Collection<Region> lake = new HashSet<Region>();
+        lake.add(start);
 
-        // assign target height to all corner
-        for (Corner c : r.getCorners()) {
-            elevations.put(c, targetHeight);
-        }
-        for (Region neigh : r.getNeighbors()) {
-            for (Corner c : neigh.getCorners()) {
-                elevations.put(c, targetHeight);
+        Deque<Region> queue = new LinkedList<>();
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            Region next = queue.pop();
+            for (Region n : next.getNeighbors()) {
+                if (pred.test(n) && !lake.contains(n) && !queue.contains(n)) {
+                    lake.add(n);
+                    queue.add(n);
+                }
             }
         }
+        return lake;
     }
 
-    private float getAverageHeight(Region r) {
-        float sum = 0;
-        for (Corner c : r.getCorners()) {
-            sum += elevations.get(c).floatValue();
+    private void flattenLake(Collection<Region> lake) {
+//        float totalHeight = 0;
+//        for (Region r : lake) {
+//            totalHeight += getElevation(r);
+//        }
+//        float targetHeight = totalHeight / lake.size();
+
+      float minHeight = Float.POSITIVE_INFINITY;
+      for (Region r : lake) {
+          float elevation = getElevation(r);
+          if (minHeight >= elevation) {
+              minHeight = elevation;
+          }
+      }
+
+        // assign target height to all corners
+        for (Region r : lake) {
+            for (Corner c : r.getCorners()) {
+                elevations.put(c, minHeight);
+            }
         }
-        return sum / r.getCorners().size();
     }
 
     private void assignCornerElevations() {
@@ -130,7 +150,9 @@ public class DefaultElevationModel extends AbstractElevationModel {
         while (!queue.isEmpty()) {
             Corner c = queue.pop();
             for (Corner a : c.getAdjacent()) {
-                float newElevation = elevations.get(c);
+                // adding the extra 0.01f is necessary to make the steepest
+                // descent towards the ocean. I can't really tell why.
+                float newElevation = elevations.get(c) + 0.01f;
                 if (!waterModel.isWater(c) && !waterModel.isWater(a)) {
                     newElevation += 1;
                 }
