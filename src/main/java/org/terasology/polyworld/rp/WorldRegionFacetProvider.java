@@ -136,6 +136,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
     @Override
     public void setConfiguration(Component configuration) {
         this.configuration = (Configuration) configuration;
+        cache.invalidateAll();
     }
 
     private static class Configuration implements Component {

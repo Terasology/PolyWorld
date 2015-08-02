@@ -177,6 +177,8 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
     @Override
     public void setConfiguration(Component configuration) {
         this.configuration = (GraphProviderConfiguration) configuration;
+        graphCache.invalidateAll();
+        lookupCache.invalidateAll();
     }
 
     private static class GraphProviderConfiguration implements Component {
