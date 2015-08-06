@@ -33,8 +33,12 @@ import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.moisture.MoistureModelFacet;
+import org.terasology.polyworld.water.WaterModel;
+import org.terasology.polyworld.water.WaterModelFacet;
+import org.terasology.rendering.nui.properties.Checkbox;
 import org.terasology.world.generation.Region;
 import org.terasology.world.viewer.layers.AbstractFacetLayer;
+import org.terasology.world.viewer.layers.FacetLayerConfig;
 import org.terasology.world.viewer.layers.Renders;
 import org.terasology.world.viewer.layers.ZOrder;
 import org.terasology.world.viewer.picker.CirclePickerClosest;
@@ -55,14 +59,25 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
      */
     private float scale = 4f;
 
+    private Config config = new Config();
+
     public MoistureModelFacetLayer() {
         setVisible(false);
         // use default settings
     }
 
+    /**
+     * This can be called only through reflection since Config is private
+     * @param config the layer configuration info
+     */
+    public MoistureModelFacetLayer(Config config) {
+        this.config = config;
+    }
+
     @Override
     public void render(BufferedImage img, Region region) {
         MoistureModelFacet facet = region.getFacet(MoistureModelFacet.class);
+        WaterModelFacet waterFacet = region.getFacet(WaterModelFacet.class);
 
         Stopwatch sw = Stopwatch.createStarted();
 
@@ -74,8 +89,9 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         for (Graph graph : facet.getKeys()) {
-            MoistureModel model = facet.get(graph);
-            draw(g, model, graph);
+            MoistureModel moistureModel = facet.get(graph);
+            WaterModel waterModel = waterFacet.get(graph);
+            draw(g, moistureModel, waterModel, graph);
         }
 
         g.dispose();
@@ -85,13 +101,15 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
         }
     }
 
-    private void draw(Graphics2D g, MoistureModel model, Graph graph) {
+    private void draw(Graphics2D g, MoistureModel model, WaterModel waterModel, Graph graph) {
         g.setColor(new Color(0x4040FF));
         for (Corner c : graph.getCorners()) {
-            float moisture = model.getMoisture(c);
-            float r = scale * moisture;
-            BaseVector2f loc = c.getLocation();
-            g.fill(new Ellipse2D.Float(loc.getX() - r, loc.getY() - r, 2 * r, 2 * r));
+            if (config.showOcean || (!waterModel.isOcean(c) && !waterModel.isCoast(c))) {
+                float moisture = model.getMoisture(c);
+                float r = scale * moisture;
+                BaseVector2f loc = c.getLocation();
+                g.fill(new Ellipse2D.Float(loc.getX() - r, loc.getY() - r, 2 * r, 2 * r));
+            }
         }
     }
 
@@ -132,5 +150,17 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
         }
 
         return null;
+    }
+
+    @Override
+    public FacetLayerConfig getConfig() {
+        return config;
+    }
+
+    /**
+     * Persistent data
+     */
+    private static class Config implements FacetLayerConfig {
+        @Checkbox private boolean showOcean;
     }
 }
