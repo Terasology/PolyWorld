@@ -65,7 +65,7 @@ public class DefaultElevationModel extends AbstractElevationModel {
         }
 
         assignCornerElevations();
-        redistributeElevations(landCorners, scale);
+        redistributeElevationsInverse(landCorners, scale);
         flattenLakes();
 
         for (Corner c : graph.getCorners()) {
@@ -143,12 +143,18 @@ public class DefaultElevationModel extends AbstractElevationModel {
                 elevations.put(c, -1.0f);
                 queue.add(c);
             } else {
-                elevations.put(c, Float.MAX_VALUE);
+                elevations.put(c, Float.POSITIVE_INFINITY);
             }
         }
 
         while (!queue.isEmpty()) {
-            Corner c = queue.pop();
+            iterateCorners(queue, queue);
+        }
+    }
+
+    private void iterateCorners(Deque<Corner> input, Deque<Corner> output) {
+        while (!input.isEmpty()) {
+            Corner c = input.pop();
             for (Corner a : c.getAdjacent()) {
                 // adding the extra 0.01f is necessary to make the steepest
                 // descent towards the ocean. I can't really tell why.
@@ -159,13 +165,36 @@ public class DefaultElevationModel extends AbstractElevationModel {
                 Float prevElevation = elevations.get(a);
                 if (newElevation < prevElevation) {
                     elevations.put(a, newElevation);
-                    queue.add(a);
+                    output.add(a);
                 }
             }
         }
     }
 
-    private void redistributeElevations(List<Corner> landCorners, float scale) {
+    private void redistributeElevationsLinear(List<Corner> landCorners, float scale) {
+
+        if (landCorners.isEmpty()) {
+            return;
+        }
+
+        // sort land corners by elevation
+        Corner peak = Collections.max(landCorners, new Comparator<Corner>() {
+            @Override
+            public int compare(Corner o1, Corner o2) {
+                Float e1 = elevations.get(o1);
+                Float e2 = elevations.get(o2);
+                return e1.compareTo(e2);
+            }
+        });
+
+        float maxHeight = elevations.get(peak);
+        for (int i = 0; i < landCorners.size(); i++) {
+            Corner corner = landCorners.get(i);
+            elevations.put(corner, elevations.get(corner) / maxHeight * scale);
+        }
+    }
+
+    private void redistributeElevationsInverse(List<Corner> landCorners, float scale) {
 
         // sort land corners by elevation
         Collections.sort(landCorners, new Comparator<Corner>() {
