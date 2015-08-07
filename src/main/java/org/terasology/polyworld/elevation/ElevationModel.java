@@ -32,6 +32,12 @@ public interface ElevationModel {
     float getElevation(Corner corner);
 
     /**
+     * @param corner the corner of interest
+     * @param elevation the new elevation at that corner
+     */
+    void setElevation(Corner corner, float elevation);  // consider moving this method into a new interface
+
+    /**
      * @param r the region
      * @return the
      */

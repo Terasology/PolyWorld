@@ -16,25 +16,18 @@
 
 package org.terasology.polyworld.elevation;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
-
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.Region;
 import org.terasology.polyworld.water.WaterModel;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * TODO Type description
@@ -66,7 +59,6 @@ public class DefaultElevationModel extends AbstractElevationModel {
 
         assignCornerElevations();
         redistributeElevationsInverse(landCorners, scale);
-        flattenLakes();
 
         for (Corner c : graph.getCorners()) {
             if (waterModel.isCoast(c)) {
@@ -76,61 +68,6 @@ public class DefaultElevationModel extends AbstractElevationModel {
             // this is more of a workaround rather than a required operation
             if (waterModel.isOcean(c)) {
                 elevations.put(c, -1f);
-            }
-        }
-    }
-
-    private void flattenLakes() {
-        Set<Region> found = Sets.newHashSet();
-        Predicate<Region> isLake = r -> waterModel.isWater(r) && !waterModel.isOcean(r);
-
-        for (Region r : graph.getRegions()) {
-            if (isLake.test(r) && !found.contains(r)) {
-                Collection<Region> lake = floodFill(r, isLake);
-                flattenLake(lake);
-                found.addAll(lake);
-            }
-        }
-    }
-
-    private Collection<Region> floodFill(Region start, Predicate<Region> pred) {
-        Collection<Region> lake = new HashSet<Region>();
-        lake.add(start);
-
-        Deque<Region> queue = new LinkedList<>();
-        queue.add(start);
-
-        while (!queue.isEmpty()) {
-            Region next = queue.pop();
-            for (Region n : next.getNeighbors()) {
-                if (pred.test(n) && !lake.contains(n) && !queue.contains(n)) {
-                    lake.add(n);
-                    queue.add(n);
-                }
-            }
-        }
-        return lake;
-    }
-
-    private void flattenLake(Collection<Region> lake) {
-//        float totalHeight = 0;
-//        for (Region r : lake) {
-//            totalHeight += getElevation(r);
-//        }
-//        float targetHeight = totalHeight / lake.size();
-
-      float minHeight = Float.POSITIVE_INFINITY;
-      for (Region r : lake) {
-          float elevation = getElevation(r);
-          if (minHeight >= elevation) {
-              minHeight = elevation;
-          }
-      }
-
-        // assign target height to all corners
-        for (Region r : lake) {
-            for (Corner c : r.getCorners()) {
-                elevations.put(c, minHeight);
             }
         }
     }
@@ -233,4 +170,8 @@ public class DefaultElevationModel extends AbstractElevationModel {
         return elevations.get(corner);
     }
 
+    @Override
+    public void setElevation(Corner corner, float elevation) {
+        elevations.put(corner, elevation);
+    }
 }

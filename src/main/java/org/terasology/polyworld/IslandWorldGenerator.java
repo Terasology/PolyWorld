@@ -35,6 +35,7 @@ import org.terasology.polyworld.biome.WhittakerBiomeModelProvider;
 import org.terasology.polyworld.biome.WhittakerBiomeProvider;
 import org.terasology.polyworld.elevation.ElevationModelFacetProvider;
 import org.terasology.polyworld.elevation.ElevationProvider;
+import org.terasology.polyworld.elevation.FlatLakeProvider;
 import org.terasology.polyworld.flora.FloraProvider;
 import org.terasology.polyworld.flora.TreeProvider;
 import org.terasology.polyworld.graph.Graph;
@@ -73,6 +74,7 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
                 .addProvider(new ElevationModelFacetProvider(maxCacheSize))
                 .addProvider(new ElevationProvider())
                 .addProvider(new RiverModelFacetProvider(maxCacheSize))
+                .addProvider(new FlatLakeProvider())
                 .addProvider(new MoistureModelFacetProvider(maxCacheSize))
                 .addProvider(new WhittakerBiomeModelProvider(maxCacheSize))
                 .addProvider(new WhittakerBiomeProvider())
