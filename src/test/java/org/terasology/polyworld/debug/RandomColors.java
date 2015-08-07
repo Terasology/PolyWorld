@@ -25,7 +25,6 @@ import com.google.common.base.Function;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public class RandomColors implements Function<Region, Color> {
     private Random r;

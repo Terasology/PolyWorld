@@ -40,7 +40,6 @@ import com.google.common.cache.CacheBuilder;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 @Produces(WhittakerBiomeModelFacet.class)
 @Requires({

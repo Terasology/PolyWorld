@@ -40,7 +40,6 @@ import com.google.common.collect.Lists;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 @Produces(WorldRegionFacet.class)
 public class WorldRegionFacetProvider implements ConfigurableFacetProvider {

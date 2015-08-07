@@ -51,7 +51,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Preview generated world in Swing
- * @author Martin Steiger
  */
 final class SwingPreview {
 

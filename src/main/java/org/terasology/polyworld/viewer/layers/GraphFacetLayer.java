@@ -47,7 +47,6 @@ import org.terasology.world.viewer.picker.CirclePickerClosest;
 
 /**
  * Draws the generated graph on a AWT graphics instance
- * @author Martin Steiger
  */
 @Renders(value = GraphFacet.class, order = ZOrder.BIOME + 1)
 public class GraphFacetLayer extends AbstractFacetLayer {

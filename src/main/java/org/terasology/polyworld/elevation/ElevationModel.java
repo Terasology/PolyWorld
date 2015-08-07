@@ -21,7 +21,6 @@ import org.terasology.polyworld.graph.Region;
 
 /**
  * Defines elevation
- * @author Martin Steiger
  */
 public interface ElevationModel {
 

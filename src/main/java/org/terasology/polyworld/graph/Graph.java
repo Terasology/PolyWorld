@@ -22,7 +22,6 @@ import org.terasology.math.geom.Rect2i;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public interface Graph {
 

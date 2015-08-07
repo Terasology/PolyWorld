@@ -27,7 +27,6 @@ import com.google.common.collect.Lists;
 
 /**
  * A graph that is based on a rectangular grid.
- * @author Martin Steiger
  */
 public class GridGraph implements Graph {
 

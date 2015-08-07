@@ -20,7 +20,6 @@ import org.terasology.math.geom.Vector2f;
 
 /**
  * A distribution that looks like Amit's blob (star-shape)
- * @author Martin Steiger
  */
 public class AmitBlobDistribution implements Distribution {
 

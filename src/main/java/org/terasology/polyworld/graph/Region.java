@@ -28,7 +28,6 @@ import com.google.common.collect.Sets;
 
 /**
  * Defines a polygon region (vornoi region)
- * @author Martin Steiger
  */
 public class Region {
 

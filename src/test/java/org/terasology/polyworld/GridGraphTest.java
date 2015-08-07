@@ -23,7 +23,6 @@ import org.terasology.polyworld.graph.GridGraph;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public class GridGraphTest extends GraphTest {
 

@@ -34,7 +34,6 @@ import com.google.common.collect.Maps;
 /**
  * Uses a {@link Distribution} to define how water is distributed in the graph.
  * The result is normalized.
- * @author Martin Steiger
  */
 public class DefaultWaterModel implements WaterModel {
 

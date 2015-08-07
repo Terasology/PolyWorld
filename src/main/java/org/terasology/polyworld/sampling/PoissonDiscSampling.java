@@ -32,7 +32,6 @@ import com.google.common.math.DoubleMath;
  * Creates a more or less isotropic sampling based on a 2D rectangular grid
  * that contains at most one point per grid cell.
  * A minimum distance of 1/2 cell size to points in neighboring cells in ensured.
- * @author Martin Steiger
  */
 public class PoissonDiscSampling implements PointSampling {
 

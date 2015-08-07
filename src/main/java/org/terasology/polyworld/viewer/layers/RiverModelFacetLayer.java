@@ -33,7 +33,6 @@ import org.terasology.world.viewer.layers.ZOrder;
 
 /**
  * Draws the generated rivers on a AWT graphics instance
- * @author Martin Steiger
  */
 @Renders(value = RiverModelFacet.class, order = ZOrder.BIOME + 5)
 public class RiverModelFacetLayer extends AbstractFacetLayer {

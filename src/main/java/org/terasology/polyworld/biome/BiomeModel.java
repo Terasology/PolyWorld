@@ -20,7 +20,6 @@ import org.terasology.polyworld.graph.Region;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public interface BiomeModel {
     WhittakerBiome getBiome(Region center);

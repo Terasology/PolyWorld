@@ -35,7 +35,6 @@ import com.google.common.collect.Maps;
 /**
  * Provides a collection of {@link Graph}s that
  * cover the entire facet.
- * @author Martin Steiger
  */
 public class GraphFacetImpl extends SparseFacet3D implements GraphFacet {
 

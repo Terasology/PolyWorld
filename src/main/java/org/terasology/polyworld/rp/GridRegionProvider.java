@@ -25,7 +25,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Subdivides a rectangle into a regular grid.
- * @author Martin Steiger
  */
 public class GridRegionProvider implements RegionProvider {
 

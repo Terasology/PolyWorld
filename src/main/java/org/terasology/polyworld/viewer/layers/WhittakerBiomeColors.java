@@ -46,7 +46,6 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * Maps biome types to color.
- * @author Martin Steiger
  */
 public class WhittakerBiomeColors implements Function<WhittakerBiome, Color> {
 

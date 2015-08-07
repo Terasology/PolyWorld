@@ -24,7 +24,6 @@ import org.terasology.world.viewer.layers.ZOrder;
 
 /**
  * Maps {@link WhittakerBiome} facet to corresponding colors.
- * @author Martin Steiger
  */
 @Renders(value = WhittakerBiomeFacet.class, order = ZOrder.BIOME)
 public class WhittakerBiomeFacetLayer extends NominalFacetLayer<WhittakerBiome> {

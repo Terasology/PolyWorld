@@ -21,7 +21,6 @@ import org.terasology.polyworld.graph.Region;
 
 /**
  * Implementation-independent methods for {@link ElevationModel}s
- * @author Martin Steiger
  */
 public abstract class AbstractElevationModel implements ElevationModel {
 

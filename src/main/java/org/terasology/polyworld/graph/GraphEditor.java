@@ -26,7 +26,6 @@ import org.terasology.utilities.random.Random;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public final class GraphEditor {
 

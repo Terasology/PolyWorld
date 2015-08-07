@@ -29,7 +29,6 @@ import org.terasology.world.generation.facets.SeaLevelFacet;
 import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 /**
- * @author Martin Steiger
  */
 public class WhittakerRasterizer implements WorldRasterizer {
 

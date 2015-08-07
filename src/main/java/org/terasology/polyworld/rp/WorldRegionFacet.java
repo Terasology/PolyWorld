@@ -27,7 +27,6 @@ import com.google.common.collect.Lists;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public class WorldRegionFacet extends SparseFacet3D {
 

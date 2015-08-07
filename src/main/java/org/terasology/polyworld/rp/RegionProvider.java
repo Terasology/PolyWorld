@@ -22,7 +22,6 @@ import org.terasology.math.geom.Rect2i;
 
 /**
  * Provides a collection of subregions based on a given rectangle.
- * @author Martin Steiger
  */
 public interface RegionProvider {
 

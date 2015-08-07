@@ -29,7 +29,6 @@ import org.terasology.math.geom.Vector2f;
  * triangulation; the line segment connecting the two Vertices is part of the
  * Voronoi diagram
  *
- * @author ashaw
  *
  */
 public final class Edge {

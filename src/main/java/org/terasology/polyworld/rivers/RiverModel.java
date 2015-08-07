@@ -21,7 +21,6 @@ import org.terasology.polyworld.graph.Edge;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public interface RiverModel {
 

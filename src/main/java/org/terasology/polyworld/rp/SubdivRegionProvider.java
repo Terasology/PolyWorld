@@ -27,7 +27,6 @@ import com.google.common.collect.Lists;
 
 /**
  * Subdivides a given rectangle recursively.
- * @author Martin Steiger
  */
 public class SubdivRegionProvider implements RegionProvider {
 

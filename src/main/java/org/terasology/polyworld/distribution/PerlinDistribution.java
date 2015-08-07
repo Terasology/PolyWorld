@@ -22,7 +22,6 @@ import org.terasology.utilities.procedural.PerlinNoise;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public class PerlinDistribution implements Distribution {
 

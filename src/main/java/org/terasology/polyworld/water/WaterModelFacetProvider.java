@@ -36,7 +36,6 @@ import com.google.common.cache.LoadingCache;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 @Produces(WaterModelFacet.class)
 @Requires({@Facet(WorldRegionFacet.class), @Facet(GraphFacet.class)})

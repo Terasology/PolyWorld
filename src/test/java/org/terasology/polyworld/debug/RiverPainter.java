@@ -27,7 +27,6 @@ import org.terasology.polyworld.rivers.RiverModel;
 
 /**
  * Draws the generated rivers on a AWT graphics instance
- * @author Martin Steiger
  */
 public class RiverPainter {
 

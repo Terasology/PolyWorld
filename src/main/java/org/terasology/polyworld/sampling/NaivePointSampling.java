@@ -28,7 +28,6 @@ import com.google.common.collect.Lists;
 /**
  * Creates a random sampling based white noise. No minimum distance
  * between points is guaranteed.
- * @author Martin Steiger
  */
 public class NaivePointSampling implements PointSampling {
 

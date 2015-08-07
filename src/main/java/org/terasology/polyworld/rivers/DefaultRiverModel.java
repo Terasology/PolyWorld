@@ -30,7 +30,6 @@ import com.google.common.collect.Maps;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public class DefaultRiverModel implements RiverModel {
 

@@ -33,7 +33,6 @@ import java.util.List;
 
 /**
  * Setup a tiny Terasology environment
- * @author Martin Steiger
  */
 public final class TinyEnvironment {
 

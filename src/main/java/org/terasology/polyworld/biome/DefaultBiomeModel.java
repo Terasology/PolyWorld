@@ -23,7 +23,6 @@ import org.terasology.polyworld.water.WaterModel;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public class DefaultBiomeModel implements BiomeModel {
 

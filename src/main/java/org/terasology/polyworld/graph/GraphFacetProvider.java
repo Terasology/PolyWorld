@@ -52,7 +52,6 @@ import com.google.common.math.DoubleMath;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 @Produces(GraphFacet.class)
 @Requires(@Facet(WorldRegionFacet.class))

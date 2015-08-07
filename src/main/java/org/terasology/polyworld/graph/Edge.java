@@ -21,7 +21,6 @@ import com.google.common.base.Preconditions;
 
 /**
  * Defines an edge
- * @author Martin Steiger
  */
 public class Edge {
 

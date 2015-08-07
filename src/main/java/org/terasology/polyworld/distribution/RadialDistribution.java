@@ -22,7 +22,6 @@ import org.terasology.math.geom.Vector2f;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public class RadialDistribution implements Distribution {
 

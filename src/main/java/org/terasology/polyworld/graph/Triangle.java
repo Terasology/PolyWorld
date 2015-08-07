@@ -24,7 +24,6 @@ import com.google.common.base.Preconditions;
 
 /**
  * Defines a triangle in the region-based {@link Graph} structure.
- * @author Martin Steiger
  */
 public class Triangle {
 

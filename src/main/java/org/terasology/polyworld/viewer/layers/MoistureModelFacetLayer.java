@@ -47,7 +47,6 @@ import com.google.common.base.Stopwatch;
 
 /**
  * TODO Convert this into a more general class that supports different graph-based value look-ups
- * @author Martin Steiger
  */
 @Renders(value = MoistureModelFacet.class, order = ZOrder.BIOME + 10)
 public class MoistureModelFacetLayer extends AbstractFacetLayer {

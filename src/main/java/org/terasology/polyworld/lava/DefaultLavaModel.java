@@ -27,7 +27,6 @@ import org.terasology.utilities.random.Random;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public class DefaultLavaModel implements LavaModel {
 

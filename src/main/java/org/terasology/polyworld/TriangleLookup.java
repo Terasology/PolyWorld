@@ -38,7 +38,6 @@ import com.google.common.collect.Lists;
 /**
  * Creates a image-based lookup table to map individual pixel to triangles
  * of the regions in a {@link Graph}
- * @author Martin Steiger
  */
 public class TriangleLookup {
 

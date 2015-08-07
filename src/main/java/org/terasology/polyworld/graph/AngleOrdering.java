@@ -24,7 +24,6 @@ import com.google.common.collect.Ordering;
 
 /**
  * Defines an order of points around a central point, based on their angle
- * @author Martin Steiger
  */
 final class AngleOrdering extends Ordering<Corner> {
 

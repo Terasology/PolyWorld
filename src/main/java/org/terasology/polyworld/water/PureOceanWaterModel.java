@@ -21,7 +21,6 @@ import org.terasology.polyworld.graph.Region;
 
 /**
  * Contains only ocean water.
- * @author Martin Steiger
  */
 public class PureOceanWaterModel implements WaterModel {
 

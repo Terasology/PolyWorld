@@ -27,7 +27,6 @@ import com.google.common.collect.Sets;
 /**
  * Corner.java
  *
- * @author Connor
  */
 public class Corner {
 

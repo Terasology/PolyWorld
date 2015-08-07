@@ -39,7 +39,6 @@ import com.google.common.base.Stopwatch;
 /**
  * Converts graph-based elevation information of the {@link ElevationModelFacet}
  * into a continuous area.
- * @author Martin Steiger
  */
 @Produces(SurfaceHeightFacet.class)
 @Requires({

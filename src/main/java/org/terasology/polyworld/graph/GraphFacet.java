@@ -24,7 +24,6 @@ import org.terasology.world.generation.WorldFacet3D;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public interface GraphFacet extends WorldFacet3D {
 

@@ -21,7 +21,6 @@ import org.terasology.polyworld.graph.Region;
 
 /**
  * Defines how water is distributed in the graph
- * @author Martin Steiger
  */
 public interface WaterModel {
 

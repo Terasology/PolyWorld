@@ -20,7 +20,6 @@ import org.terasology.world.biomes.Biome;
 
 /**
  * Different biome types
- * @author Martin Steiger
  */
 public enum WhittakerBiome implements Biome {
     OCEAN,

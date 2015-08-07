@@ -25,7 +25,6 @@ import com.google.common.collect.Maps;
 
 /**
  * Manages {@link ElevationModel} instances per graph.
- * @author Martin Steiger
  */
 public class ElevationModelFacet implements WorldFacet {
 

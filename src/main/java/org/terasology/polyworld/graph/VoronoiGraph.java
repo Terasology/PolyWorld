@@ -33,7 +33,6 @@ import org.terasology.math.geom.Vector2f;
 /**
  * VoronoiGraph.java
  *
- * @author Connor
  */
 public class VoronoiGraph implements Graph {
 

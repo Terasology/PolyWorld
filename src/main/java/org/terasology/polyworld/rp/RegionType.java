@@ -18,7 +18,6 @@ package org.terasology.polyworld.rp;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 public enum RegionType {
     ISLAND,

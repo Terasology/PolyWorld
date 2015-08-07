@@ -21,7 +21,6 @@ import org.terasology.world.generation.facets.base.BaseObjectFacet2D;
 
 /**
  * A {@link org.terasology.world.generation.WorldFacet2D} that provides {@link WhittakerBiome}
- * @author Martin Steiger
  */
 public class WhittakerBiomeFacet extends BaseObjectFacet2D<WhittakerBiome> {
 

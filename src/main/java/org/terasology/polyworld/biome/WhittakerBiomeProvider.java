@@ -30,7 +30,6 @@ import org.terasology.world.generation.Requires;
 
 /**
  * TODO Type description
- * @author Martin Steiger
  */
 @Produces(WhittakerBiomeFacet.class)
 @Requires(@Facet(WhittakerBiomeModelFacet.class))

@@ -27,7 +27,6 @@ import org.terasology.polyworld.lava.LavaModel;
 
 /**
  * Draws the generated rivers on a AWT graphics instance
- * @author Martin Steiger
  */
 public class LavaPainter {
 

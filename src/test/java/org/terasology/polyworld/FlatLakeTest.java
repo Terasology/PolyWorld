@@ -37,7 +37,6 @@ import org.terasology.world.generation.World;
 
 /**
  * Tests the flatness of lakes
- * @author Martin Steiger
  */
 public class FlatLakeTest {
 
