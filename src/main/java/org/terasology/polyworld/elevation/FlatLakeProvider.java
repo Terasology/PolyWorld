@@ -60,21 +60,25 @@ public class FlatLakeProvider implements FacetProvider {
         for (Graph g : graphFacet.getAllGraphs()) {
             ElevationModel elevationModel = elevationModelFacet.get(g);
             WaterModel waterModel = waterModelFacet.get(g);
-            flattenLakes(g, elevationModel, waterModel);
+            ElevationModel flattenedElevationModel = flattenLakes(g, elevationModel, waterModel);
+            elevationModelFacet.set(g, flattenedElevationModel);
         }
     }
 
-    private void flattenLakes(Graph graph, ElevationModel elevationModel, WaterModel waterModel) {
+    private ElevationModel flattenLakes(Graph graph, ElevationModel elevationModel, WaterModel waterModel) {
         Set<Region> found = Sets.newHashSet();
         Predicate<Region> isLake = r -> waterModel.isWater(r) && !waterModel.isOcean(r);
 
+        FlatLakeElevationModel flatModel = new FlatLakeElevationModel(elevationModel);
         for (Region r : graph.getRegions()) {
             if (isLake.test(r) && !found.contains(r)) {
                 Collection<Region> lake = floodFill(r, isLake);
-                flattenLake(elevationModel, lake);
+                flattenLake(flatModel, lake);
                 found.addAll(lake);
             }
         }
+
+        return flatModel;
     }
 
     private Collection<Region> floodFill(Region start, Predicate<Region> pred) {
@@ -96,7 +100,7 @@ public class FlatLakeProvider implements FacetProvider {
         return lake;
     }
 
-    private void flattenLake(ElevationModel elevationModel, Collection<Region> lake) {
+    private void flattenLake(FlatLakeElevationModel elevationModel, Collection<Region> lake) {
 
         float minHeight = Float.POSITIVE_INFINITY;
         for (Region r : lake) {

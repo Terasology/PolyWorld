@@ -24,7 +24,7 @@ import org.terasology.world.generation.WorldFacet;
 import com.google.common.collect.Maps;
 
 /**
- * TODO Type description
+ * Manages {@link ElevationModel} instances per graph.
  * @author Martin Steiger
  */
 public class ElevationModelFacet implements WorldFacet {
@@ -32,16 +32,17 @@ public class ElevationModelFacet implements WorldFacet {
     private final Map<Graph, ElevationModel> map = Maps.newHashMap();
 
     /**
+     * Existing entries will be overwritten
      * @param g the graph
-     * @param model the elevation model to add
+     * @param model the elevation model to set
      */
-    public void add(Graph g, ElevationModel model) {
+    public void set(Graph g, ElevationModel model) {
         map.put(g, model);
     }
 
     /**
-     * @param graph
-     * @return
+     * @param graph the graph of interest
+     * @return the corresponding elevation model or <code>null</code>.
      */
     public ElevationModel get(Graph graph) {
         return map.get(graph);

@@ -77,7 +77,7 @@ public class ElevationModelFacetProvider implements FacetProvider {
             WaterModel waterModel = waterFacet.get(graph);
             float heightScale = wr.getHeightScaleFactor();
             ElevationModel elevationModel = getOrCreate(graph, waterModel, heightScale);
-            elevationFacet.add(graph, elevationModel);
+            elevationFacet.set(graph, elevationModel);
         }
 
         region.setRegionFacet(ElevationModelFacet.class, elevationFacet);

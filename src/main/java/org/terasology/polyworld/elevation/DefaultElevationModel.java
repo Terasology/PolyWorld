@@ -169,9 +169,4 @@ public class DefaultElevationModel extends AbstractElevationModel {
     public float getElevation(Corner corner) {
         return elevations.get(corner);
     }
-
-    @Override
-    public void setElevation(Corner corner, float elevation) {
-        elevations.put(corner, elevation);
-    }
 }
