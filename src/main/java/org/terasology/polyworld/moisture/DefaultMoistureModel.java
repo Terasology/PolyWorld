@@ -28,13 +28,14 @@ import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.Region;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.water.WaterModel;
+import org.terasology.utilities.random.FastRandom;
+import org.terasology.utilities.random.Random;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * TODO Type description
- * @author Martin Steiger
+ * Uses rivers and lakes as sources of moisture and distributes it over the entire island.
  */
 public class DefaultMoistureModel implements MoistureModel {
 
@@ -48,37 +49,66 @@ public class DefaultMoistureModel implements MoistureModel {
         this.riverModel = riverModel;
         this.waterModel = waterModel;
 
-        assignCornerMoisture();
+        assignRiverAndLakeMoisture();
+        assignRandomSeedMoisture();
+        spreadMoisture();
+        assignOceanMoisture();
+
+        assignRemaining(0f);
+
         redistributeMoisture();
     }
 
-    private void assignCornerMoisture() {
-        Deque<Corner> queue = new LinkedList<>();
+    private void assignRiverAndLakeMoisture() {
         for (Corner c : graph.getCorners()) {
             int riverValue = riverModel.getRiverValue(c);
             if ((waterModel.isWater(c) || riverValue > 0) && !waterModel.isOcean(c)) {
                 moisture.put(c, riverValue > 0 ? Math.min(3.0f, (0.2f * riverValue)) : 1.0f);
-                queue.push(c);
-            } else {
-                moisture.put(c, 0.0f);
             }
         }
+    }
+
+    private void assignRandomSeedMoisture() {
+        int cornerCount = graph.getCorners().size();
+        int count = cornerCount / 50;
+        Random r = new FastRandom(133353);
+
+        for (int i = 0; i < count; i++) {
+            Corner c = graph.getCorners().get(r.nextInt(cornerCount));
+            // the seed value should be below the normalization threshold in redistributeMoisture
+            float seedValue = 0.25f;
+            moisture.put(c, seedValue);
+        }
+    }
+
+    private void spreadMoisture() {
+        Deque<Corner> queue = new LinkedList<>(moisture.keySet());
 
         while (!queue.isEmpty()) {
             Corner c = queue.pop();
+            float cm = getMoisture(c);
             for (Corner a : c.getAdjacent()) {
-                float newM = .9f * getMoisture(c);
-                if (newM > getMoisture(a)) {
+                float newM = .9f * cm;
+                if (newM > moisture.getOrDefault(a, 0f)) {
                     moisture.put(a, newM);
                     queue.add(a);
                 }
             }
         }
+    }
 
-        // Salt water
+    private void assignOceanMoisture() {
         for (Corner c : graph.getCorners()) {
             if (waterModel.isOcean(c) || waterModel.isCoast(c)) {
                 moisture.put(c, 1.0f);
+            }
+        }
+    }
+
+    private void assignRemaining(float value) {
+        for (Corner c : graph.getCorners()) {
+            if (!moisture.containsKey(c)) {
+                moisture.put(c, value);
             }
         }
     }
@@ -92,6 +122,11 @@ public class DefaultMoistureModel implements MoistureModel {
             }
         }
 
+        int size = landCorners.size();
+        if (size == 0) {
+            return;
+        }
+
         Collections.sort(landCorners, new Comparator<Corner>() {
             @Override
             public int compare(Corner o1, Corner o2) {
@@ -101,8 +136,16 @@ public class DefaultMoistureModel implements MoistureModel {
                 return Double.compare(m1, m2);
             }
         });
-        for (int i = 0; i < landCorners.size(); i++) {
-            moisture.put(landCorners.get(i), (float) i / landCorners.size());
+
+        // the list is sorted now, so the last entry has the largest number
+        float maximum = getMoisture(landCorners.get(size - 1));
+
+        // if there is no real moisture then don't scale up to max, which is around lakes and rivers
+        float v = (maximum < 0.3) ? 0.3f : 1f;
+        float scale = v / size;
+
+        for (int i = 0; i < size; i++) {
+            moisture.put(landCorners.get(i), i * scale);
         }
     }
 
