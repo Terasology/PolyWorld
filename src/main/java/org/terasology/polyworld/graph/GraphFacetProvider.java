@@ -20,6 +20,7 @@ import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,8 @@ import com.google.common.math.DoubleMath;
 public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(GraphFacetProvider.class);
+
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(false);
 
     private final CacheLoader<WorldRegion, Graph> graphLoader = new CacheLoader<WorldRegion, Graph>() {
 
@@ -109,9 +112,19 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
         Collection<WorldRegion> areas = regionFacet.getRegions();
 
+
         for (WorldRegion wr : areas) {
-            Graph graph = graphCache.getUnchecked(wr);
-            TriangleLookup lookup = lookupCache.getUnchecked(graph);
+            Graph graph = graphCache.getIfPresent(wr);
+            TriangleLookup lookup = graph == null ? null : lookupCache.getIfPresent(graph);
+            if (lookup == null) {
+                try {
+                    lock.readLock().lock();
+                    graph = graphCache.getUnchecked(wr);
+                    lookup = lookupCache.getUnchecked(graph);
+                } finally {
+                    lock.readLock().unlock();
+                }
+            }
             facet.add(wr, graph, lookup);
         }
 
@@ -140,8 +153,10 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     private Graph createVoronoiGraph(Rect2i bounds, int numSites) {
 
-        // use different seeds for different areas
-        long areaSeed = seed ^ bounds.hashCode();
+        // use different seeds for different areas.
+        // also use the number of target sites since similar numbers could lead to identical
+        // distributions otherwise.
+        long areaSeed = seed ^ bounds.hashCode() ^ numSites;
         final Random rng = new FastRandom(areaSeed);
 
         PointSampling sampling = new PoissonDiscSampling();
@@ -175,9 +190,14 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     @Override
     public void setConfiguration(Component configuration) {
-        this.configuration = (GraphProviderConfiguration) configuration;
-        graphCache.invalidateAll();
-        lookupCache.invalidateAll();
+        try {
+            lock.writeLock().lock();
+            this.configuration = (GraphProviderConfiguration) configuration;
+            graphCache.invalidateAll();
+            lookupCache.invalidateAll();
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     private static class GraphProviderConfiguration implements Component {

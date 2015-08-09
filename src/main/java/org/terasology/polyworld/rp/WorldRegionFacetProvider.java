@@ -18,6 +18,7 @@ package org.terasology.polyworld.rp;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.terasology.commonworld.Sector;
 import org.terasology.commonworld.Sectors;
@@ -43,6 +44,8 @@ import com.google.common.collect.Lists;
  */
 @Produces(WorldRegionFacet.class)
 public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
+
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(false);
 
     private RegionProvider regionProvider;
     private Configuration configuration = new Configuration();
@@ -75,6 +78,8 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
     private final LoadingCache<Rect2i, Collection<WorldRegion>> cache;
 
+    private long seed;
+
     /**
      * @param maxCacheSize maximum number of cached regions
      */
@@ -84,6 +89,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
     @Override
     public void setSeed(long seed) {
+        this.seed = seed;
         regionProvider = new SubdivRegionProvider(seed, configuration.minSize, 0.95f);
         islandRatioNoise = new WhiteNoise(seed);
     }
@@ -110,7 +116,15 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
                 org.terasology.math.Rect2i sb = sector.getWorldBounds();
                 Rect2i fullArea = Rect2i.createFromMinAndSize(sb.minX(), sb.minY(), sb.width(), sb.height());
 
-                Collection<WorldRegion> collection = cache.getUnchecked(fullArea);
+                Collection<WorldRegion> collection = cache.getIfPresent(fullArea);
+                if (collection == null) {
+                    try {
+                        lock.readLock().lock();
+                        collection = cache.getUnchecked(fullArea);
+                    } finally {
+                        lock.readLock().unlock();
+                    }
+                }
                 for (WorldRegion wr : collection) {
                     if (wr.getArea().overlaps(target)) {
                         facet.addRegion(wr);
@@ -134,8 +148,14 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
     @Override
     public void setConfiguration(Component configuration) {
-        this.configuration = (Configuration) configuration;
-        cache.invalidateAll();
+        try {
+            lock.writeLock().lock();
+            this.configuration = (Configuration) configuration;
+            setSeed(seed); // trigger updating fields with new configuration
+            cache.invalidateAll();
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     private static class Configuration implements Component {
