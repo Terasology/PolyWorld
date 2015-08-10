@@ -147,11 +147,14 @@ public class DefaultElevationModel extends AbstractElevationModel {
         // --> solve for x
         // x = 1 - sqrt(1 - y)
 
+        int count = landCorners.size();
+
         final float scaleFactor = 1.1f;
-        for (int i = 0; i < landCorners.size(); i++) {
+        for (int i = 0; i < count; i++) {
 
             // y is the relative position in the sorted list
-            float y = (float) i / (landCorners.size() - 1);
+            // special case with only one land corner on the island: avoid division by zero explicitly
+            float y = (count == 1) ? 1 : (float) i / (count - 1);
 
             // x is the desired elevation
             float x = scale * (float) (Math.sqrt(scaleFactor) - Math.sqrt(scaleFactor * (1 - y)));
