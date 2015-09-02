@@ -108,12 +108,11 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
         Rect2i target = Rect2i.createFromMinAndMax(min.x, min.z, max.x, max.z);
 
-        for (int sx = minSec.getCoords().x; sx <= maxSec.getCoords().x; sx++) {
-            for (int sz = minSec.getCoords().y; sz <= maxSec.getCoords().y; sz++) {
+        for (int sx = minSec.getCoords().getX(); sx <= maxSec.getCoords().getX(); sx++) {
+            for (int sz = minSec.getCoords().getY(); sz <= maxSec.getCoords().getY(); sz++) {
                 Sector sector = Sectors.getSector(sx, sz);
 
-                // TODO: use geom.Rect2i in CommonWorld.Sector
-                org.terasology.math.Rect2i sb = sector.getWorldBounds();
+                Rect2i sb = sector.getWorldBounds();
                 Rect2i fullArea = Rect2i.createFromMinAndSize(sb.minX(), sb.minY(), sb.width(), sb.height());
 
                 Collection<WorldRegion> collection = cache.getIfPresent(fullArea);

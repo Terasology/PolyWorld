@@ -18,26 +18,27 @@ package org.terasology.polyworld.graph;
 
 import java.util.Collection;
 
-import org.terasology.math.geom.Vector3i;
+import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.rp.WorldRegion;
+import org.terasology.world.generation.WorldFacet2D;
 import org.terasology.world.generation.WorldFacet3D;
 
 /**
  * TODO Type description
  */
-public interface GraphFacet extends WorldFacet3D {
+public interface GraphFacet extends WorldFacet2D {
 
-    Graph get(int x, int y, int z);
+    Graph get(int x, int z);
 
-    Graph get(Vector3i pos);
+    Graph get(Vector2i pos);
 
-    Graph getWorld(int x, int y, int z);
+    Graph getWorld(int x, int z);
 
-    Graph getWorld(Vector3i pos);
+    Graph getWorld(Vector2i pos);
 
     Collection<Graph> getAllGraphs();
 
     Graph getGraph(WorldRegion wr);
 
-    Triangle getWorldTriangle(int x, int y, int z);
+    Triangle getWorldTriangle(int x, int z);
 }

@@ -105,10 +105,10 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     }
 
     private void drawTriangleLookup(Graphics2D g, GraphFacet graphFacet) {
-        Region3i worldReg = graphFacet.getWorldRegion();
-        for (int z = worldReg.minZ(); z < worldReg.maxZ(); z++) {
+        Rect2i worldReg = graphFacet.getWorldRegion();
+        for (int z = worldReg.minY(); z < worldReg.maxY(); z++) {
             for (int x = worldReg.minX(); x < worldReg.maxX(); x++) {
-                Triangle tri = graphFacet.getWorldTriangle(x, 0, z);
+                Triangle tri = graphFacet.getWorldTriangle(x, z);
                 if (tri == null) {
                     g.setStroke(new BasicStroke(3f));
                     g.setColor(Color.MAGENTA);
@@ -125,7 +125,7 @@ public class GraphFacetLayer extends AbstractFacetLayer {
         CirclePickerClosest<Region> sitePicker = new CirclePickerClosest<>(new Vector2f(wx, wy), r -> 3);
         for (Graph graph : graphFacet.getAllGraphs()) {
             if (graph.getBounds().contains(wx, wy)) {
-                Triangle tri = graphFacet.getWorldTriangle(wx, 0, wy);
+                Triangle tri = graphFacet.getWorldTriangle(wx, wy);
                 cornerPicker.offer(tri.getCorner1().getLocation(), tri.getCorner1());
                 cornerPicker.offer(tri.getCorner2().getLocation(), tri.getCorner2());
                 sitePicker.offer(tri.getRegion().getCenter(), tri.getRegion());

@@ -92,11 +92,11 @@ public class ElevationProvider implements FacetProvider {
 
         for (Vector2i p : facet.getWorldRegion()) {
             if (graph == null || !graph.getBounds().contains(p.x, p.y)) {
-                graph = graphFacet.getWorld(p.x, 0, p.y);
+                graph = graphFacet.getWorld(p.x, p.y);
                 elevation = elevationModelFacet.get(graph);
             }
 
-            Triangle tri = graphFacet.getWorldTriangle(p.x, 0, p.y);
+            Triangle tri = graphFacet.getWorldTriangle(p.x, p.y);
 
             if (tri != prevTri) {
                 wreg = elevation.getElevation(tri.getRegion());

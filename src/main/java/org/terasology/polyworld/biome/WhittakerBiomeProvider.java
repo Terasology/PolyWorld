@@ -53,11 +53,11 @@ public class WhittakerBiomeProvider implements FacetProvider {
 
         for (Vector2i pos : facet.getWorldRegion()) {
             if (graph == null || !graph.getBounds().contains(pos.x, pos.y)) {
-                graph = graphFacet.getWorld(pos.x, 0, pos.y);
+                graph = graphFacet.getWorld(pos.x, pos.y);
                 model = biomeModelFacet.get(graph);
             }
 
-            Triangle tri = graphFacet.getWorldTriangle(pos.x, 0, pos.y);
+            Triangle tri = graphFacet.getWorldTriangle(pos.x, pos.y);
             Region r = tri.getRegion();
 
             WhittakerBiome biome = model.getBiome(r);
