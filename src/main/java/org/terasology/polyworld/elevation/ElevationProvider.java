@@ -20,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.math.Vector2i;
 import org.terasology.math.geom.Vector2f;
+import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.Triangle;
