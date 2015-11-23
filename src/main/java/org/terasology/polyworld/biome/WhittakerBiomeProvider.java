@@ -16,6 +16,7 @@
 
 package org.terasology.polyworld.biome;
 
+import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
@@ -51,13 +52,13 @@ public class WhittakerBiomeProvider implements FacetProvider {
         Graph graph = null;
         BiomeModel model = null;
 
-        for (Vector2i pos : facet.getWorldRegion()) {
-            if (graph == null || !graph.getBounds().contains(pos.x, pos.y)) {
-                graph = graphFacet.getWorld(pos.x, pos.y);
+        for (BaseVector2i pos : facet.getWorldRegion().contents()) {
+            if (graph == null || !graph.getBounds().contains(pos.x(), pos.y())) {
+                graph = graphFacet.getWorld(pos.x(), pos.y());
                 model = biomeModelFacet.get(graph);
             }
 
-            Triangle tri = graphFacet.getWorldTriangle(pos.x, pos.y);
+            Triangle tri = graphFacet.getWorldTriangle(pos.x(), pos.y());
             Region r = tri.getRegion();
 
             WhittakerBiome biome = model.getBiome(r);

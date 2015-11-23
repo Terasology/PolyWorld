@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.graph.Graph;
@@ -90,13 +91,13 @@ public class ElevationProvider implements FacetProvider {
 
         ElevationModel elevation = null;
 
-        for (Vector2i p : facet.getWorldRegion()) {
-            if (graph == null || !graph.getBounds().contains(p.x, p.y)) {
-                graph = graphFacet.getWorld(p.x, p.y);
+        for (BaseVector2i p : facet.getWorldRegion().contents()) {
+            if (graph == null || !graph.getBounds().contains(p.x(), p.y())) {
+                graph = graphFacet.getWorld(p.x(), p.y());
                 elevation = elevationModelFacet.get(graph);
             }
 
-            Triangle tri = graphFacet.getWorldTriangle(p.x, p.y);
+            Triangle tri = graphFacet.getWorldTriangle(p.x(), p.y());
 
             if (tri != prevTri) {
                 wreg = elevation.getElevation(tri.getRegion());
@@ -105,7 +106,7 @@ public class ElevationProvider implements FacetProvider {
                 prevTri = tri;
             }
 
-            float ele = tri.computeInterpolated(new Vector2f(p.x, p.y), wreg, wc1, wc2);
+            float ele = tri.computeInterpolated(new Vector2f(p.x(), p.y()), wreg, wc1, wc2);
             float blockHeight = convertModelElevation(seaLevel, seaFloor, maxHeight, ele);
 
             facet.setWorld(p, blockHeight);
