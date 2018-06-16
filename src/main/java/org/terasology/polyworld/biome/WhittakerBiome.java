@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 MovingBlocks
+ * Copyright 2018 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,55 +22,63 @@ import org.terasology.world.biomes.Biome;
  * Different biome types
  */
 public enum WhittakerBiome implements Biome {
-    OCEAN,
-    LAKE,
-    BEACH,
-    SNOW,
+    OCEAN("Ocean"),
+    LAKE("Lake"),
+    BEACH("Beach"),
+    SNOW("Snow"),
 
     /**
      * Mostly shrubs, and grasses, mosses, and lichens as well as some scattered trees.
      */
-    TUNDRA,
-    BARE,
-    SCORCHED,
+    TUNDRA("Tundra"),
+    BARE("Bare"),
+    SCORCHED("Scorched"),
 
     /**
      * Boreal forest or snowforest, consisting mostly of pines, spruces and larches.
      */
-    TAIGA,
-    TEMPERATE_DESERT,
-    TEMPERATE_RAIN_FOREST,
+    TAIGA("Taiga"),
+    TEMPERATE_DESERT("Temperate desert"),
+    TEMPERATE_RAIN_FOREST("Temperate rain forest"),
 
     /**
      * Trees or shrubs lose their leaves seasonally (most commonly during autumn).
      */
-    TEMPERATE_DECIDUOUS_FOREST,
+    TEMPERATE_DECIDUOUS_FOREST("Temperate deciduous forest"),
 
     /**
      * Dominated by grasses, however sedge and rush, shrubs and trees can also be found.
      */
-    GRASSLAND,
-    SUBTROPICAL_DESERT,
-    SHRUBLAND,
-    ICE,
+    GRASSLAND("Grassland"),
+    SUBTROPICAL_DESERT("Subtropical desert"),
+    SHRUBLAND("Shrubland"),
+    ICE("Ice"),
 
     /**
      * Wetland that is dominated by mostly herbaceous plant species.
      */
-    MARSH,
-    TROPICAL_RAIN_FOREST,
-    TROPICAL_SEASONAL_FOREST,
-    COAST,
-    LAKESHORE;
+    MARSH("Marsh"),
+    TROPICAL_RAIN_FOREST("Tropical rain forest"),
+    TROPICAL_SEASONAL_FOREST("Tropical seasonal forest"),
+    COAST("Coast"),
+    LAKESHORE("Lakeshore");
+
+    private String id;
+    private String name;
+
+    WhittakerBiome(final String name) {
+        this.id = "WhittakerBiome:" + name().toLowerCase();
+        this.name = name;
+    }
 
     @Override
     public String getId() {
-        return name();
+        return id;
     }
 
     @Override
     public String getName() {
-        return toString();
+        return name;
     }
 
     @Override
