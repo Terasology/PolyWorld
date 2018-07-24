@@ -8,5 +8,5 @@
         {"id" : "Core", "minVersion" : "2.0.0"},
         {"id" : "CommonWorld", "minVersion" : "0.2.1"}
     ],
-    "isServerSideOnly" : false
+    "serverSideOnly" : false
 }
