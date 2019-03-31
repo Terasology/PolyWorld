@@ -16,57 +16,59 @@
 
 package org.terasology.polyworld.biome;
 
-import org.terasology.world.biomes.Biome;
+import org.terasology.biomesAPI.Biome;
 
 /**
  * Different biome types
  */
 public enum WhittakerBiome implements Biome {
-    OCEAN("Ocean"),
-    LAKE("Lake"),
-    BEACH("Beach"),
-    SNOW("Snow"),
+    OCEAN("Ocean", 2001),
+    LAKE("Lake", 2002),
+    BEACH("Beach", 2003),
+    SNOW("Snow", 2004),
 
     /**
      * Mostly shrubs, and grasses, mosses, and lichens as well as some scattered trees.
      */
-    TUNDRA("Tundra"),
-    BARE("Bare"),
-    SCORCHED("Scorched"),
+    TUNDRA("Tundra", 2005),
+    BARE("Bare", 2006),
+    SCORCHED("Scorched", 2007),
 
     /**
      * Boreal forest or snowforest, consisting mostly of pines, spruces and larches.
      */
-    TAIGA("Taiga"),
-    TEMPERATE_DESERT("Temperate desert"),
-    TEMPERATE_RAIN_FOREST("Temperate rain forest"),
+    TAIGA("Taiga", 2008),
+    TEMPERATE_DESERT("Temperate desert", 2009),
+    TEMPERATE_RAIN_FOREST("Temperate rain forest", 2010),
 
     /**
      * Trees or shrubs lose their leaves seasonally (most commonly during autumn).
      */
-    TEMPERATE_DECIDUOUS_FOREST("Temperate deciduous forest"),
+    TEMPERATE_DECIDUOUS_FOREST("Temperate deciduous forest", 2011),
 
     /**
      * Dominated by grasses, however sedge and rush, shrubs and trees can also be found.
      */
-    GRASSLAND("Grassland"),
-    SUBTROPICAL_DESERT("Subtropical desert"),
-    SHRUBLAND("Shrubland"),
-    ICE("Ice"),
+    GRASSLAND("Grassland", 2012),
+    SUBTROPICAL_DESERT("Subtropical desert", 2013),
+    SHRUBLAND("Shrubland", 2014),
+    ICE("Ice", 2015),
 
     /**
      * Wetland that is dominated by mostly herbaceous plant species.
      */
-    MARSH("Marsh"),
-    TROPICAL_RAIN_FOREST("Tropical rain forest"),
-    TROPICAL_SEASONAL_FOREST("Tropical seasonal forest"),
-    COAST("Coast"),
-    LAKESHORE("Lakeshore");
+    MARSH("Marsh", 2016),
+    TROPICAL_RAIN_FOREST("Tropical rain forest", 2017),
+    TROPICAL_SEASONAL_FOREST("Tropical seasonal forest", 2018),
+    COAST("Coast", 2019),
+    LAKESHORE("Lakeshore", 2020);
 
     private String id;
     private String name;
+    private short hash;
 
-    WhittakerBiome(final String name) {
+    WhittakerBiome(final String name, int hash) {
+        this.hash = (short) hash;
         this.id = "WhittakerBiome:" + name().toLowerCase();
         this.name = name;
     }
@@ -82,20 +84,7 @@ public enum WhittakerBiome implements Biome {
     }
 
     @Override
-    public float getFog() {
-        // TODO: remove this property from Biome
-        return 0;
-    }
-
-    @Override
-    public float getHumidity() {
-        // TODO: remove this property from Biome
-        return 0;
-    }
-
-    @Override
-    public float getTemperature() {
-        // TODO: remove this property from Biome
-        return 0;
+    public short biomeHash() {
+        return hash;
     }
 }

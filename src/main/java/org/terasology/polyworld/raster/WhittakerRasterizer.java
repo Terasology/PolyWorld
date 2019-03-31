@@ -15,6 +15,7 @@
  */
 package org.terasology.polyworld.raster;
 
+import org.terasology.biomesAPI.BiomeRegistry;
 import org.terasology.math.TeraMath;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.polyworld.biome.WhittakerBiome;
@@ -39,6 +40,7 @@ public class WhittakerRasterizer implements WorldRasterizer {
     private Block grass;
     private Block snow;
     private Block dirt;
+    private BiomeRegistry biomeRegistry;
 
     @Override
     public void initialize() {
@@ -50,6 +52,7 @@ public class WhittakerRasterizer implements WorldRasterizer {
         grass = blockManager.getBlock("core:Grass");
         snow = blockManager.getBlock("core:Snow");
         dirt = blockManager.getBlock("core:Dirt");
+        biomeRegistry = CoreRegistry.get(BiomeRegistry.class);
     }
 
     @Override
@@ -70,7 +73,7 @@ public class WhittakerRasterizer implements WorldRasterizer {
 
                 for (int y = 0; y < chunk.getChunkSizeY(); ++y) {
 
-                    chunk.setBiome(x, y, z, biome);
+                    biomeRegistry.setBiome(biome, chunk, x, y, z);
 
                     int depth = surfaceHeightInt - y - chunk.getChunkWorldOffsetY();
                     if (depth >= 0) {

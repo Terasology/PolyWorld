@@ -15,19 +15,23 @@
  */
 package org.terasology.polyworld.biome;
 
-import org.terasology.world.biomes.BiomeRegistrator;
-import org.terasology.world.biomes.BiomeRegistry;
+import org.terasology.biomesAPI.Biome;
+import org.terasology.biomesAPI.BiomeRegistry;
+import org.terasology.entitySystem.systems.BaseComponentSystem;
+import org.terasology.registry.In;
 
 /**
  * Registers all core biomes with the engine.
  */
-public class WhittakerBiomes implements BiomeRegistrator {
+public class WhittakerBiomes extends BaseComponentSystem {
+
+    @In
+    BiomeRegistry biomeRegistry;
 
     @Override
-    public void registerBiomes(BiomeRegistry registry) {
-        for (WhittakerBiome biome : WhittakerBiome.values()) {
-            registry.registerBiome(biome);
+    public void preBegin() {
+        for (Biome biome : WhittakerBiome.values()) {
+            biomeRegistry.registerBiome(biome);
         }
     }
-
 }

@@ -18,6 +18,7 @@ package org.terasology.polyworld.flora;
 import java.util.List;
 import java.util.Map;
 
+import org.terasology.biomesAPI.Biome;
 import org.terasology.core.world.generator.facetProviders.PositionFilters;
 import org.terasology.core.world.generator.facetProviders.SurfaceObjectProvider;
 import org.terasology.core.world.generator.facets.FloraFacet;
@@ -29,7 +30,6 @@ import org.terasology.polyworld.biome.WhittakerBiomeFacet;
 import org.terasology.rendering.nui.properties.Range;
 import org.terasology.utilities.procedural.Noise;
 import org.terasology.utilities.procedural.WhiteNoise;
-import org.terasology.world.biomes.Biome;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.Facet;
 import org.terasology.world.generation.GeneratingRegion;
