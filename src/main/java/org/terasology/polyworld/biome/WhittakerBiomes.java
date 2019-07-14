@@ -18,11 +18,14 @@ package org.terasology.polyworld.biome;
 import org.terasology.biomesAPI.Biome;
 import org.terasology.biomesAPI.BiomeRegistry;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
+import org.terasology.entitySystem.systems.RegisterMode;
+import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
 
 /**
  * Registers all core biomes with the engine.
  */
+@RegisterSystem(RegisterMode.ALWAYS)
 public class WhittakerBiomes extends BaseComponentSystem {
 
     @In
