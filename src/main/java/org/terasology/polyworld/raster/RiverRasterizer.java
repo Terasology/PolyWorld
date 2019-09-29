@@ -15,9 +15,6 @@
  */
 package org.terasology.polyworld.raster;
 
-import java.util.Collection;
-import java.util.EnumSet;
-
 import org.terasology.commonworld.geom.BresenhamCollectorVisitor;
 import org.terasology.commonworld.geom.BresenhamLineIterator;
 import org.terasology.math.ChunkMath;
@@ -40,6 +37,9 @@ import org.terasology.world.generation.WorldRasterizer;
 import org.terasology.world.generation.facets.SeaLevelFacet;
 import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
+import java.util.Collection;
+import java.util.EnumSet;
+
 /**
  * Rasterizer for the river model of PolyWorld.
  *
@@ -54,7 +54,7 @@ public class RiverRasterizer implements WorldRasterizer {
     @Override
     public void initialize() {
         BlockManager blockManager = CoreRegistry.get(BlockManager.class);
-        water = blockManager.getBlock("core:water");
+        water = blockManager.getBlock("CoreBlocks:Water");
         air = blockManager.getBlock(BlockManager.AIR_ID);
     }
 
