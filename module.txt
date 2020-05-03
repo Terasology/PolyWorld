@@ -6,7 +6,8 @@
     "description" : "A world generator that creates island worlds based on Amit Patel's flash implementation",
     "dependencies" : [
         {"id" : "CoreBlocks", "minVersion" : "1.0.0"},
-        {"id" : "CommonWorld", "minVersion" : "0.2.1"}
+        {"id" : "CommonWorld", "minVersion" : "0.2.1"},
+        {"id" : "BiomesAPI", "minVersion" : "3.2.1"}
     ],
     "serverSideOnly" : false,
     "isWorld": true
