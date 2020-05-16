@@ -54,7 +54,7 @@ public class RiverRasterizer implements WorldRasterizer {
     @Override
     public void initialize() {
         BlockManager blockManager = CoreRegistry.get(BlockManager.class);
-        water = blockManager.getBlock("CoreBlocks:Water");
+        water = blockManager.getBlock("CoreAssets:Water");
         air = blockManager.getBlock(BlockManager.AIR_ID);
     }
 
