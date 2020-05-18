@@ -1,13 +1,15 @@
 {
-    "id" : "PolyWorld",
-    "version" : "0.7.3-SNAPSHOT",
-    "author" : "msteiger",
-    "displayName" : "PolyWorld",
-    "description" : "A world generator that creates island worlds based on Amit Patel's flash implementation",
-    "dependencies" : [
-        {"id" : "CoreBlocks", "minVersion" : "1.0.0"},
-        {"id" : "Core", "minVersion" : "3.0.0"},
-        {"id" : "CommonWorld", "minVersion" : "0.2.1"}
+    "id": "PolyWorld",
+    "version": "1.0.0",
+    "author": "msteiger",
+    "displayName": "PolyWorld",
+    "description": "A world generator that creates island worlds based on Amit Patel's flash implementation",
+    "dependencies": [
+        { "id": "BiomesAPI", "minVersion": "4.0.0" },
+        { "id": "CommonWorld", "minVersion": "1.0.0" },
+        { "id": "CoreAssets", "minVersion": "2.0.1" },
+        { "id": "CoreWorlds", "minVersion": "1.1.0" }
     ],
-    "serverSideOnly" : false
+    "serverSideOnly": false,
+    "isWorld": true
 }

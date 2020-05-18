@@ -45,13 +45,13 @@ public class WhittakerRasterizer implements WorldRasterizer {
     @Override
     public void initialize() {
         BlockManager blockManager = CoreRegistry.get(BlockManager.class);
-        stone = blockManager.getBlock("CoreBlocks:Stone");
-        water = blockManager.getBlock("CoreBlocks:Water");
-        ice = blockManager.getBlock("CoreBlocks:Ice");
-        sand = blockManager.getBlock("CoreBlocks:Sand");
-        grass = blockManager.getBlock("CoreBlocks:Grass");
-        snow = blockManager.getBlock("CoreBlocks:Snow");
-        dirt = blockManager.getBlock("CoreBlocks:Dirt");
+        stone = blockManager.getBlock("CoreAssets:Stone");
+        water = blockManager.getBlock("CoreAssets:Water");
+        ice = blockManager.getBlock("CoreAssets:Ice");
+        sand = blockManager.getBlock("CoreAssets:Sand");
+        grass = blockManager.getBlock("CoreAssets:Grass");
+        snow = blockManager.getBlock("CoreAssets:Snow");
+        dirt = blockManager.getBlock("CoreAssets:Dirt");
         biomeRegistry = CoreRegistry.get(BiomeRegistry.class);
     }
 
