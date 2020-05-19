@@ -17,6 +17,7 @@
 package org.terasology.polyworld.biome;
 
 import org.terasology.biomesAPI.Biome;
+import org.terasology.naming.Name;
 
 /**
  * Different biome types
@@ -63,23 +64,23 @@ public enum WhittakerBiome implements Biome {
     COAST("Coast", 2019),
     LAKESHORE("Lakeshore", 2020);
 
-    private String id;
+    private Name id;
     private String name;
     private short hash;
 
     WhittakerBiome(final String name, int hash) {
         this.hash = (short) hash;
-        this.id = "WhittakerBiome:" + name().toLowerCase();
+        this.id = new Name("WhittakerBiome:" + name().toLowerCase());
         this.name = name;
     }
 
     @Override
-    public String getId() {
+    public Name getId() {
         return id;
     }
 
     @Override
-    public String getName() {
+    public String getDisplayName() {
         return name;
     }
 
