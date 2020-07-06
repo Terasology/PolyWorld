@@ -89,8 +89,8 @@ public class RiverRasterizer implements WorldRasterizer {
 
                     for (Vector2i p : line) {
                         if (p.getX() >= region.minX() && p.getX() <= region.maxX() && p.getY() >= region.minZ() && p.getY() <= region.maxZ()) {
-                            int x = ChunkMath.calcBlockPosX(p.getX(), ChunkConstants.INNER_CHUNK_POS_FILTER.x);
-                            int z = ChunkMath.calcBlockPosZ(p.getY(), ChunkConstants.INNER_CHUNK_POS_FILTER.z);
+                            int x = ChunkMath.calcRelativeBlockPos(p.getX(), ChunkConstants.INNER_CHUNK_POS_FILTER.x);
+                            int z = ChunkMath.calcRelativeBlockPos(p.getY(), ChunkConstants.INNER_CHUNK_POS_FILTER.z);
                             int y = TeraMath.floorToInt(surfaceHeightData.get(x, z));
                             Vector3i worldPos = new Vector3i(p.getX(), y, p.getY());
 
@@ -146,7 +146,7 @@ public class RiverRasterizer implements WorldRasterizer {
 
                     // remove top layer (soil)
                     if (region.encompasses(pos.x, pos.y, pos.z)) {
-                        chunk.setBlock(ChunkMath.calcBlockPos(pos.x, pos.y, pos.z), air);
+                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos.x, pos.y, pos.z), air);
                     }
 
                     // don't dig below the sea level
@@ -154,7 +154,7 @@ public class RiverRasterizer implements WorldRasterizer {
                         pos.y -= 1;
                     }
                     if (region.encompasses(pos.x, pos.y, pos.z)) {
-                        chunk.setBlock(ChunkMath.calcBlockPos(pos.x, pos.y, pos.z), water);
+                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos.x, pos.y, pos.z), water);
                     }
                 }
             }
