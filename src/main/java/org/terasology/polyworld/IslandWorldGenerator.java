@@ -83,8 +83,7 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
                 .addRasterizer(new WhittakerRasterizer())
                 .addRasterizer(new RiverRasterizer())
                 .addRasterizer(new TreeRasterizer())
-                .addRasterizer(new FloraRasterizer())
-                .addPlugins();
+                .addRasterizer(new FloraRasterizer());
     }
 
     @Override
