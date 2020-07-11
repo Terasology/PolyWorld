@@ -87,6 +87,11 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         cache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(loader);
     }
 
+    public WorldRegionFacetProvider(int maxCacheSize,float islandDensity) {
+        cache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(loader);
+        configuration.islandDensity =  islandDensity;
+    }
+
     @Override
     public void setSeed(long seed) {
         this.seed = seed;
