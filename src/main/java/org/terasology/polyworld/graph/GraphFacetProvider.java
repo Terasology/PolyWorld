@@ -88,6 +88,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
     private final LoadingCache<Graph, TriangleLookup> lookupCache;
 
     private long seed;
+    private int graphUniformity = 1;
 
     private GraphProviderConfiguration configuration = new GraphProviderConfiguration();
 
@@ -97,6 +98,13 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
     public GraphFacetProvider(int maxCacheSize) {
         graphCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(graphLoader);
         lookupCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(lookupLoader);
+    }
+
+    public GraphFacetProvider(int maxCacheSize, float graphDensity, int graphUniformity) {
+        graphCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(graphLoader);
+        lookupCache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(lookupLoader);
+        configuration.graphDensity = graphDensity;
+        this.graphUniformity = graphUniformity;
     }
 
     @Override
@@ -145,7 +153,8 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
     private static Graph createGridGraph(Rect2i bounds, int rows, int cols) {
 
-        Rect2i doubleBounds = Rect2i.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+        Rect2i doubleBounds = Rect2i.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(),
+                bounds.height());
         final Graph graph = new GridGraph(doubleBounds, rows, cols);
 
         return graph;
@@ -170,8 +179,9 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         Voronoi v = new Voronoi(points, doubleBounds);
 
         // Lloyd relaxation makes regions more uniform
-        v = GraphEditor.lloydRelaxation(v);
-
+        for (int i = 0; i < graphUniformity; i++) {
+            v = GraphEditor.lloydRelaxation(v);
+        }
         final Graph graph = new VoronoiGraph(bounds, v);
         GraphEditor.improveCorners(graph.getCorners());
 
@@ -201,7 +211,8 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
     }
 
     private static class GraphProviderConfiguration implements Component {
-        @Range(min = 0.1f, max = 10f, increment = 0.1f, precision = 1, description = "Define the density for graph cells")
+        @Range(min = 0.1f, max = 10f, increment = 0.1f, precision = 1, description = "Define the density for graph " +
+                "cells")
         private float graphDensity = 2f;
     }
 }
