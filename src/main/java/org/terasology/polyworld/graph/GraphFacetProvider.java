@@ -35,7 +35,7 @@ import org.terasology.polyworld.rp.WorldRegion;
 import org.terasology.polyworld.rp.WorldRegionFacet;
 import org.terasology.polyworld.sampling.PointSampling;
 import org.terasology.polyworld.sampling.PoissonDiscSampling;
-import org.terasology.rendering.nui.properties.Range;
+import org.terasology.nui.properties.Range;
 import org.terasology.utilities.random.FastRandom;
 import org.terasology.utilities.random.Random;
 import org.terasology.world.generation.Border3D;

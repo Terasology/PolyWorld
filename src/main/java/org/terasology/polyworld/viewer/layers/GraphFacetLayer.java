@@ -38,7 +38,7 @@ import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.Region;
 import org.terasology.polyworld.graph.Triangle;
-import org.terasology.rendering.nui.properties.Checkbox;
+import org.terasology.nui.properties.Checkbox;
 import org.terasology.world.viewer.layers.AbstractFacetLayer;
 import org.terasology.world.viewer.layers.FacetLayerConfig;
 import org.terasology.world.viewer.layers.Renders;

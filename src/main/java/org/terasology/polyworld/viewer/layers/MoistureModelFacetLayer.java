@@ -35,7 +35,7 @@ import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.moisture.MoistureModelFacet;
 import org.terasology.polyworld.water.WaterModel;
 import org.terasology.polyworld.water.WaterModelFacet;
-import org.terasology.rendering.nui.properties.Checkbox;
+import org.terasology.nui.properties.Checkbox;
 import org.terasology.world.generation.Region;
 import org.terasology.world.viewer.layers.AbstractFacetLayer;
 import org.terasology.world.viewer.layers.FacetLayerConfig;
