@@ -29,13 +29,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.Vector2f;
+import org.terasology.nui.properties.Checkbox;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.moisture.MoistureModelFacet;
 import org.terasology.polyworld.water.WaterModel;
 import org.terasology.polyworld.water.WaterModelFacet;
-import org.terasology.rendering.nui.properties.Checkbox;
 import org.terasology.world.generation.Region;
 import org.terasology.world.viewer.layers.AbstractFacetLayer;
 import org.terasology.world.viewer.layers.FacetLayerConfig;
@@ -160,6 +160,7 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
      * Persistent data
      */
     private static class Config implements FacetLayerConfig {
-        @Checkbox private boolean showOcean;
+        @Checkbox
+        private boolean showOcean;
     }
 }

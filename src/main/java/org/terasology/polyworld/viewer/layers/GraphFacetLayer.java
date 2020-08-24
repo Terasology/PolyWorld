@@ -28,17 +28,16 @@ import java.util.List;
 import java.util.function.Function;
 
 import org.terasology.math.geom.Rect2i;
-import org.terasology.math.Region3i;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Vector2f;
+import org.terasology.nui.properties.Checkbox;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.Region;
 import org.terasology.polyworld.graph.Triangle;
-import org.terasology.rendering.nui.properties.Checkbox;
 import org.terasology.world.viewer.layers.AbstractFacetLayer;
 import org.terasology.world.viewer.layers.FacetLayerConfig;
 import org.terasology.world.viewer.layers.Renders;
@@ -60,6 +59,7 @@ public class GraphFacetLayer extends AbstractFacetLayer {
 
     /**
      * This can be called only through reflection since Config is private
+     *
      * @param config the layer configuration info
      */
     public GraphFacetLayer(Config config) {
@@ -293,11 +293,17 @@ public class GraphFacetLayer extends AbstractFacetLayer {
      * Persistent data
      */
     private static class Config implements FacetLayerConfig {
-        @Checkbox private boolean showEdges = true;
-        @Checkbox private boolean showBounds = true;
-        @Checkbox private boolean showCorners = true;
-        @Checkbox private boolean showSites = true;
-        @Checkbox private boolean showLookUp;
-        @Checkbox private boolean showTris;
+        @Checkbox
+        private boolean showEdges = true;
+        @Checkbox
+        private boolean showBounds = true;
+        @Checkbox
+        private boolean showCorners = true;
+        @Checkbox
+        private boolean showSites = true;
+        @Checkbox
+        private boolean showLookUp;
+        @Checkbox
+        private boolean showTris;
     }
 }

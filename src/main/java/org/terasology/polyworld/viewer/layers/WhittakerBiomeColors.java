@@ -40,7 +40,7 @@ import static org.terasology.polyworld.biome.WhittakerBiome.TUNDRA;
 import java.util.function.Function;
 
 import org.terasology.polyworld.biome.WhittakerBiome;
-import org.terasology.rendering.nui.Color;
+import org.terasology.nui.Color;
 
 import com.google.common.collect.ImmutableMap;
 
