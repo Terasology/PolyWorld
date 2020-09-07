@@ -17,7 +17,7 @@
 package org.terasology.polyworld.biome;
 
 import org.terasology.biomesAPI.Biome;
-import org.terasology.naming.Name;
+import org.terasology.gestalt.naming.Name;
 
 /**
  * Different biome types
