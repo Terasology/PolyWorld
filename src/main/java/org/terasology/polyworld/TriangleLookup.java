@@ -1,20 +1,17 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld;
+
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.Rect2i;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.Triangle;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -24,20 +21,8 @@ import java.awt.image.DataBufferInt;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.Region;
-import org.terasology.polyworld.graph.Triangle;
-
-import com.google.common.base.Stopwatch;
-import com.google.common.collect.Lists;
-
 /**
- * Creates a image-based lookup table to map individual pixel to triangles
- * of the regions in a {@link Graph}
+ * Creates a image-based lookup table to map individual pixel to triangles of the regions in a {@link Graph}
  */
 public class TriangleLookup {
 
@@ -75,31 +60,6 @@ public class TriangleLookup {
         dataBuffer = (DataBufferInt) image.getRaster().getDataBuffer();
     }
 
-    /**
-     * @param x the x world coord.
-     * @param y the y world coord.
-     * @return the triangle that contains the point or <code>null</code>
-     */
-    public Triangle findTriangleAt(int x, int y) {
-        int imgX = x - bounds.minX();
-        int imgY = y - bounds.minY();
-
-        if (imgX < 0 || imgY < 0 || imgX >= image.getWidth() || imgY >= image.getHeight()) {
-            logger.warn("Coordinate {}/{} is out of bounds", x, y);
-            return null;
-        }
-
-        // index 0 is reserved for missing coverage
-        // we need to subtract 1 to get the real list index
-        int index1 = dataBuffer.getElem(imgY * image.getWidth() + imgX) & 0xFFFFFF;
-        if (index1 < 1 || index1 > triangles.size()) {
-            logger.warn("Could not find a triangle for {}/{}", x, y);
-            return null;
-        }
-
-        return triangles.get(index1 - 1);
-    }
-
     private static List<Triangle> drawTriangles(Graphics2D g, Graph graph) {
         List<Region> regions = graph.getRegions();
         List<Triangle> triangles = Lists.newArrayList();
@@ -125,6 +85,31 @@ public class TriangleLookup {
         }
 
         return triangles;
+    }
+
+    /**
+     * @param x the x world coord.
+     * @param y the y world coord.
+     * @return the triangle that contains the point or <code>null</code>
+     */
+    public Triangle findTriangleAt(int x, int y) {
+        int imgX = x - bounds.minX();
+        int imgY = y - bounds.minY();
+
+        if (imgX < 0 || imgY < 0 || imgX >= image.getWidth() || imgY >= image.getHeight()) {
+            logger.warn("Coordinate {}/{} is out of bounds", x, y);
+            return null;
+        }
+
+        // index 0 is reserved for missing coverage
+        // we need to subtract 1 to get the real list index
+        int index1 = dataBuffer.getElem(imgY * image.getWidth() + imgX) & 0xFFFFFF;
+        if (index1 < 1 || index1 > triangles.size()) {
+            logger.warn("Could not find a triangle for {}/{}", x, y);
+            return null;
+        }
+
+        return triangles.get(index1 - 1);
     }
 
     /**

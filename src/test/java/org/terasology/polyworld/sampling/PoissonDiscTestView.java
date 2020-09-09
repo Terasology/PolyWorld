@@ -1,21 +1,17 @@
-/*
- * Copyright 2015 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.sampling;
 
+import com.google.common.math.DoubleMath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.terasology.math.geom.Rect2f;
+import org.terasology.math.geom.Vector2f;
+import org.terasology.math.geom.Vector2i;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -25,21 +21,9 @@ import java.awt.geom.Line2D;
 import java.math.RoundingMode;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
-import org.terasology.math.geom.Vector2i;
-
-import com.google.common.math.DoubleMath;
-
 public final class PoissonDiscTestView {
-    private static float graphDensity = 10f;
-
     private static final Logger logger = LoggerFactory.getLogger(PoissonDiscTestView.class);
+    private static final float graphDensity = 10f;
 
     private PoissonDiscTestView() {
         // no instances
@@ -92,8 +76,8 @@ public final class PoissonDiscTestView {
                 int cols = dims.getX();
                 int rows = dims.getY();
 
-                float cellWidth = (float) bounds.width() / cols;
-                float cellHeight = (float) bounds.height() / rows;
+                float cellWidth = bounds.width() / cols;
+                float cellHeight = bounds.height() / rows;
 
                 g.translate(bounds.minX(), bounds.minY());
                 for (int i = 0; i <= cols; i++) {

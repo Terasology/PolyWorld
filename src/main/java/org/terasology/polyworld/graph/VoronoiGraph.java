@@ -1,26 +1,7 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.graph;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.BaseVector2f;
@@ -30,9 +11,14 @@ import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2f;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * VoronoiGraph.java
- *
  */
 public class VoronoiGraph implements Graph {
 
@@ -106,6 +92,31 @@ public class VoronoiGraph implements Graph {
     }
 
     /**
+     * Transforms the given point from the source rectangle into the destination rectangle.
+     *
+     * @param srcRc The source rectangle
+     * @param dstRc The destination rectangle
+     * @param pt The point to transform
+     * @return The new, transformed point
+     */
+    private static Vector2f transform(Rect2f srcRc, Rect2f dstRc, BaseVector2f pt) {
+
+        // TODO: move this to a better place
+
+        float x = (pt.getX() - srcRc.minX()) / srcRc.width();
+        float y = (pt.getY() - srcRc.minY()) / srcRc.height();
+
+        x = dstRc.minX() + x * dstRc.width();
+        y = dstRc.minY() + y * dstRc.height();
+
+        return new Vector2f(x, y);
+    }
+
+    private static boolean closeEnough(float d1, float d2, float diff) {
+        return Math.abs(d1 - d2) <= diff;
+    }
+
+    /**
      * ensures that each corner is represented by only one corner object
      */
     private Corner makeCorner(Map<BaseVector2f, Corner> pointCornerMap, Rect2f srcRc, BaseVector2f orgPt) {
@@ -162,29 +173,5 @@ public class VoronoiGraph implements Graph {
     @Override
     public Rect2i getBounds() {
         return intBounds;
-    }
-
-    /**
-     * Transforms the given point from the source rectangle into the destination rectangle.
-     * @param srcRc The source rectangle
-     * @param dstRc The destination rectangle
-     * @param pt The point to transform
-     * @return The new, transformed point
-     */
-    private static Vector2f transform(Rect2f srcRc, Rect2f dstRc, BaseVector2f pt) {
-
-        // TODO: move this to a better place
-
-        float x = (pt.getX() - srcRc.minX()) / srcRc.width();
-        float y = (pt.getY() - srcRc.minY()) / srcRc.height();
-
-        x = dstRc.minX() + x * dstRc.width();
-        y = dstRc.minY() + y * dstRc.height();
-
-        return new Vector2f(x, y);
-    }
-
-    private static boolean closeEnough(float d1, float d2, float diff) {
-        return Math.abs(d1 - d2) <= diff;
     }
 }

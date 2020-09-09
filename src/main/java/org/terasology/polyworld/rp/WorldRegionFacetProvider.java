@@ -1,43 +1,29 @@
-/*
- * Copyright 2015 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.rp;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import org.terasology.commonworld.Sector;
-import org.terasology.commonworld.Sectors;
-import org.terasology.entitySystem.Component;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.Vector3i;
-import org.terasology.nui.properties.Range;
-import org.terasology.utilities.procedural.Noise;
-import org.terasology.utilities.procedural.WhiteNoise;
-import org.terasology.world.generation.Border3D;
-import org.terasology.world.generation.ConfigurableFacetProvider;
-import org.terasology.world.generation.GeneratingRegion;
-import org.terasology.world.generation.Produces;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
+import org.terasology.commonworld.Sector;
+import org.terasology.commonworld.Sectors;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.math.Region3i;
+import org.terasology.engine.utilities.procedural.Noise;
+import org.terasology.engine.utilities.procedural.WhiteNoise;
+import org.terasology.engine.world.generation.Border3D;
+import org.terasology.engine.world.generation.ConfigurableFacetProvider;
+import org.terasology.engine.world.generation.GeneratingRegion;
+import org.terasology.engine.world.generation.Produces;
+import org.terasology.math.geom.Rect2i;
+import org.terasology.math.geom.Vector3i;
+import org.terasology.nui.properties.Range;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * TODO Type description
@@ -46,13 +32,12 @@ import com.google.common.collect.Lists;
 public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(false);
-
+    private final LoadingCache<Rect2i, Collection<WorldRegion>> cache;
     private RegionProvider regionProvider;
     private Configuration configuration = new Configuration();
-
     private Noise islandRatioNoise;
-
-    private final CacheLoader<Rect2i, Collection<WorldRegion>> loader = new CacheLoader<Rect2i, Collection<WorldRegion>>() {
+    private final CacheLoader<Rect2i, Collection<WorldRegion>> loader = new CacheLoader<Rect2i,
+            Collection<WorldRegion>>() {
 
         @Override
         public Collection<WorldRegion> load(Rect2i fullArea) throws Exception {
@@ -75,9 +60,6 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
             return result;
         }
     };
-
-    private final LoadingCache<Rect2i, Collection<WorldRegion>> cache;
-
     private long seed;
 
     /**
@@ -87,9 +69,9 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         cache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(loader);
     }
 
-    public WorldRegionFacetProvider(int maxCacheSize,float islandDensity) {
+    public WorldRegionFacetProvider(int maxCacheSize, float islandDensity) {
         cache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(loader);
-        configuration.islandDensity =  islandDensity;
+        configuration.islandDensity = islandDensity;
     }
 
     @Override
@@ -165,7 +147,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
     private static class Configuration implements Component {
 
         @Range(min = 50, max = 500f, increment = 10f, precision = 0, description = "Minimum size of a region")
-        private int minSize = 100;
+        private final int minSize = 100;
 
         @Range(min = 0.1f, max = 1.0f, increment = 0.1f, precision = 1, description = "Define the ratio islands/water")
         private float islandDensity = 0.7f;

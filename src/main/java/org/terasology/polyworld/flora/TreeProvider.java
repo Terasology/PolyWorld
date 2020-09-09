@@ -1,46 +1,32 @@
-/*
- * Copyright 2015 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.polyworld.flora;
-
-import java.util.List;
-
-import org.terasology.core.world.generator.facetProviders.PositionFilters;
-import org.terasology.core.world.generator.facetProviders.SurfaceObjectProvider;
-import org.terasology.core.world.generator.facets.TreeFacet;
-import org.terasology.core.world.generator.trees.TreeGenerator;
-import org.terasology.core.world.generator.trees.Trees;
-import org.terasology.entitySystem.Component;
-import org.terasology.math.geom.Vector3i;
-import org.terasology.polyworld.biome.WhittakerBiome;
-import org.terasology.polyworld.biome.WhittakerBiomeFacet;
-import org.terasology.nui.properties.Range;
-import org.terasology.utilities.procedural.Noise;
-import org.terasology.utilities.procedural.WhiteNoise;
-import org.terasology.world.generation.Border3D;
-import org.terasology.world.generation.ConfigurableFacetProvider;
-import org.terasology.world.generation.Facet;
-import org.terasology.world.generation.FacetBorder;
-import org.terasology.world.generation.GeneratingRegion;
-import org.terasology.world.generation.Produces;
-import org.terasology.world.generation.Requires;
-import org.terasology.world.generation.facets.SeaLevelFacet;
-import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+import org.terasology.coreworlds.generator.facetProviders.PositionFilters;
+import org.terasology.coreworlds.generator.facetProviders.SurfaceObjectProvider;
+import org.terasology.coreworlds.generator.facets.TreeFacet;
+import org.terasology.coreworlds.generator.trees.TreeGenerator;
+import org.terasology.coreworlds.generator.trees.Trees;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.utilities.procedural.Noise;
+import org.terasology.engine.utilities.procedural.WhiteNoise;
+import org.terasology.engine.world.generation.Border3D;
+import org.terasology.engine.world.generation.ConfigurableFacetProvider;
+import org.terasology.engine.world.generation.Facet;
+import org.terasology.engine.world.generation.FacetBorder;
+import org.terasology.engine.world.generation.GeneratingRegion;
+import org.terasology.engine.world.generation.Produces;
+import org.terasology.engine.world.generation.Requires;
+import org.terasology.engine.world.generation.facets.SeaLevelFacet;
+import org.terasology.engine.world.generation.facets.SurfaceHeightFacet;
+import org.terasology.math.geom.Vector3i;
+import org.terasology.nui.properties.Range;
+import org.terasology.polyworld.biome.WhittakerBiome;
+import org.terasology.polyworld.biome.WhittakerBiomeFacet;
+
+import java.util.List;
 
 /**
  * Determines where trees can be placed.  Will put trees one block above the surface.
@@ -133,7 +119,7 @@ public class TreeProvider extends SurfaceObjectProvider<WhittakerBiome, TreeGene
 
     private static class TreeProviderConfiguration implements Component {
         @Range(min = 0, max = 1.0f, increment = 0.05f, precision = 2, description = "Define the overall tree density")
-        private float density = 0.4f;
+        private final float density = 0.4f;
 
     }
 }

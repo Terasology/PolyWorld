@@ -1,33 +1,20 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.math.delaunay;
 
+import org.terasology.math.geom.Vector2f;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.terasology.math.geom.Vector2f;
 
 final class HalfedgePriorityQueue {
     private List<Halfedge> hash;
     private int count;
     private int minBucket;
-    private int hashsize;
-    private float ymin;
-    private float deltay;
+    private final int hashsize;
+    private final float ymin;
+    private final float deltay;
 
     public HalfedgePriorityQueue(float ymin, float deltay, int sqrtNumSites) {
         this.ymin = ymin;
@@ -37,7 +24,7 @@ final class HalfedgePriorityQueue {
         count = 0;
         minBucket = 0;
         hash = new ArrayList<Halfedge>(hashsize);
-        
+
         // dummy Halfedge at the top of each hash
         for (int i = 0; i < hashsize; ++i) {
             hash.add(Halfedge.createDummy());
@@ -106,9 +93,7 @@ final class HalfedgePriorityQueue {
     }
 
     /**
-     * move _minBucket until it contains an actual Halfedge (not just the dummy
-     * at the top);
-     *
+     * move _minBucket until it contains an actual Halfedge (not just the dummy at the top);
      */
     private void adjustMinBucket() {
         while (minBucket < hashsize - 1 && isEmpty(minBucket)) {
@@ -121,9 +106,7 @@ final class HalfedgePriorityQueue {
     }
 
     /**
-     * @return coordinates of the Halfedge's vertex in V*, the transformed
-     * Voronoi diagram
-     *
+     * @return coordinates of the Halfedge's vertex in V*, the transformed Voronoi diagram
      */
     public Vector2f min() {
         adjustMinBucket();
@@ -135,7 +118,6 @@ final class HalfedgePriorityQueue {
      * remove and return the min Halfedge
      *
      * @return
-     *
      */
     public Halfedge extractMin() {
         Halfedge answer;

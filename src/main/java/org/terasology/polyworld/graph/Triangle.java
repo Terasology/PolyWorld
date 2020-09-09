@@ -1,26 +1,12 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.graph;
 
+import com.google.common.base.Preconditions;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.math.geom.Vector3f;
-
-import com.google.common.base.Preconditions;
 
 /**
  * Defines a triangle in the region-based {@link Graph} structure.
@@ -47,6 +33,31 @@ public class Triangle {
         this.c2 = c2;
     }
 
+    public static boolean barycoordInsideTriangle(Vector3f bary) {
+        return bary.getX() >= 0 && bary.getY() >= 0 && bary.getX() + bary.getY() <= 1;
+    }
+
+    private static Vector3f computeBarycentricCoordinates(BaseVector2f a, BaseVector2f b, BaseVector2f c,
+                                                          BaseVector2f p) {
+
+        Vector2f v0 = new Vector2f(b).sub(a);
+        Vector2f v1 = new Vector2f(c).sub(a);
+        Vector2f v2 = new Vector2f(p).sub(a);
+
+        float d00 = v0.dot(v0);
+        float d01 = v0.dot(v1);
+        float d11 = v1.dot(v1);
+        float d20 = v2.dot(v0);
+        float d21 = v2.dot(v1);
+        float denom = d00 * d11 - d01 * d01;
+        float u = (d11 * d20 - d01 * d21) / denom;
+        float v = (d00 * d21 - d01 * d20) / denom;
+        float w = 1.0f - u - v;
+
+        // note that w is the first parameter
+        return new Vector3f(w, u, v);
+    }
+
     public Region getRegion() {
         return region;
     }
@@ -66,30 +77,6 @@ public class Triangle {
 
     public Vector3f computeBarycentricCoordinates(Vector2f p) {
         return computeBarycentricCoordinates(region.getCenter(), c1.getLocation(), c2.getLocation(), p);
-    }
-
-    public static boolean barycoordInsideTriangle(Vector3f bary) {
-        return bary.getX() >= 0 && bary.getY() >= 0 && bary.getX() + bary.getY() <= 1;
-    }
-
-    private static Vector3f computeBarycentricCoordinates(BaseVector2f a, BaseVector2f b, BaseVector2f c, BaseVector2f p) {
-
-        Vector2f v0 = new Vector2f(b).sub(a);
-        Vector2f v1 = new Vector2f(c).sub(a);
-        Vector2f v2 = new Vector2f(p).sub(a);
-
-        float d00 = v0.dot(v0);
-        float d01 = v0.dot(v1);
-        float d11 = v1.dot(v1);
-        float d20 = v2.dot(v0);
-        float d21 = v2.dot(v1);
-        float denom = d00 * d11 - d01 * d01;
-        float u = (d11 * d20 - d01 * d21) / denom;
-        float v = (d00 * d21 - d01 * d20) / denom;
-        float w = 1.0f - u - v;
-
-        // note that w is the first parameter
-        return new Vector3f(w, u, v);
     }
 
     @Override

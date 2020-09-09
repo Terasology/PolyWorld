@@ -1,35 +1,22 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.viewer.layers;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
+import org.terasology.engine.world.generation.Region;
+import org.terasology.engine.world.viewer.layers.AbstractFacetLayer;
+import org.terasology.engine.world.viewer.layers.Renders;
+import org.terasology.engine.world.viewer.layers.ZOrder;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.rivers.RiverModelFacet;
-import org.terasology.world.generation.Region;
-import org.terasology.world.viewer.layers.AbstractFacetLayer;
-import org.terasology.world.viewer.layers.Renders;
-import org.terasology.world.viewer.layers.ZOrder;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 /**
  * Draws the generated rivers on a AWT graphics instance
@@ -37,14 +24,14 @@ import org.terasology.world.viewer.layers.ZOrder;
 @Renders(value = RiverModelFacet.class, order = ZOrder.BIOME + 5)
 public class RiverModelFacetLayer extends AbstractFacetLayer {
 
-    private Color riverColor = new Color(0x225588ff);
+    private final Color riverColor = new Color(0x225588ff);
 
     public RiverModelFacetLayer() {
         // use default settings
     }
 
     @Override
-    public void render(BufferedImage img, org.terasology.world.generation.Region region) {
+    public void render(BufferedImage img, org.terasology.engine.world.generation.Region region) {
         RiverModelFacet riverModelFacet = region.getFacet(RiverModelFacet.class);
 
         Graphics2D g = img.createGraphics();

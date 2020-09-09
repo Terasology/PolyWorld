@@ -1,40 +1,25 @@
-/*
- * Copyright 2015 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.graph;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.terasology.engine.math.Region3i;
+import org.terasology.engine.world.generation.Border3D;
+import org.terasology.engine.world.generation.facets.base.BaseFacet2D;
+import org.terasology.math.geom.Vector2i;
+import org.terasology.polyworld.TriangleLookup;
+import org.terasology.polyworld.rp.WorldRegion;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.Vector2i;
-import org.terasology.polyworld.TriangleLookup;
-import org.terasology.polyworld.rp.WorldRegion;
-import org.terasology.world.generation.Border3D;
-import org.terasology.world.generation.facets.base.BaseFacet2D;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 /**
- * Provides a collection of {@link Graph}s that
- * cover the entire facet.
+ * Provides a collection of {@link Graph}s that cover the entire facet.
  */
 public class GraphFacetImpl extends BaseFacet2D implements GraphFacet {
 
@@ -50,7 +35,8 @@ public class GraphFacetImpl extends BaseFacet2D implements GraphFacet {
      */
     public void add(WorldRegion wr, Graph graph, TriangleLookup lookup) {
         Preconditions.checkArgument(wr.getArea().equals(graph.getBounds()), "region does not match graph");
-        Preconditions.checkArgument(graph.getBounds().equals(lookup.getBounds()), "graph does not match triangle lookup");
+        Preconditions.checkArgument(graph.getBounds().equals(lookup.getBounds()), "graph does not match triangle " +
+                "lookup");
 
         graphs.put(wr, graph);
         lookups.add(lookup);
@@ -64,7 +50,7 @@ public class GraphFacetImpl extends BaseFacet2D implements GraphFacet {
             }
         }
 
-       throw new IllegalArgumentException(String.format("no graph data for %d/%d", x, z));
+        throw new IllegalArgumentException(String.format("no graph data for %d/%d", x, z));
     }
 
     @Override
@@ -80,7 +66,7 @@ public class GraphFacetImpl extends BaseFacet2D implements GraphFacet {
             }
         }
 
-       throw new IllegalArgumentException(String.format("no triangle lookup data for %d/%d", x, z));
+        throw new IllegalArgumentException(String.format("no triangle lookup data for %d/%d", x, z));
     }
 
     @Override

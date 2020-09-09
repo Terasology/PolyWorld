@@ -1,18 +1,5 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.math.delaunay;
 
@@ -26,7 +13,7 @@ final class Halfedge {
     public Edge edge;
     public LR leftRight;
     public Vertex vertex;
-    
+
     // the vertex's y-coordinate in the transformed Voronoi space V*
     public float ystar;
 
@@ -44,7 +31,7 @@ final class Halfedge {
     public static Halfedge createDummy() {
         return create(null, null);
     }
-    
+
     @Override
     public String toString() {
         return "Halfedge (leftRight: " + leftRight + "; vertex: " + vertex + ")";
@@ -126,6 +113,6 @@ final class Halfedge {
             t3 = yl - topSite.getY();
             above = t1 * t1 > t2 * t2 + t3 * t3;
         }
-        return this.leftRight == LR.LEFT ? above : !above;
+        return (this.leftRight == LR.LEFT) == above;
     }
 }

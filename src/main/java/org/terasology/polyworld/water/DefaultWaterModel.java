@@ -1,39 +1,24 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.water;
 
-import java.util.Collection;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Map;
-
-import org.terasology.math.geom.Rect2i;
+import com.google.common.collect.Maps;
 import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.distribution.Distribution;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.Region;
 
-import com.google.common.collect.Maps;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
- * Uses a {@link Distribution} to define how water is distributed in the graph.
- * The result is normalized.
+ * Uses a {@link Distribution} to define how water is distributed in the graph. The result is normalized.
  */
 public class DefaultWaterModel implements WaterModel {
 
@@ -111,7 +96,7 @@ public class DefaultWaterModel implements WaterModel {
     }
 
     private void setCoast(Corner c, boolean coast) {
-         cornerCoast.put(c, Boolean.valueOf(coast));
+        cornerCoast.put(c, Boolean.valueOf(coast));
     }
 
     private void setOcean(Corner c, boolean ocean) {
@@ -152,18 +137,18 @@ public class DefaultWaterModel implements WaterModel {
     @Override
     public boolean isWater(Region c) {
         Boolean val = regionWater.get(c);
-        return val == null ? false : val.booleanValue();
+        return val != null && val.booleanValue();
     }
 
     @Override
     public boolean isCoast(Region c) {
         Boolean val = regionCoast.get(c);
-        return val == null ? false : val.booleanValue();
+        return val != null && val.booleanValue();
     }
 
     @Override
     public boolean isOcean(Region c) {
         Boolean val = regionOcean.get(c);
-        return val == null ? false : val.booleanValue();
+        return val != null && val.booleanValue();
     }
 }

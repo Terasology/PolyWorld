@@ -1,24 +1,20 @@
-/*
- * Copyright 2015 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.polyworld.raster;
 
 import org.terasology.commonworld.geom.BresenhamCollectorVisitor;
 import org.terasology.commonworld.geom.BresenhamLineIterator;
-import org.terasology.math.ChunkMath;
-import org.terasology.math.Region3i;
+import org.terasology.engine.math.ChunkMath;
+import org.terasology.engine.math.Region3i;
+import org.terasology.engine.registry.CoreRegistry;
+import org.terasology.engine.world.block.Block;
+import org.terasology.engine.world.block.BlockManager;
+import org.terasology.engine.world.chunks.ChunkConstants;
+import org.terasology.engine.world.chunks.CoreChunk;
+import org.terasology.engine.world.generation.Region;
+import org.terasology.engine.world.generation.WorldRasterizer;
+import org.terasology.engine.world.generation.facets.SeaLevelFacet;
+import org.terasology.engine.world.generation.facets.SurfaceHeightFacet;
 import org.terasology.math.TeraMath;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.math.geom.Vector3i;
@@ -27,29 +23,42 @@ import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.rivers.RiverModelFacet;
-import org.terasology.registry.CoreRegistry;
-import org.terasology.world.block.Block;
-import org.terasology.world.block.BlockManager;
-import org.terasology.world.chunks.ChunkConstants;
-import org.terasology.world.chunks.CoreChunk;
-import org.terasology.world.generation.Region;
-import org.terasology.world.generation.WorldRasterizer;
-import org.terasology.world.generation.facets.SeaLevelFacet;
-import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 import java.util.Collection;
 import java.util.EnumSet;
 
 /**
  * Rasterizer for the river model of PolyWorld.
- *
+ * <p>
  * This rasterizer class turns the edges of the PolyWorld graph with a positive river value into actual in-game blocks.
- * The river width is determined by the river value associated with an edge s.t. the width is proportional to this value.
+ * The river width is determined by the river value associated with an edge s.t. the width is proportional to this
+ * value.
  */
 public class RiverRasterizer implements WorldRasterizer {
 
     private Block water;
     private Block air;
+
+    /**
+     * Returns a structuring element for the specified radius in form of a 2-dimensional disk/circle.
+     * <p>
+     * For instance, the structuring element for a radius of 1 looks like follows: 0|1|0 1|1|1 0|1|0
+     *
+     * @param radius the radius of the structuring element
+     * @return the matrix of the structuring element
+     */
+    static int[][] getStructuringElement(int radius) {
+        int[][] structElem = new int[2 * radius + 1][2 * radius + 1];
+        for (int y = -radius; y <= radius; y++) {
+            for (int x = -radius; x <= radius; x++) {
+                if (x * x + y * y <= radius * radius) {
+                    structElem[x + radius][y + radius] = 1;
+                }
+            }
+        }
+
+        return structElem;
+    }
 
     @Override
     public void initialize() {
@@ -84,7 +93,8 @@ public class RiverRasterizer implements WorldRasterizer {
                     int z1 = TeraMath.floorToInt(e.getCorner1().getLocation().y());
 
                     BresenhamCollectorVisitor bresenhamCollector = new BresenhamCollectorVisitor();
-                    BresenhamLineIterator.iterateLine2D(x0, z0, x1, z1, bresenhamCollector, EnumSet.allOf(BresenhamLineIterator.Overlap.class));
+                    BresenhamLineIterator.iterateLine2D(x0, z0, x1, z1, bresenhamCollector,
+                            EnumSet.allOf(BresenhamLineIterator.Overlap.class));
                     Collection<Vector2i> line = bresenhamCollector.getLinePoints();
 
                     for (Vector2i p : line) {
@@ -100,30 +110,6 @@ public class RiverRasterizer implements WorldRasterizer {
                 }
             }
         }
-    }
-
-    /**
-     * Returns a structuring element for the specified radius in form of a 2-dimensional disk/circle.
-     *
-     * For instance, the structuring element for a radius of 1 looks like follows:
-     *      0|1|0
-     *      1|1|1
-     *      0|1|0
-     *
-     * @param radius the radius of the structuring element
-     * @return the matrix of the structuring element
-     */
-    static int[][] getStructuringElement(int radius) {
-        int[][] structElem = new int[2 * radius + 1][2 * radius + 1];
-        for (int y = -radius; y <= radius; y++) {
-            for (int x = -radius; x <= radius; x++) {
-                if (x * x + y * y <= radius * radius) {
-                    structElem[x + radius][y + radius] = 1;
-                }
-            }
-        }
-
-        return structElem;
     }
 
     /**

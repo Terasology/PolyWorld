@@ -1,60 +1,40 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.math.delaunay;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 /**
- * The line segment connecting the two Sites is part of the Delaunay
- * triangulation; the line segment connecting the two Vertices is part of the
- * Voronoi diagram
- *
- *
+ * The line segment connecting the two Sites is part of the Delaunay triangulation; the line segment connecting the two
+ * Vertices is part of the Voronoi diagram
  */
 public final class Edge {
 
     public static final Edge DELETED = new Edge();
-
-    // the equation of the edge: ax + by = c
-    private float a;
-    private float b;
-    private float c;
-
-    // the two Voronoi vertices that the edge connects
-    // (if one of them is null, the edge extends to infinity)
-    private Vertex leftVertex;
-    private Vertex rightVertex;
-
     /**
-     * Once clipVertices() is called, this HashMap will hold two Points
-     * representing the clipped coordinates of the left and right ends...
+     * Once clipVertices() is called, this HashMap will hold two Points representing the clipped coordinates of the left
+     * and right ends...
      */
     private final Map<LR, Vector2f> clippedVertices = new EnumMap<LR, Vector2f>(LR.class);
-
     /**
      * The two input Sites for which this Edge is a bisector:
      */
     private final Map<LR, Site> sites = new EnumMap<LR, Site>(LR.class);
+    // the equation of the edge: ax + by = c
+    private float a;
+    private float b;
+    private float c;
+    // the two Voronoi vertices that the edge connects
+    // (if one of them is null, the edge extends to infinity)
+    private Vertex leftVertex;
+    private Vertex rightVertex;
 
 
     private Edge() {
@@ -66,7 +46,6 @@ public final class Edge {
      * @param site0
      * @param site1
      * @return
-     *
      */
     public static Edge createBisectingEdge(Site site0, Site site1) {
         float a;
@@ -107,6 +86,22 @@ public final class Edge {
         return edge;
     }
 
+    public static float compareSitesDistancesMax(Edge edge0, Edge edge1) {
+        float length0 = edge0.sitesDistance();
+        float length1 = edge1.sitesDistance();
+        if (length0 < length1) {
+            return 1;
+        }
+        if (length0 > length1) {
+            return -1;
+        }
+        return 0;
+    }
+
+    public static float compareSitesDistances(Edge edge0, Edge edge1) {
+        return -compareSitesDistancesMax(edge0, edge1);
+    }
+
     public LineSegment delaunayLine() {
         // draw a line connecting the input Sites for which the edge is a bisector:
         return new LineSegment(getLeftSite().getCoord(), getRightSite().getCoord());
@@ -144,22 +139,6 @@ public final class Edge {
         return BaseVector2f.distance(getLeftSite().getCoord(), getRightSite().getCoord());
     }
 
-    public static float compareSitesDistancesMax(Edge edge0, Edge edge1) {
-        float length0 = edge0.sitesDistance();
-        float length1 = edge1.sitesDistance();
-        if (length0 < length1) {
-            return 1;
-        }
-        if (length0 > length1) {
-            return -1;
-        }
-        return 0;
-    }
-
-    public static float compareSitesDistances(Edge edge0, Edge edge1) {
-        return -compareSitesDistancesMax(edge0, edge1);
-    }
-
     public Map<LR, Vector2f> getClippedEnds() {
         return clippedVertices;
     }
@@ -171,20 +150,20 @@ public final class Edge {
         return !clippedVertices.isEmpty();
     }
 
-    public void setLeftSite(Site s) {
-        sites.put(LR.LEFT, s);
-    }
-
     public Site getLeftSite() {
         return sites.get(LR.LEFT);
     }
 
-    public void setRightSite(Site s) {
-        sites.put(LR.RIGHT, s);
+    public void setLeftSite(Site s) {
+        sites.put(LR.LEFT, s);
     }
 
     public Site getRightSite() {
         return sites.get(LR.RIGHT);
+    }
+
+    public void setRightSite(Site s) {
+        sites.put(LR.RIGHT, s);
     }
 
     public Site getSite(LR leftRight) {
@@ -194,16 +173,14 @@ public final class Edge {
     @Override
     public String toString() {
         return "Edge [sites " + sites.get(LR.LEFT) + ", " + sites.get(LR.RIGHT)
-               + "; endVertices " + leftVertex + ", " + rightVertex + "]";
+                + "; endVertices " + leftVertex + ", " + rightVertex + "]";
     }
 
     /**
-     * Set _clippedVertices to contain the two ends of the portion of the
-     * Voronoi edge that is visible within the bounds. If no part of the Edge
-     * falls within the bounds, leave _clippedVertices null.
+     * Set _clippedVertices to contain the two ends of the portion of the Voronoi edge that is visible within the
+     * bounds. If no part of the Edge falls within the bounds, leave _clippedVertices null.
      *
      * @param bounds
-     *
      */
     public void clipVertices(Rect2f bounds) {
         float xmin = bounds.minX();

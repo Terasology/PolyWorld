@@ -1,27 +1,7 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.math.delaunay;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +11,19 @@ import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 public final class Voronoi {
 
     private static final Logger logger = LoggerFactory.getLogger(Voronoi.class);
-
+    private final List<Edge> edges = new ArrayList<Edge>();
     private SiteList sites;
     private Map<Vector2f, Site> sitesIndexedByLocation;
-
-    private final List<Edge> edges = new ArrayList<Edge>();
     // TODO generalize this so it doesn't have to be a rectangle;
     // then we can make the fractal voronois-within-voronois
     private Rect2f plotBounds;
@@ -68,6 +53,38 @@ public final class Voronoi {
         }
         init(points, Rect2f.createFromMinAndSize(0, 0, maxWidth, maxHeight));
         fortunesAlgorithm();
+    }
+
+    public static int compareByYThenX(Site s1, Site s2) {
+        if (s1.getY() < s2.getY()) {
+            return -1;
+        }
+        if (s1.getY() > s2.getY()) {
+            return 1;
+        }
+        if (s1.getX() < s2.getX()) {
+            return -1;
+        }
+        if (s1.getX() > s2.getX()) {
+            return 1;
+        }
+        return 0;
+    }
+
+    public static int compareByYThenX(Site s1, Vector2f s2) {
+        if (s1.getY() < s2.getY()) {
+            return -1;
+        }
+        if (s1.getY() > s2.getY()) {
+            return 1;
+        }
+        if (s1.getX() < s2.getX()) {
+            return -1;
+        }
+        if (s1.getX() > s2.getX()) {
+            return 1;
+        }
+        return 0;
     }
 
     public Rect2f getPlotBounds() {
@@ -186,7 +203,6 @@ public final class Voronoi {
         }
 
 
-
         return filtered;
 
         /*function myTest(edge:Edge, index:int, vector:Vector.<Edge>):Boolean
@@ -254,7 +270,7 @@ public final class Voronoi {
         Site bottomMostSite = sites.next();
         newSite = sites.next();
 
-        for (;;) {
+        for (; ; ) {
             if (!heap.empty()) {
                 newintstar = heap.min();
             }
@@ -271,7 +287,7 @@ public final class Voronoi {
                 //trace("rbnd: " + rbnd);
                 bottomSite = rightRegion(lbnd, bottomMostSite);   // this is the same as leftRegion(rbnd)
                 // this Site determines the region containing the new site
-              //trace("new Site is in region of existing site: " + bottomSite);
+                //trace("new Site is in region of existing site: " + bottomSite);
 
                 // Step 9:
                 edge = Edge.createBisectingEdge(bottomSite, newSite);
@@ -392,37 +408,5 @@ public final class Voronoi {
             return bottomMostSite;
         }
         return edge.getSite(he.leftRight.other());
-    }
-
-    public static int compareByYThenX(Site s1, Site s2) {
-        if (s1.getY() < s2.getY()) {
-            return -1;
-        }
-        if (s1.getY() > s2.getY()) {
-            return 1;
-        }
-        if (s1.getX() < s2.getX()) {
-            return -1;
-        }
-        if (s1.getX() > s2.getX()) {
-            return 1;
-        }
-        return 0;
-    }
-
-    public static int compareByYThenX(Site s1, Vector2f s2) {
-        if (s1.getY() < s2.getY()) {
-            return -1;
-        }
-        if (s1.getY() > s2.getY()) {
-            return 1;
-        }
-        if (s1.getX() < s2.getX()) {
-            return -1;
-        }
-        if (s1.getX() > s2.getX()) {
-            return 1;
-        }
-        return 0;
     }
 }

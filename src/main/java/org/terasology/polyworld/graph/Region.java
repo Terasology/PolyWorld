@@ -1,30 +1,15 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.graph;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.terasology.math.geom.ImmutableVector2f;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Vector2f;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * Defines a polygon region (vornoi region)
@@ -96,7 +81,7 @@ public class Region {
     /**
      * @param c the corner to add (can be null or already added)
      */
-    public void addCorner(Corner c)  {
+    public void addCorner(Corner c) {
         if (c != null) {
             corners.add(c);
         }

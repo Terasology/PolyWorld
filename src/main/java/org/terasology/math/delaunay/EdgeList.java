@@ -1,34 +1,21 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.math.delaunay;
+
+import org.terasology.math.geom.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.terasology.math.geom.Vector2f;
-
 final class EdgeList {
 
-    private float deltax;
-    private float xmin;
-    private int hashsize;
     private final List<Halfedge> hash;
-    private Halfedge leftEnd;
-    private Halfedge rightEnd;
+    private final float deltax;
+    private final float xmin;
+    private final int hashsize;
+    private final Halfedge leftEnd;
+    private final Halfedge rightEnd;
 
     public EdgeList(float xmin, float deltax, int sqrtNumSites) {
         this.xmin = xmin;
@@ -58,7 +45,6 @@ final class EdgeList {
      *
      * @param lb
      * @param newHalfedge
-     *
      */
     public void insert(Halfedge lb, Halfedge newHalfedge) {
         newHalfedge.edgeListLeftNeighbor = lb;
@@ -68,11 +54,10 @@ final class EdgeList {
     }
 
     /**
-     * This function only removes the Halfedge from the left-right list. We
-     * cannot dispose it yet because we are still using it.
+     * This function only removes the Halfedge from the left-right list. We cannot dispose it yet because we are still
+     * using it.
      *
      * @param halfEdge
-     *
      */
     public void remove(Halfedge halfEdge) {
         halfEdge.edgeListLeftNeighbor.edgeListRightNeighbor = halfEdge.edgeListRightNeighbor;
@@ -87,7 +72,6 @@ final class EdgeList {
      *
      * @param p
      * @return
-     *
      */
     public Halfedge edgeListLeftNeighbor(Vector2f p) {
         int i;
@@ -134,8 +118,8 @@ final class EdgeList {
         return halfEdge;
     }
 
-    /** 
-     * Get entry from hash table, pruning any deleted nodes 
+    /**
+     * Get entry from hash table, pruning any deleted nodes
      */
     private Halfedge getHash(int b) {
         Halfedge halfEdge;

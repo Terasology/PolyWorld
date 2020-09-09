@@ -1,20 +1,17 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.moisture;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.terasology.engine.utilities.random.FastRandom;
+import org.terasology.engine.utilities.random.Random;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.rivers.RiverModel;
+import org.terasology.polyworld.water.WaterModel;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,17 +19,6 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.terasology.polyworld.graph.Corner;
-import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.Region;
-import org.terasology.polyworld.rivers.RiverModel;
-import org.terasology.polyworld.water.WaterModel;
-import org.terasology.utilities.random.FastRandom;
-import org.terasology.utilities.random.Random;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * Uses rivers and lakes as sources of moisture and distributes it over the entire island.
@@ -42,7 +28,7 @@ public class DefaultMoistureModel implements MoistureModel {
     private final Graph graph;
     private final Map<Corner, Float> moisture = Maps.newHashMap();
     private final RiverModel riverModel;
-    private WaterModel waterModel;
+    private final WaterModel waterModel;
 
     public DefaultMoistureModel(Graph graph, RiverModel riverModel, WaterModel waterModel) {
         this.graph = graph;

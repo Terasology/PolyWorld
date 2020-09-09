@@ -1,36 +1,23 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.math.delaunay;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import org.terasology.math.geom.Polygon;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.math.geom.Winding;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 public final class Site implements ICoord {
 
     private static final float EPSILON = .005f;
 
-    private Vector2f coord;
+    private final Vector2f coord;
 
     private int siteIndex;
 
@@ -65,12 +52,10 @@ public final class Site implements ICoord {
     }
 
     /**
-     * sort sites on y, then x, coord also change each site's _siteIndex to
-     * match its new position in the list so the _siteIndex can be used to
-     * identify the site for nearest-neighbor queries
-     *
+     * sort sites on y, then x, coord also change each site's _siteIndex to match its new position in the list so the
+     * _siteIndex can be used to identify the site for nearest-neighbor queries
+     * <p>
      * haha "also" - means more than one responsibility...
-     *
      */
     private static float compare(Site s1, Site s2) {
         int returnValue = Voronoi.compareByYThenX(s1, s2);
@@ -331,12 +316,9 @@ public final class Site implements ICoord {
         }
 
         /**
-         *
          * @param point
          * @param bounds
-         * @return an int with the appropriate bits set if the Point lies on the
-         * corresponding bounds lines
-         *
+         * @return an int with the appropriate bits set if the Point lies on the corresponding bounds lines
          */
         static int check(Vector2f point, Rect2f bounds) {
             int value = 0;

@@ -1,28 +1,15 @@
-/*
- * Copyright 2014 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.graph;
 
-import java.util.Collection;
-import java.util.List;
-
+import org.terasology.engine.utilities.random.Random;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Vector2f;
-import org.terasology.utilities.random.Random;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * TODO Type description
@@ -34,9 +21,9 @@ public final class GraphEditor {
     }
 
     /**
-     * Moving corners by averaging the nearby centers produces more uniform edge lengths,
-     * although it occasionally worsens the polygon sizes. However, moving corners will
-     * lose the Voronoi diagram properties.
+     * Moving corners by averaging the nearby centers produces more uniform edge lengths, although it occasionally
+     * worsens the polygon sizes. However, moving corners will lose the Voronoi diagram properties.
+     *
      * @param corners the collection of corners
      */
     public static void improveCorners(Collection<Corner> corners) {
@@ -65,6 +52,7 @@ public final class GraphEditor {
 
     /**
      * Moves all corners to a random position within a circle with r=maxDist around it
+     *
      * @param corners the set of corners
      * @param random the random number gen
      * @param maxDist the maximum moving distance
@@ -81,13 +69,13 @@ public final class GraphEditor {
             float len = random.nextFloat(0, maxDist);
             float rx = (float) (Math.cos(ang) * len);
             float ry = (float) (Math.sin(ang) * len);
-            c.setLocation(loc.add(rx,  ry));
+            c.setLocation(loc.add(rx, ry));
         }
     }
 
     /**
-     * Perform Lloyd's algorithm to achieve well-shaped
-     * and uniformly sized convex cells.
+     * Perform Lloyd's algorithm to achieve well-shaped and uniformly sized convex cells.
+     *
      * @param v the Voronoi diagram to relax
      * @return a new Voronoi diagram
      */

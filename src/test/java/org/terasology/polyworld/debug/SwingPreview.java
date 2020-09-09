@@ -1,53 +1,25 @@
-/*
- * Copyright 2015 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.debug;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import org.terasology.math.delaunay.Voronoi;
+import org.terasology.math.geom.BaseVector2i;
+import org.terasology.math.geom.Rect2f;
+import org.terasology.math.geom.Rect2i;
+import org.terasology.math.geom.Vector2f;
+import org.terasology.polyworld.TriangleLookup;
+import org.terasology.polyworld.graph.Triangle;
+import org.terasology.polyworld.graph.VoronoiGraph;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
-
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.BaseVector2i;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
-import org.terasology.math.geom.Vector2i;
-import org.terasology.polyworld.TriangleLookup;
-import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.Region;
-import org.terasology.polyworld.graph.Triangle;
-import org.terasology.polyworld.graph.VoronoiGraph;
-import org.terasology.polyworld.sampling.PointSampling;
-import org.terasology.polyworld.sampling.PoissonDiscSampling;
-import org.terasology.utilities.random.FastRandom;
-import org.terasology.utilities.random.Random;
-
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Preview generated world in Swing
@@ -64,7 +36,8 @@ final class SwingPreview {
         final long seed = "asdf".hashCode(); //System.nanoTime();
 
         Rect2i bounds = Rect2i.createFromMinAndSize(0, 0, width, height);
-        Rect2f doubleBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+        Rect2f doubleBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(),
+                bounds.height());
 
 //        PointSampling sampling = new PoissonDiscSampling();
 //        int numSites = 1000;
