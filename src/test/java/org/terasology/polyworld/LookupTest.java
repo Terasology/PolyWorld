@@ -14,13 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.terasology.engine.utilities.random.FastRandom;
 import org.terasology.engine.utilities.random.MersenneRandom;
 import org.terasology.engine.utilities.random.Random;
-import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.graph.Triangle;
 import org.terasology.polyworld.graph.VoronoiGraph;
+import org.terasology.polyworld.math.delaunay.Voronoi;
 import org.terasology.polyworld.sampling.PointSampling;
 import org.terasology.polyworld.sampling.PoissonDiscSampling;
 

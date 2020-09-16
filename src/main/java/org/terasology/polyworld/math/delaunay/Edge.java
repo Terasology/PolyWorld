@@ -1,7 +1,7 @@
 // Copyright 2020 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 
-package org.terasology.math.delaunay;
+package org.terasology.polyworld.math.delaunay;
 
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.LineSegment;

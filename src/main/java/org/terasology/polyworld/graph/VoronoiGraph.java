@@ -3,13 +3,13 @@
 
 package org.terasology.polyworld.graph;
 
-import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.LineSegment;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2f;
+import org.terasology.polyworld.math.delaunay.Voronoi;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +54,7 @@ public class VoronoiGraph implements Graph {
             }
         }
 
-        for (org.terasology.math.delaunay.Edge libedge : v.edges()) {
+        for (org.terasology.polyworld.math.delaunay.Edge libedge : v.edges()) {
 
             if (!libedge.isVisible()) {
                 continue;

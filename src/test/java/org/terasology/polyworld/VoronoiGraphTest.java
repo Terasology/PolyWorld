@@ -6,7 +6,6 @@ package org.terasology.polyworld;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Rect2f;
@@ -14,6 +13,7 @@ import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.graph.Region;
 import org.terasology.polyworld.graph.VoronoiGraph;
+import org.terasology.polyworld.math.delaunay.Voronoi;
 
 import java.util.ArrayList;
 import java.util.Arrays;

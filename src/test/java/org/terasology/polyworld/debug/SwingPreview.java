@@ -3,7 +3,6 @@
 
 package org.terasology.polyworld.debug;
 
-import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Rect2i;
@@ -11,6 +10,7 @@ import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.graph.Triangle;
 import org.terasology.polyworld.graph.VoronoiGraph;
+import org.terasology.polyworld.math.delaunay.Voronoi;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;

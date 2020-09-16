@@ -4,9 +4,9 @@
 package org.terasology.polyworld.graph;
 
 import org.terasology.engine.utilities.random.Random;
-import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Vector2f;
+import org.terasology.polyworld.math.delaunay.Voronoi;
 
 import java.util.Collection;
 import java.util.List;
