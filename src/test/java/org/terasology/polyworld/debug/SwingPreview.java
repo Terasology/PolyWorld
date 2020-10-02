@@ -37,7 +37,7 @@ import org.terasology.math.geom.Vector2f;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
 import org.terasology.polyworld.graph.VoronoiGraph;
 import org.terasology.polyworld.sampling.PointSampling;

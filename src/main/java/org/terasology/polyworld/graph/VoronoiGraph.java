@@ -38,7 +38,7 @@ public class VoronoiGraph implements Graph {
 
     private final List<Edge> edges = new ArrayList<>();
     private final List<Corner> corners = new ArrayList<>();
-    private final List<Region> regions = new ArrayList<>();
+    private final List<GraphRegion> regions = new ArrayList<>();
     private final Rect2f realBounds;
     private final Rect2i intBounds;
 
@@ -51,12 +51,12 @@ public class VoronoiGraph implements Graph {
         intBounds = bounds;
         realBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
 
-        final Map<Vector2f, Region> regionMap = new HashMap<>();
+        final Map<Vector2f, GraphRegion> regionMap = new HashMap<>();
         final Map<BaseVector2f, Corner> pointCornerMap = new HashMap<>();
 
         for (Vector2f vorSite : v.siteCoords()) {
             Vector2f site = transform(v.getPlotBounds(), realBounds, vorSite);
-            Region region = new Region(new ImmutableVector2f(site));
+            GraphRegion region = new GraphRegion(new ImmutableVector2f(site));
             regions.add(region);
             regionMap.put(vorSite, region);
 
@@ -80,8 +80,8 @@ public class VoronoiGraph implements Graph {
             Corner c0 = makeCorner(pointCornerMap, v.getPlotBounds(), vEdge.getStart());
             Corner c1 = makeCorner(pointCornerMap, v.getPlotBounds(), vEdge.getEnd());
 
-            Region r0 = regionMap.get(dEdge.getStart());
-            Region r1 = regionMap.get(dEdge.getEnd());
+            GraphRegion r0 = regionMap.get(dEdge.getStart());
+            GraphRegion r1 = regionMap.get(dEdge.getEnd());
 
             final Edge edge = new Edge(c0, c1, r0, r1);
 
@@ -136,7 +136,7 @@ public class VoronoiGraph implements Graph {
      * @return
      */
     @Override
-    public List<Region> getRegions() {
+    public List<GraphRegion> getRegions() {
         return Collections.unmodifiableList(regions);
     }
 

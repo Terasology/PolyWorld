@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.water.WaterModel;
 import org.terasology.utilities.random.FastRandom;
@@ -150,7 +150,7 @@ public class DefaultMoistureModel implements MoistureModel {
     }
 
     @Override
-    public float getMoisture(Region r) {
+    public float getMoisture(GraphRegion r) {
         float total = 0;
         for (Corner c : r.getCorners()) {
             total += getMoisture(c);

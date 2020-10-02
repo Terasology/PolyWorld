@@ -48,7 +48,7 @@ public final class GraphEditor {
             } else {
                 float x = 0;
                 float y = 0;
-                for (Region region : c.getTouches()) {
+                for (GraphRegion region : c.getTouches()) {
                     x += region.getCenter().getX();
                     y += region.getCenter().getY();
                 }

@@ -17,7 +17,7 @@
 package org.terasology.polyworld.water;
 
 import org.terasology.polyworld.graph.Corner;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 
 /**
  * Contains only ocean water.
@@ -25,7 +25,7 @@ import org.terasology.polyworld.graph.Region;
 public class PureOceanWaterModel implements WaterModel {
 
     @Override
-    public boolean isWater(Region p) {
+    public boolean isWater(GraphRegion p) {
         return true;
     }
 
@@ -35,7 +35,7 @@ public class PureOceanWaterModel implements WaterModel {
     }
 
     @Override
-    public boolean isOcean(Region p) {
+    public boolean isOcean(GraphRegion p) {
         return true;
     }
 
@@ -45,7 +45,7 @@ public class PureOceanWaterModel implements WaterModel {
     }
 
     @Override
-    public boolean isCoast(Region p) {
+    public boolean isCoast(GraphRegion p) {
         return false;
     }
 

@@ -24,8 +24,8 @@ import com.google.common.base.Preconditions;
  */
 public class Edge {
 
-    private final Region r0;  // Delaunay edge
-    private final Region r1;  // Delaunay edge
+    private final GraphRegion r0;  // Delaunay edge
+    private final GraphRegion r1;  // Delaunay edge
 
     private final Corner c0;  // Voronoi edge
     private final Corner c1;  // Voronoi edge
@@ -36,7 +36,7 @@ public class Edge {
      * @param r1
      * @param r0
      */
-    public Edge(Corner c0, Corner c1, Region r0, Region r1) {
+    public Edge(Corner c0, Corner c1, GraphRegion r0, GraphRegion r1) {
         Preconditions.checkArgument(c0 != null);
         Preconditions.checkArgument(c1 != null);
         Preconditions.checkArgument(r0 != null);
@@ -65,14 +65,14 @@ public class Edge {
     /**
      * @return the d1
      */
-    public Region getRegion1() {
+    public GraphRegion getRegion1() {
         return r1;
     }
 
     /**
      * @return the d0
      */
-    public Region getRegion0() {
+    public GraphRegion getRegion0() {
         return r0;
     }
 

@@ -17,7 +17,7 @@
 package org.terasology.polyworld.biome;
 
 import org.terasology.polyworld.elevation.ElevationModel;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.water.WaterModel;
 
@@ -40,7 +40,7 @@ public class DefaultBiomeModel implements BiomeModel {
     }
 
     @Override
-    public WhittakerBiome getBiome(Region region) {
+    public WhittakerBiome getBiome(GraphRegion region) {
         float moisture = moistureModel.getMoisture(region);
         float elevation = elevationModel.getElevation(region);
 

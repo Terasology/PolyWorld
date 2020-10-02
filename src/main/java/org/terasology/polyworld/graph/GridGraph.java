@@ -34,7 +34,7 @@ public class GridGraph implements Graph {
     private final int cols;
 
     private final List<Corner> corners = Lists.newArrayList();
-    private final List<Region> regions = Lists.newArrayList();
+    private final List<GraphRegion> regions = Lists.newArrayList();
     private final List<Edge> edges = Lists.newArrayList();
 
     private final Rect2i bounds;
@@ -77,7 +77,7 @@ public class GridGraph implements Graph {
                 float x = bounds.minX() + (c + 0.5f) * dx;
                 float y = bounds.minY() + (r + 0.5f) * dy;
                 ImmutableVector2f pos = new ImmutableVector2f(x, y);
-                Region reg = new Region(pos);
+                GraphRegion reg = new GraphRegion(pos);
                 Corner tl = getCorner(r, c);
                 Corner tr = getCorner(r, c + 1);
                 Corner br = getCorner(r + 1, c + 1);
@@ -96,7 +96,7 @@ public class GridGraph implements Graph {
 
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
-                Region reg = getRegion(r, c);
+                GraphRegion reg = getRegion(r, c);
                 reg.addNeigbor(getRegion(r - 1, c - 1));
                 reg.addNeigbor(getRegion(r - 1, c));
                 reg.addNeigbor(getRegion(r - 1, c + 1));
@@ -112,8 +112,8 @@ public class GridGraph implements Graph {
             for (int c = 0; c < cols; c++) {
                 Corner left = getCorner(r, c);
                 Corner right = getCorner(r, c + 1);
-                Region regTop = getRegion(r - 1, c);
-                Region regBot = getRegion(r, c);
+                GraphRegion regTop = getRegion(r - 1, c);
+                GraphRegion regBot = getRegion(r, c);
 
                 Edge edge = new Edge(left, right, regTop, regBot);
                 left.addEdge(edge);
@@ -128,8 +128,8 @@ public class GridGraph implements Graph {
             for (int c = 1; c < cols; c++) {
                 Corner top = getCorner(r, c);
                 Corner bot = getCorner(r + 1, c);
-                Region regLeft = getRegion(r, c - 1);
-                Region regRight = getRegion(r, c);
+                GraphRegion regLeft = getRegion(r, c - 1);
+                GraphRegion regRight = getRegion(r, c);
 
                 Edge edge = new Edge(top, bot, regLeft, regRight);
                 top.addEdge(edge);
@@ -142,7 +142,7 @@ public class GridGraph implements Graph {
 
     }
 
-    private Region getRegion(int r, int c) {
+    private GraphRegion getRegion(int r, int c) {
         if (r < 0 || r >= rows) {
             return null;
         }
@@ -169,7 +169,7 @@ public class GridGraph implements Graph {
     }
 
     @Override
-    public List<Region> getRegions() {
+    public List<GraphRegion> getRegions() {
         return Collections.unmodifiableList(regions);
     }
 

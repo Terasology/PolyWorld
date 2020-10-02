@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.terasology.math.geom.Rect2i;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
 
 import com.google.common.base.Stopwatch;
@@ -101,12 +101,12 @@ public class TriangleLookup {
     }
 
     private static List<Triangle> drawTriangles(Graphics2D g, Graph graph) {
-        List<Region> regions = graph.getRegions();
+        List<GraphRegion> regions = graph.getRegions();
         List<Triangle> triangles = Lists.newArrayList();
 
         // index 0 is reserved for missing coverage
         int index = 1;
-        for (final Region reg : regions) {
+        for (final GraphRegion reg : regions) {
             for (Triangle tri : reg.computeTriangles()) {
                 BaseVector2f p0 = tri.getRegion().getCenter();
                 BaseVector2f p1 = tri.getCorner1().getLocation();

@@ -36,7 +36,7 @@ import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
 import org.terasology.nui.properties.Checkbox;
 import org.terasology.world.viewer.layers.AbstractFacetLayer;
@@ -122,7 +122,7 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     public String getWorldText(org.terasology.world.generation.Region region, int wx, int wy) {
         GraphFacet graphFacet = region.getFacet(GraphFacet.class);
         CirclePickerClosest<Corner> cornerPicker = new CirclePickerClosest<>(new Vector2f(wx, wy), c -> 3);
-        CirclePickerClosest<Region> sitePicker = new CirclePickerClosest<>(new Vector2f(wx, wy), r -> 3);
+        CirclePickerClosest<GraphRegion> sitePicker = new CirclePickerClosest<>(new Vector2f(wx, wy), r -> 3);
         for (Graph graph : graphFacet.getAllGraphs()) {
             if (graph.getBounds().contains(wx, wy)) {
                 Triangle tri = graphFacet.getWorldTriangle(wx, wy);
@@ -216,10 +216,10 @@ public class GraphFacetLayer extends AbstractFacetLayer {
         }
     }
 
-    public static void drawPolys(Graphics2D g, Graph graph, Function<Region, Color> colorFunc) {
-        List<Region> regions = graph.getRegions();
+    public static void drawPolys(Graphics2D g, Graph graph, Function<GraphRegion, Color> colorFunc) {
+        List<GraphRegion> regions = graph.getRegions();
 
-        for (final Region reg : regions) {
+        for (final GraphRegion reg : regions) {
 
             Color col = colorFunc.apply(reg);
             Collection<Corner> pts = reg.getCorners();
@@ -240,11 +240,11 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     }
 
     public static void drawTriangles(Graphics2D g, Graph graph) {
-        List<Region> regions = graph.getRegions();
+        List<GraphRegion> regions = graph.getRegions();
 
         g.setColor(new Color(64, 64, 255, 224));
 
-        for (final Region reg : regions) {
+        for (final GraphRegion reg : regions) {
             BaseVector2f p0 = reg.getCenter();
             for (Corner c : reg.getCorners()) {
                 BaseVector2f p1 = c.getLocation();
@@ -255,10 +255,10 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     }
 
     public static void drawSites(Graphics2D g, Graph graph) {
-        List<Region> centers = graph.getRegions();
+        List<GraphRegion> centers = graph.getRegions();
 
         g.setColor(Color.ORANGE);
-        for (Region regs : centers) {
+        for (GraphRegion regs : centers) {
             BaseVector2f c = regs.getCenter();
             g.fill(new Rectangle2D.Double(c.getX() - 1, c.getY() - 1, 2, 2));
         }

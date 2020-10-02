@@ -18,7 +18,7 @@ package org.terasology.polyworld.lava;
 
 import org.terasology.polyworld.elevation.ElevationModel;
 import org.terasology.polyworld.graph.Edge;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.water.WaterModel;
@@ -49,8 +49,8 @@ public class DefaultLavaModel implements LavaModel {
 
     @Override
     public boolean isLava(Edge edge) {
-        Region d0 = edge.getRegion0();
-        Region d1 = edge.getRegion1();
+        GraphRegion d0 = edge.getRegion0();
+        GraphRegion d1 = edge.getRegion1();
         return (riverModel.getRiverValue(edge) <= 0 && !waterModel.isWater(d0) && !waterModel.isWater(d1)
                 && elevationModel.getElevation(d0) > 0.8
                 && elevationModel.getElevation(d1) > 0.8

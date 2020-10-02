@@ -29,18 +29,18 @@ import com.google.common.collect.Sets;
 /**
  * Defines a polygon region (vornoi region)
  */
-public class Region {
+public class GraphRegion {
 
     private final Collection<Corner> corners;
     private final Collection<Edge> borders;
-    private final Collection<Region> neighbors;
+    private final Collection<GraphRegion> neighbors;
 
     private final ImmutableVector2f center;
 
     /**
      * @param centerPos the center of the region
      */
-    public Region(ImmutableVector2f centerPos) {
+    public GraphRegion(ImmutableVector2f centerPos) {
         this.center = centerPos;
         this.corners = Sets.newTreeSet(new AngleOrdering(centerPos));
         this.borders = Sets.newLinkedHashSet();
@@ -57,7 +57,7 @@ public class Region {
     /**
      * @return an unmodifiable collection of all neighbors in insertion order
      */
-    public Collection<Region> getNeighbors() {
+    public Collection<GraphRegion> getNeighbors() {
         return Collections.unmodifiableCollection(neighbors);
     }
 
@@ -71,7 +71,7 @@ public class Region {
     /**
      * @param region the region to add (can be null or already added)
      */
-    public void addNeigbor(Region region) {
+    public void addNeigbor(GraphRegion region) {
         if (region != null) {
             neighbors.add(region);
         }
