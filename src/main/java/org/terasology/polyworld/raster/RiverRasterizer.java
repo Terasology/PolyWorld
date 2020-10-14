@@ -89,8 +89,8 @@ public class RiverRasterizer implements WorldRasterizer {
 
                     for (Vector2i p : line) {
                         if (p.getX() >= region.minX() && p.getX() <= region.maxX() && p.getY() >= region.minZ() && p.getY() <= region.maxZ()) {
-                            int x = ChunkMath.calcRelativeBlockPos(p.getX(), ChunkConstants.INNER_CHUNK_POS_FILTER.x);
-                            int z = ChunkMath.calcRelativeBlockPos(p.getY(), ChunkConstants.INNER_CHUNK_POS_FILTER.z);
+                            int x = ChunkMath.calcRelativeBlockPos(p.getX(), ChunkConstants.INNER_CHUNK_POS_FILTER.x());
+                            int z = ChunkMath.calcRelativeBlockPos(p.getY(), ChunkConstants.INNER_CHUNK_POS_FILTER.z());
                             int y = TeraMath.floorToInt(surfaceHeightData.get(x, z));
                             Vector3i worldPos = new Vector3i(p.getX(), y, p.getY());
 
