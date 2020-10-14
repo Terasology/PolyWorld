@@ -19,14 +19,14 @@ package org.terasology.polyworld.debug;
 import java.awt.Color;
 import java.util.Random;
 
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 
 import com.google.common.base.Function;
 
 /**
  * TODO Type description
  */
-public class RandomColors implements Function<Region, Color> {
+public class RandomColors implements Function<GraphRegion, Color> {
     private Random r;
 
     public RandomColors() {
@@ -34,7 +34,7 @@ public class RandomColors implements Function<Region, Color> {
     }
 
     @Override
-    public Color apply(Region input) {
+    public Color apply(GraphRegion input) {
         return new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
     }
 

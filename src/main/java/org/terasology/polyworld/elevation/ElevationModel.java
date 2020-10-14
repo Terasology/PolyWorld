@@ -17,7 +17,7 @@
 package org.terasology.polyworld.elevation;
 
 import org.terasology.polyworld.graph.Corner;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 
 /**
  * Defines elevation
@@ -34,7 +34,7 @@ public interface ElevationModel {
      * @param r the region
      * @return the
      */
-    float getElevation(Region r);
+    float getElevation(GraphRegion r);
 
     /**
      * @param c the corner of interest

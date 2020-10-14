@@ -17,7 +17,7 @@
 package org.terasology.polyworld.elevation;
 
 import org.terasology.polyworld.graph.Corner;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 
 /**
  * Implementation-independent methods for {@link ElevationModel}s
@@ -25,7 +25,7 @@ import org.terasology.polyworld.graph.Region;
 public abstract class AbstractElevationModel implements ElevationModel {
 
     @Override
-    public float getElevation(Region r) {
+    public float getElevation(GraphRegion r) {
         float total = 0;
         for (Corner c : r.getCorners()) {
             total += getElevation(c);

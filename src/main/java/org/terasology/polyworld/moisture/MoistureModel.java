@@ -17,7 +17,7 @@
 package org.terasology.polyworld.moisture;
 
 import org.terasology.polyworld.graph.Corner;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 
 /**
  * TODO Type description
@@ -34,6 +34,6 @@ public interface MoistureModel {
      * @param r
      * @return
      */
-    float getMoisture(Region r);
+    float getMoisture(GraphRegion r);
 
 }

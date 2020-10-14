@@ -28,7 +28,7 @@ public interface Graph {
     /**
      * @return
      */
-    List<Region> getRegions();
+    List<GraphRegion> getRegions();
 
     /**
      * @return

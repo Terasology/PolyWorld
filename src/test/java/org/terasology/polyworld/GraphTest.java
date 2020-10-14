@@ -28,7 +28,7 @@ import org.terasology.math.geom.Rect2f;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 
 /**
  * Tests the correct representation of a {@link Graph}
@@ -68,8 +68,8 @@ public abstract class GraphTest {
     public void testGraphRelations() {
 
         for (Edge e : graph.getEdges()) {
-            Region r0 = e.getRegion0();
-            Region r1 = e.getRegion1();
+            GraphRegion r0 = e.getRegion0();
+            GraphRegion r1 = e.getRegion1();
 
             Corner c0 = e.getCorner0();
             Corner c1 = e.getCorner1();
@@ -97,7 +97,7 @@ public abstract class GraphTest {
     @Test
     public void testGraphCornerRegions() {
 
-        for (Region r : graph.getRegions()) {
+        for (GraphRegion r : graph.getRegions()) {
             Assert.assertTrue(graph.getCorners().containsAll(r.getCorners()));
         }
     }
@@ -119,7 +119,7 @@ public abstract class GraphTest {
 
     @Test
     public void testGraphRegionNeighborsSet() {
-        for (Region r : graph.getRegions()) {
+        for (GraphRegion r : graph.getRegions()) {
             Assert.assertFalse(r.getNeighbors().isEmpty());
         }
     }

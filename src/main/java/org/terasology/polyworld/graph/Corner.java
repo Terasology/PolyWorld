@@ -30,7 +30,7 @@ import com.google.common.collect.Sets;
  */
 public class Corner {
 
-    private final Set<Region> touches = Sets.newLinkedHashSet();
+    private final Set<GraphRegion> touches = Sets.newLinkedHashSet();
     private final Set<Corner> adjacent = Sets.newLinkedHashSet();
     private final Set<Edge> protrudes = Sets.newLinkedHashSet();
     private ImmutableVector2f loc;
@@ -62,7 +62,7 @@ public class Corner {
     /**
      * @param region the touching region to add (can be null or already added)
      */
-    public void addTouches(Region region) {
+    public void addTouches(GraphRegion region) {
         if (region != null) {
             touches.add(region);
         }
@@ -85,7 +85,7 @@ public class Corner {
     /**
      * @return the touches
      */
-    public Collection<Region> getTouches() {
+    public Collection<GraphRegion> getTouches() {
         return Collections.unmodifiableSet(touches);
     }
 

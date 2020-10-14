@@ -29,7 +29,7 @@ import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Rect2f;
 import org.terasology.math.geom.Vector2f;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.VoronoiGraph;
 
 /**
@@ -58,9 +58,9 @@ public class VoronoiGraphTest extends GraphTest {
 
     @Test
     public void testRegionAndSiteMatch() {
-        List<Region> regions = graph.getRegions();
+        List<GraphRegion> regions = graph.getRegions();
         Assert.assertEquals("Number of regions differs from number of input sites", points.size(), regions.size());
-        for (Region reg : regions) {
+        for (GraphRegion reg : regions) {
             Assert.assertTrue(points.contains(reg.getCenter()));
         }
     }

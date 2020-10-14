@@ -20,7 +20,7 @@ import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.Facet;
@@ -59,7 +59,7 @@ public class WhittakerBiomeProvider implements FacetProvider {
             }
 
             Triangle tri = graphFacet.getWorldTriangle(pos.x(), pos.y());
-            Region r = tri.getRegion();
+            GraphRegion r = tri.getRegion();
 
             WhittakerBiome biome = model.getBiome(r);
 

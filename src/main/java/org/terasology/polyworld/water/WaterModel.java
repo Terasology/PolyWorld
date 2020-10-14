@@ -17,7 +17,7 @@
 package org.terasology.polyworld.water;
 
 import org.terasology.polyworld.graph.Corner;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 
 /**
  * Defines how water is distributed in the graph
@@ -26,13 +26,13 @@ public interface WaterModel {
 
     boolean isWater(Corner c);
 
-    boolean isWater(Region p);
+    boolean isWater(GraphRegion p);
 
     boolean isOcean(Corner c);
 
-    boolean isOcean(Region p);
+    boolean isOcean(GraphRegion p);
 
     boolean isCoast(Corner c);
 
-    boolean isCoast(Region p);
+    boolean isCoast(GraphRegion p);
 }

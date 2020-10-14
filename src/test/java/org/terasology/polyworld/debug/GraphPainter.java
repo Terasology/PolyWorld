@@ -31,7 +31,7 @@ import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
 
 import com.google.common.base.Function;
@@ -68,10 +68,10 @@ public class GraphPainter {
         }
     }
 
-    public void drawPolys(Graphics2D g, Graph graph, Function<Region, Color> colorFunc) {
-        List<Region> regions = graph.getRegions();
+    public void drawPolys(Graphics2D g, Graph graph, Function<GraphRegion, Color> colorFunc) {
+        List<GraphRegion> regions = graph.getRegions();
 
-        for (final Region reg : regions) {
+        for (final GraphRegion reg : regions) {
 
             Color col = colorFunc.apply(reg);
             Collection<Corner> pts = reg.getCorners();
@@ -92,11 +92,11 @@ public class GraphPainter {
     }
 
     public void drawTriangles(Graphics2D g, Graph graph) {
-        List<Region> regions = graph.getRegions();
+        List<GraphRegion> regions = graph.getRegions();
 
         Random r = new Random(12332434);
 
-        for (final Region reg : regions) {
+        for (final GraphRegion reg : regions) {
             for (Triangle tri : reg.computeTriangles()) {
                 g.setColor(new Color(r.nextInt(0xFFFFFF)));
                 BaseVector2f p0 = tri.getRegion().getCenter();
@@ -114,10 +114,10 @@ public class GraphPainter {
     }
 
     public void drawSites(Graphics2D g, Graph graph) {
-        List<Region> centers = graph.getRegions();
+        List<GraphRegion> centers = graph.getRegions();
 
         g.setColor(Color.BLACK);
-        for (Region s : centers) {
+        for (GraphRegion s : centers) {
             g.fillOval((int) (s.getCenter().getX() - 2), (int) (s.getCenter().getY() - 2), 4, 4);
         }
     }

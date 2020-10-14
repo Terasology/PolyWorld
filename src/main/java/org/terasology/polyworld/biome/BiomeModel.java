@@ -16,11 +16,11 @@
 
 package org.terasology.polyworld.biome;
 
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 
 /**
  * TODO Type description
  */
 public interface BiomeModel {
-    WhittakerBiome getBiome(Region center);
+    WhittakerBiome getBiome(GraphRegion center);
 }

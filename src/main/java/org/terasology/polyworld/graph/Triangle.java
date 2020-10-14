@@ -27,7 +27,7 @@ import com.google.common.base.Preconditions;
  */
 public class Triangle {
 
-    private final Region region;
+    private final GraphRegion region;
     private final Corner c1;
     private final Corner c2;
 
@@ -36,7 +36,7 @@ public class Triangle {
      * @param c1
      * @param c2
      */
-    public Triangle(Region region, Corner c1, Corner c2) {
+    public Triangle(GraphRegion region, Corner c1, Corner c2) {
         Preconditions.checkArgument(region != null);
         Preconditions.checkArgument(c1 != null);
         Preconditions.checkArgument(c2 != null);
@@ -47,7 +47,7 @@ public class Triangle {
         this.c2 = c2;
     }
 
-    public Region getRegion() {
+    public GraphRegion getRegion() {
         return region;
     }
 

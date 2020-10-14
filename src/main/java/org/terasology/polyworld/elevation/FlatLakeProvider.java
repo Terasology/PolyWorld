@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
-import org.terasology.polyworld.graph.Region;
+import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.water.WaterModel;
 import org.terasology.polyworld.water.WaterModelFacet;
 import org.terasology.world.generation.Facet;
@@ -66,13 +66,13 @@ public class FlatLakeProvider implements FacetProvider {
     }
 
     private ElevationModel flattenLakes(Graph graph, ElevationModel elevationModel, WaterModel waterModel) {
-        Set<Region> found = Sets.newHashSet();
-        Predicate<Region> isLake = r -> waterModel.isWater(r) && !waterModel.isOcean(r);
+        Set<GraphRegion> found = Sets.newHashSet();
+        Predicate<GraphRegion> isLake = r -> waterModel.isWater(r) && !waterModel.isOcean(r);
 
         FlatLakeElevationModel flatModel = new FlatLakeElevationModel(elevationModel);
-        for (Region r : graph.getRegions()) {
+        for (GraphRegion r : graph.getRegions()) {
             if (isLake.test(r) && !found.contains(r)) {
-                Collection<Region> lake = floodFill(r, isLake);
+                Collection<GraphRegion> lake = floodFill(r, isLake);
                 flattenLake(flatModel, lake);
                 found.addAll(lake);
             }
@@ -81,16 +81,16 @@ public class FlatLakeProvider implements FacetProvider {
         return flatModel;
     }
 
-    private Collection<Region> floodFill(Region start, Predicate<Region> pred) {
-        Collection<Region> lake = new HashSet<Region>();
+    private Collection<GraphRegion> floodFill(GraphRegion start, Predicate<GraphRegion> pred) {
+        Collection<GraphRegion> lake = new HashSet<GraphRegion>();
         lake.add(start);
 
-        Deque<Region> queue = new LinkedList<>();
+        Deque<GraphRegion> queue = new LinkedList<>();
         queue.add(start);
 
         while (!queue.isEmpty()) {
-            Region next = queue.pop();
-            for (Region n : next.getNeighbors()) {
+            GraphRegion next = queue.pop();
+            for (GraphRegion n : next.getNeighbors()) {
                 if (pred.test(n) && !lake.contains(n) && !queue.contains(n)) {
                     lake.add(n);
                     queue.add(n);
@@ -100,10 +100,10 @@ public class FlatLakeProvider implements FacetProvider {
         return lake;
     }
 
-    private void flattenLake(FlatLakeElevationModel elevationModel, Collection<Region> lake) {
+    private void flattenLake(FlatLakeElevationModel elevationModel, Collection<GraphRegion> lake) {
 
         float minHeight = Float.POSITIVE_INFINITY;
-        for (Region r : lake) {
+        for (GraphRegion r : lake) {
             float elevation = elevationModel.getElevation(r);
             if (minHeight >= elevation) {
                 minHeight = elevation;
@@ -111,7 +111,7 @@ public class FlatLakeProvider implements FacetProvider {
         }
 
         // assign target height to all corners
-        for (Region r : lake) {
+        for (GraphRegion r : lake) {
             for (Corner c : r.getCorners()) {
                 elevationModel.setElevation(c, minHeight);
             }
