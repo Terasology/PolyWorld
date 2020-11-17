@@ -15,9 +15,9 @@
  */
 package org.terasology.polyworld.flora;
 
-import java.util.List;
-import java.util.Map;
-
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import org.terasology.biomesAPI.Biome;
 import org.terasology.core.world.generator.facetProviders.PositionFilters;
 import org.terasology.core.world.generator.facetProviders.SurfaceObjectProvider;
@@ -25,28 +25,28 @@ import org.terasology.core.world.generator.facets.FloraFacet;
 import org.terasology.core.world.generator.rasterizers.FloraType;
 import org.terasology.entitySystem.Component;
 import org.terasology.math.geom.Vector3i;
+import org.terasology.nui.properties.Range;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeFacet;
-import org.terasology.nui.properties.Range;
 import org.terasology.utilities.procedural.Noise;
 import org.terasology.utilities.procedural.WhiteNoise;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.Facet;
+import org.terasology.world.generation.FacetBorder;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 import org.terasology.world.generation.Requires;
 import org.terasology.world.generation.facets.SeaLevelFacet;
-import org.terasology.world.generation.facets.SurfaceHeightFacet;
+import org.terasology.world.generation.facets.SurfacesFacet;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Determines where plants can be placed.  Will put plants one block above the surface if it is in the correct biome.
  */
 @Produces(FloraFacet.class)
-@Requires({@Facet(SurfaceHeightFacet.class), @Facet(WhittakerBiomeFacet.class)})
+@Requires({@Facet(value = SurfacesFacet.class, border = @FacetBorder(bottom = 1)), @Facet(WhittakerBiomeFacet.class)})
 public class FloraProvider extends SurfaceObjectProvider<Biome, FloraType> implements ConfigurableFacetProvider {
 
     private Noise densityNoiseGen;
@@ -96,7 +96,7 @@ public class FloraProvider extends SurfaceObjectProvider<Biome, FloraType> imple
 
     @Override
     public void process(GeneratingRegion region) {
-        SurfaceHeightFacet surface = region.getRegionFacet(SurfaceHeightFacet.class);
+        SurfacesFacet surface = region.getRegionFacet(SurfacesFacet.class);
         WhittakerBiomeFacet biomeFacet = region.getRegionFacet(WhittakerBiomeFacet.class);
         SeaLevelFacet seaLevel = region.getRegionFacet(SeaLevelFacet.class);
 

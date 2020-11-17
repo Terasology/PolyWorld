@@ -16,6 +16,7 @@
 package org.terasology.polyworld;
 
 import org.terasology.core.world.generator.facetProviders.SeaLevelProvider;
+import org.terasology.core.world.generator.facetProviders.SurfaceToDensityProvider;
 import org.terasology.core.world.generator.rasterizers.FloraRasterizer;
 import org.terasology.core.world.generator.rasterizers.TreeRasterizer;
 import org.terasology.engine.SimpleUri;
@@ -73,6 +74,7 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
                 .addProvider(new WaterModelFacetProvider(maxCacheSize))
                 .addProvider(new ElevationModelFacetProvider(maxCacheSize))
                 .addProvider(new ElevationProvider())
+                .addProvider(new SurfaceToDensityProvider())
                 .addProvider(new RiverModelFacetProvider(maxCacheSize))
                 .addProvider(new FlatLakeProvider())
                 .addProvider(new MoistureModelFacetProvider(maxCacheSize))

@@ -34,8 +34,8 @@ import org.terasology.world.chunks.ChunkConstants;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.WorldRasterizer;
+import org.terasology.world.generation.facets.ElevationFacet;
 import org.terasology.world.generation.facets.SeaLevelFacet;
-import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -63,7 +63,7 @@ public class RiverRasterizer implements WorldRasterizer {
         GraphFacet graphFacet = chunkRegion.getFacet(GraphFacet.class);
         SeaLevelFacet seaLevelFacet = chunkRegion.getFacet(SeaLevelFacet.class);
         RiverModelFacet riverModelFacet = chunkRegion.getFacet(RiverModelFacet.class);
-        SurfaceHeightFacet surfaceHeightData = chunkRegion.getFacet(SurfaceHeightFacet.class);
+        ElevationFacet elevationFacet = chunkRegion.getFacet(ElevationFacet.class);
 
         Region3i region = chunkRegion.getRegion();
         int seaLevel = seaLevelFacet.getSeaLevel();
@@ -91,7 +91,7 @@ public class RiverRasterizer implements WorldRasterizer {
                         if (p.getX() >= region.minX() && p.getX() <= region.maxX() && p.getY() >= region.minZ() && p.getY() <= region.maxZ()) {
                             int x = ChunkMath.calcRelativeBlockPos(p.getX(), ChunkConstants.INNER_CHUNK_POS_FILTER.x());
                             int z = ChunkMath.calcRelativeBlockPos(p.getY(), ChunkConstants.INNER_CHUNK_POS_FILTER.z());
-                            int y = TeraMath.floorToInt(surfaceHeightData.get(x, z));
+                            int y = TeraMath.floorToInt(elevationFacet.get(x, z));
                             Vector3i worldPos = new Vector3i(p.getX(), y, p.getY());
 
                             placeWaterBody(chunk, region, worldPos, structElem, seaLevel);
