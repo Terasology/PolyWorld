@@ -15,8 +15,8 @@
  */
 package org.terasology.polyworld.flora;
 
-import java.util.List;
-
+import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 import org.terasology.core.world.generator.facetProviders.PositionFilters;
 import org.terasology.core.world.generator.facetProviders.SurfaceObjectProvider;
 import org.terasology.core.world.generator.facets.TreeFacet;
@@ -24,9 +24,9 @@ import org.terasology.core.world.generator.trees.TreeGenerator;
 import org.terasology.core.world.generator.trees.Trees;
 import org.terasology.entitySystem.Component;
 import org.terasology.math.geom.Vector3i;
+import org.terasology.nui.properties.Range;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeFacet;
-import org.terasology.nui.properties.Range;
 import org.terasology.utilities.procedural.Noise;
 import org.terasology.utilities.procedural.WhiteNoise;
 import org.terasology.world.generation.Border3D;
@@ -37,10 +37,9 @@ import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 import org.terasology.world.generation.Requires;
 import org.terasology.world.generation.facets.SeaLevelFacet;
-import org.terasology.world.generation.facets.SurfaceHeightFacet;
+import org.terasology.world.generation.facets.SurfacesFacet;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
+import java.util.List;
 
 /**
  * Determines where trees can be placed.  Will put trees one block above the surface.
@@ -48,7 +47,7 @@ import com.google.common.collect.Lists;
 @Produces(TreeFacet.class)
 @Requires({
         @Facet(value = SeaLevelFacet.class, border = @FacetBorder(sides = 12)),
-        @Facet(value = SurfaceHeightFacet.class, border = @FacetBorder(sides = 12 + 1)),
+        @Facet(value = SurfacesFacet.class, border = @FacetBorder(sides = 12 + 1, bottom = 1)),
         @Facet(value = WhittakerBiomeFacet.class, border = @FacetBorder(sides = 12))
 })
 public class TreeProvider extends SurfaceObjectProvider<WhittakerBiome, TreeGenerator> implements ConfigurableFacetProvider {
@@ -96,7 +95,7 @@ public class TreeProvider extends SurfaceObjectProvider<WhittakerBiome, TreeGene
 
     @Override
     public void process(GeneratingRegion region) {
-        SurfaceHeightFacet surface = region.getRegionFacet(SurfaceHeightFacet.class);
+        SurfacesFacet surface = region.getRegionFacet(SurfacesFacet.class);
         WhittakerBiomeFacet biome = region.getRegionFacet(WhittakerBiomeFacet.class);
         SeaLevelFacet seaLevel = region.getRegionFacet(SeaLevelFacet.class);
 

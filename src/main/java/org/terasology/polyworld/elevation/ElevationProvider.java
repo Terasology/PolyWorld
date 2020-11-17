@@ -16,13 +16,11 @@
 
 package org.terasology.polyworld.elevation;
 
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Vector2f;
-import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.Triangle;
@@ -32,16 +30,16 @@ import org.terasology.world.generation.FacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 import org.terasology.world.generation.Requires;
+import org.terasology.world.generation.facets.ElevationFacet;
 import org.terasology.world.generation.facets.SeaLevelFacet;
-import org.terasology.world.generation.facets.SurfaceHeightFacet;
 
-import com.google.common.base.Stopwatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Converts graph-based elevation information of the {@link ElevationModelFacet}
  * into a continuous area.
  */
-@Produces(SurfaceHeightFacet.class)
+@Produces(ElevationFacet.class)
 @Requires({
         @Facet(SeaLevelFacet.class),
         @Facet(ElevationModelFacet.class),
@@ -64,8 +62,8 @@ public class ElevationProvider implements FacetProvider {
 
     @Override
     public void process(GeneratingRegion region) {
-        Border3D border = region.getBorderForFacet(SurfaceHeightFacet.class);
-        SurfaceHeightFacet facet = new SurfaceHeightFacet(region.getRegion(), border);
+        Border3D border = region.getBorderForFacet(ElevationFacet.class);
+        ElevationFacet facet = new ElevationFacet(region.getRegion(), border);
 
         ElevationModelFacet elevationModelFacet = region.getRegionFacet(ElevationModelFacet.class);
         SeaLevelFacet seaLevelFacet = region.getRegionFacet(SeaLevelFacet.class);
@@ -116,7 +114,7 @@ public class ElevationProvider implements FacetProvider {
             logger.trace("Created elevation facet for {} in {}ms.", facet.getWorldRegion(), sw.elapsed(TimeUnit.MILLISECONDS));
         }
 
-        region.setRegionFacet(SurfaceHeightFacet.class, facet);
+        region.setRegionFacet(ElevationFacet.class, facet);
     }
 
     private float convertModelElevation(float seaLevel, float seaFloor, float maxHeight, float ele) {

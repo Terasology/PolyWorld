@@ -16,7 +16,6 @@
 package org.terasology.polyworld.raster;
 
 import org.terasology.biomesAPI.BiomeRegistry;
-import org.terasology.math.TeraMath;
 import org.terasology.math.geom.Vector3i;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeFacet;
@@ -26,8 +25,9 @@ import org.terasology.world.block.BlockManager;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.WorldRasterizer;
+import org.terasology.world.generation.facets.DensityFacet;
 import org.terasology.world.generation.facets.SeaLevelFacet;
-import org.terasology.world.generation.facets.SurfaceHeightFacet;
+import org.terasology.world.generation.facets.SurfacesFacet;
 
 /**
  */
@@ -57,7 +57,8 @@ public class WhittakerRasterizer implements WorldRasterizer {
 
     @Override
     public void generateChunk(CoreChunk chunk, Region chunkRegion) {
-        SurfaceHeightFacet surfaceHeightData = chunkRegion.getFacet(SurfaceHeightFacet.class);
+        SurfacesFacet surfacesFacet = chunkRegion.getFacet(SurfacesFacet.class);
+        DensityFacet densityFacet = chunkRegion.getFacet(DensityFacet.class);
         SeaLevelFacet seaLevelFacet = chunkRegion.getFacet(SeaLevelFacet.class);
         WhittakerBiomeFacet biomeFacet = chunkRegion.getFacet(WhittakerBiomeFacet.class);
         int seaLevel = seaLevelFacet.getSeaLevel();
@@ -66,21 +67,21 @@ public class WhittakerRasterizer implements WorldRasterizer {
         for (int x = 0; x < chunk.getChunkSizeX(); ++x) {
             for (int z = 0; z < chunk.getChunkSizeZ(); ++z) {
 
-                float surfaceHeight = surfaceHeightData.get(x, z);
-                int surfaceHeightInt = TeraMath.floorToInt(surfaceHeight);
-
                 WhittakerBiome biome = biomeFacet.get(x, z);
 
                 for (int y = 0; y < chunk.getChunkSizeY(); ++y) {
 
                     biomeRegistry.setBiome(biome, chunk, x, y, z);
 
-                    int depth = surfaceHeightInt - y - chunk.getChunkWorldOffsetY();
-                    if (depth >= 0) {
-                        Block block = getSurfaceBlock(depth, biome);
-                        chunk.setBlock(x, y, z, block);
-                    } else
-                    if (y + chunkOffset.y <= seaLevel) {
+                    float density = densityFacet.get(x, y, z);
+
+                    if (surfacesFacet.get(x, y, z)) {
+                        chunk.setBlock(x, y, z, getSurfaceBlock(biome));
+                    } else if (density > 8) {
+                        chunk.setBlock(x, y, z, stone);
+                    } else if (density > 0) {
+                        chunk.setBlock(x, y, z, dirt);
+                    } else if (y + chunkOffset.y <= seaLevel) {
                         chunk.setBlock(x, y, z, water);
                     }
                 }
@@ -88,21 +89,15 @@ public class WhittakerRasterizer implements WorldRasterizer {
         }
     }
 
-    private Block getSurfaceBlock(int depth, WhittakerBiome type) {
-        if (depth > 8) {
-            return stone;
-        }
-
-        if (depth > 1) {
-            return dirt;
-        }
-
+    private Block getSurfaceBlock(WhittakerBiome type) {
         switch (type) {
             case TROPICAL_RAIN_FOREST:
             case TROPICAL_SEASONAL_FOREST:
             case GRASSLAND:
             case MARSH:
             case SHRUBLAND:
+            case TEMPERATE_DECIDUOUS_FOREST:
+            case TEMPERATE_RAIN_FOREST:
                 return grass;
 
             case TAIGA:
@@ -110,10 +105,6 @@ public class WhittakerRasterizer implements WorldRasterizer {
 
             case SNOW:
                 return snow;
-
-            case TEMPERATE_DECIDUOUS_FOREST:
-            case TEMPERATE_RAIN_FOREST:
-                return grass;
 
             case TUNDRA:
             case SCORCHED:
@@ -125,8 +116,6 @@ public class WhittakerRasterizer implements WorldRasterizer {
             case LAKESHORE:
             case SUBTROPICAL_DESERT:
             case TEMPERATE_DESERT:
-                return sand;
-
             case ICE:
                 return sand;
 
