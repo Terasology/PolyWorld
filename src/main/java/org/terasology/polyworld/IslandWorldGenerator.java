@@ -23,6 +23,7 @@ import org.terasology.engine.SimpleUri;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.spawner.FixedSpawner;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.Region3i;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Vector2f;
@@ -124,6 +125,6 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
         }
 
         FixedSpawner spawner = new FixedSpawner(target.getX(), target.getY());
-        return spawner.getSpawnPosition(getWorld(), entity);
+        return JomlUtil.from(spawner.getSpawnPosition(getWorld(), entity));
     }
 }
