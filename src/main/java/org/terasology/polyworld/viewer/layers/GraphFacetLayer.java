@@ -72,8 +72,8 @@ public class GraphFacetLayer extends AbstractFacetLayer {
 
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        int dx = region.getRegion().minX();
-        int dy = region.getRegion().minZ();
+        int dx = region.getRegion().getMinX();
+        int dy = region.getRegion().getMinZ();
         g.translate(-dx, -dy);
         for (Graph graph : graphFacet.getAllGraphs()) {
             if (config.showEdges) {

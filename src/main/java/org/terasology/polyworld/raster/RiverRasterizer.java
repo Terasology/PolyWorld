@@ -30,6 +30,7 @@ import org.terasology.polyworld.rivers.RiverModelFacet;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockManager;
+import org.terasology.world.block.BlockRegion;
 import org.terasology.world.chunks.ChunkConstants;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
@@ -65,7 +66,7 @@ public class RiverRasterizer implements WorldRasterizer {
         RiverModelFacet riverModelFacet = chunkRegion.getFacet(RiverModelFacet.class);
         ElevationFacet elevationFacet = chunkRegion.getFacet(ElevationFacet.class);
 
-        Region3i region = chunkRegion.getRegion();
+        BlockRegion region = chunkRegion.getRegion();
         int seaLevel = seaLevelFacet.getSeaLevel();
 
 
@@ -88,7 +89,7 @@ public class RiverRasterizer implements WorldRasterizer {
                     Collection<Vector2i> line = bresenhamCollector.getLinePoints();
 
                     for (Vector2i p : line) {
-                        if (p.getX() >= region.minX() && p.getX() <= region.maxX() && p.getY() >= region.minZ() && p.getY() <= region.maxZ()) {
+                        if (p.getX() >= region.getMinX() && p.getX() <= region.getMaxX() && p.getY() >= region.getMinZ() && p.getY() <= region.getMaxZ()) {
                             int x = ChunkMath.calcRelativeBlockPos(p.getX(), ChunkConstants.INNER_CHUNK_POS_FILTER.x());
                             int z = ChunkMath.calcRelativeBlockPos(p.getY(), ChunkConstants.INNER_CHUNK_POS_FILTER.z());
                             int y = TeraMath.floorToInt(elevationFacet.get(x, z));
@@ -135,7 +136,7 @@ public class RiverRasterizer implements WorldRasterizer {
      * @param structElem the structuring element for block placement
      * @param seaLevel
      */
-    private void placeWaterBody(CoreChunk chunk, Region3i region, Vector3i worldPos, int[][] structElem, int seaLevel) {
+    private void placeWaterBody(CoreChunk chunk, BlockRegion region, Vector3i worldPos, int[][] structElem, int seaLevel) {
         int radius = (structElem.length - 1) / 2;
         Vector3i pos;
 
@@ -145,7 +146,7 @@ public class RiverRasterizer implements WorldRasterizer {
                     pos = new Vector3i(worldPos.add(dx, 0, dz));
 
                     // remove top layer (soil)
-                    if (region.encompasses(pos.x, pos.y, pos.z)) {
+                    if (region.containsBlock(pos.x, pos.y, pos.z)) {
                         chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos.x, pos.y, pos.z), air);
                     }
 
@@ -153,7 +154,7 @@ public class RiverRasterizer implements WorldRasterizer {
                     if (pos.y > seaLevel) {
                         pos.y -= 1;
                     }
-                    if (region.encompasses(pos.x, pos.y, pos.z)) {
+                    if (region.containsBlock(pos.x, pos.y, pos.z)) {
                         chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos.x, pos.y, pos.z), water);
                     }
                 }

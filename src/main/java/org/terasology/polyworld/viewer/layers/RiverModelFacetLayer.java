@@ -48,8 +48,8 @@ public class RiverModelFacetLayer extends AbstractFacetLayer {
         RiverModelFacet riverModelFacet = region.getFacet(RiverModelFacet.class);
 
         Graphics2D g = img.createGraphics();
-        int dx = region.getRegion().minX();
-        int dy = region.getRegion().minZ();
+        int dx = region.getRegion().getMinX();
+        int dy = region.getRegion().getMinZ();
         g.translate(-dx, -dy);
 
         for (Graph graph : riverModelFacet.getKeys()) {

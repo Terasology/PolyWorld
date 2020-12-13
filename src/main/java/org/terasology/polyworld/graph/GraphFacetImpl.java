@@ -25,6 +25,7 @@ import org.terasology.math.Region3i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.rp.WorldRegion;
+import org.terasology.world.block.BlockRegion;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.facets.base.BaseFacet2D;
 
@@ -41,7 +42,7 @@ public class GraphFacetImpl extends BaseFacet2D implements GraphFacet {
     private final Map<WorldRegion, Graph> graphs = Maps.newLinkedHashMap();
     private final List<TriangleLookup> lookups = Lists.newArrayList();
 
-    public GraphFacetImpl(Region3i targetRegion, Border3D border) {
+    public GraphFacetImpl(BlockRegion targetRegion, Border3D border) {
         super(targetRegion, border);
     }
 

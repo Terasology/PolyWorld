@@ -17,13 +17,13 @@ package org.terasology.polyworld.flora;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+import org.joml.Vector3i;
 import org.terasology.core.world.generator.facetProviders.PositionFilters;
 import org.terasology.core.world.generator.facetProviders.SurfaceObjectProvider;
 import org.terasology.core.world.generator.facets.TreeFacet;
 import org.terasology.core.world.generator.trees.TreeGenerator;
 import org.terasology.core.world.generator.trees.Trees;
 import org.terasology.entitySystem.Component;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.nui.properties.Range;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeFacet;

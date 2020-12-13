@@ -16,28 +16,27 @@
 
 package org.terasology.polyworld.rp;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Lists;
+import org.joml.Vector3i;
 import org.terasology.commonworld.Sector;
 import org.terasology.commonworld.Sectors;
 import org.terasology.entitySystem.Component;
 import org.terasology.math.geom.Rect2i;
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.nui.properties.Range;
 import org.terasology.utilities.procedural.Noise;
 import org.terasology.utilities.procedural.WhiteNoise;
+import org.terasology.world.block.BlockRegion;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Lists;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * TODO Type description
@@ -104,10 +103,10 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         Border3D border = region.getBorderForFacet(WorldRegionFacet.class);
         WorldRegionFacet facet = new WorldRegionFacet(region.getRegion(), border);
 
-        Region3i worldRegion = facet.getWorldRegion();
+        BlockRegion worldRegion = facet.getWorldRegion();
 
-        Vector3i min = worldRegion.min();
-        Vector3i max = worldRegion.max();
+        Vector3i min = worldRegion.getMin(new Vector3i());
+        Vector3i max = worldRegion.getMax(new Vector3i());
         Sector minSec = Sectors.getSectorForBlock(min.x, min.z);
         Sector maxSec = Sectors.getSectorForBlock(max.x, max.z);
 

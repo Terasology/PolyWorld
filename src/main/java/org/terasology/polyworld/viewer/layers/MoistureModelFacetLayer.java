@@ -81,8 +81,8 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
         Stopwatch sw = Stopwatch.createStarted();
 
         Graphics2D g = img.createGraphics();
-        int dx = region.getRegion().minX();
-        int dy = region.getRegion().minZ();
+        int dx = region.getRegion().getMinX();
+        int dy = region.getRegion().getMinZ();
         g.translate(-dx, -dy);
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

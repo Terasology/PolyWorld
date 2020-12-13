@@ -16,14 +16,13 @@
 
 package org.terasology.polyworld;
 
+import org.joml.Vector3i;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.engine.SimpleUri;
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeModelFacet;
@@ -32,6 +31,8 @@ import org.terasology.polyworld.elevation.ElevationModelFacet;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
+import org.terasology.world.block.BlockRegion;
+import org.terasology.world.block.BlockRegions;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.World;
 
@@ -90,7 +91,7 @@ public class FlatLakeTest {
 
     private Region createRegion(int minX, int minY, int maxX, int maxY) {
 
-        Region3i area3d = Region3i.createFromMinMax(new Vector3i(minX, 0, minY), new Vector3i(maxX, 1, maxY));
+        BlockRegion area3d = BlockRegions.createFromMinAndMax(new Vector3i(minX, 0, minY), new Vector3i(maxX, 1, maxY));
         World world = worldGen.getWorld();
         Region region = world.getWorldData(area3d);
 

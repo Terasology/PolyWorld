@@ -16,6 +16,7 @@
 package org.terasology.polyworld.biome;
 
 import org.terasology.math.Region3i;
+import org.terasology.world.block.BlockRegion;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.facets.base.BaseObjectFacet2D;
 
@@ -24,7 +25,7 @@ import org.terasology.world.generation.facets.base.BaseObjectFacet2D;
  */
 public class WhittakerBiomeFacet extends BaseObjectFacet2D<WhittakerBiome> {
 
-    public WhittakerBiomeFacet(Region3i targetRegion, Border3D border) {
+    public WhittakerBiomeFacet(BlockRegion targetRegion, Border3D border) {
         super(targetRegion, border, WhittakerBiome.class);
     }
 }
