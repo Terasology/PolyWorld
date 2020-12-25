@@ -24,7 +24,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.spawner.FixedSpawner;
 import org.terasology.math.JomlUtil;
-import org.terasology.math.Region3i;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Vector2f;
 import org.terasology.math.geom.Vector2i;
@@ -51,7 +50,6 @@ import org.terasology.polyworld.rp.WorldRegionFacetProvider;
 import org.terasology.polyworld.water.WaterModelFacetProvider;
 import org.terasology.registry.CoreRegistry;
 import org.terasology.world.block.BlockRegion;
-import org.terasology.world.block.BlockRegions;
 import org.terasology.world.generation.BaseFacetedWorldGenerator;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.WorldBuilder;
@@ -101,7 +99,7 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
         Vector3i desiredPos = new Vector3i(pos.getX(), 1, pos.getZ());
 
         // try and find somewhere in this region a spot to land
-        BlockRegion spawnArea = BlockRegions.createFromCenterAndExtents(JomlUtil.from(desiredPos), JomlUtil.from(ext));
+        BlockRegion spawnArea = new BlockRegion(JomlUtil.from(desiredPos)).expand(JomlUtil.from(ext));
         Region worldRegion = getWorld().getWorldData(spawnArea);
 
         GraphFacet graphs = worldRegion.getFacet(GraphFacet.class);

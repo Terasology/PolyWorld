@@ -16,6 +16,25 @@
 
 package org.terasology.polyworld.viewer.layers;
 
+import com.google.common.base.Stopwatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.Vector2f;
+import org.terasology.nui.properties.Checkbox;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.moisture.MoistureModel;
+import org.terasology.polyworld.moisture.MoistureModelFacet;
+import org.terasology.polyworld.water.WaterModel;
+import org.terasology.polyworld.water.WaterModelFacet;
+import org.terasology.world.generation.Region;
+import org.terasology.world.viewer.layers.AbstractFacetLayer;
+import org.terasology.world.viewer.layers.FacetLayerConfig;
+import org.terasology.world.viewer.layers.Renders;
+import org.terasology.world.viewer.layers.ZOrder;
+import org.terasology.world.viewer.picker.CirclePickerClosest;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -24,26 +43,6 @@ import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.Vector2f;
-import org.terasology.polyworld.graph.Corner;
-import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.moisture.MoistureModel;
-import org.terasology.polyworld.moisture.MoistureModelFacet;
-import org.terasology.polyworld.water.WaterModel;
-import org.terasology.polyworld.water.WaterModelFacet;
-import org.terasology.nui.properties.Checkbox;
-import org.terasology.world.generation.Region;
-import org.terasology.world.viewer.layers.AbstractFacetLayer;
-import org.terasology.world.viewer.layers.FacetLayerConfig;
-import org.terasology.world.viewer.layers.Renders;
-import org.terasology.world.viewer.layers.ZOrder;
-import org.terasology.world.viewer.picker.CirclePickerClosest;
-
-import com.google.common.base.Stopwatch;
 
 /**
  * TODO Convert this into a more general class that supports different graph-based value look-ups
@@ -81,8 +80,8 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
         Stopwatch sw = Stopwatch.createStarted();
 
         Graphics2D g = img.createGraphics();
-        int dx = region.getRegion().getMinX();
-        int dy = region.getRegion().getMinZ();
+        int dx = region.getRegion().minX();
+        int dy = region.getRegion().minZ();
         g.translate(-dx, -dy);
 
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

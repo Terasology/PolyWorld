@@ -18,7 +18,6 @@ package org.terasology.polyworld.raster;
 import org.terasology.commonworld.geom.BresenhamCollectorVisitor;
 import org.terasology.commonworld.geom.BresenhamLineIterator;
 import org.terasology.math.ChunkMath;
-import org.terasology.math.Region3i;
 import org.terasology.math.TeraMath;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.math.geom.Vector3i;
@@ -89,7 +88,7 @@ public class RiverRasterizer implements WorldRasterizer {
                     Collection<Vector2i> line = bresenhamCollector.getLinePoints();
 
                     for (Vector2i p : line) {
-                        if (p.getX() >= region.getMinX() && p.getX() <= region.getMaxX() && p.getY() >= region.getMinZ() && p.getY() <= region.getMaxZ()) {
+                        if (p.getX() >= region.minX() && p.getX() <= region.maxX() && p.getY() >= region.minZ() && p.getY() <= region.maxZ()) {
                             int x = ChunkMath.calcRelativeBlockPos(p.getX(), ChunkConstants.INNER_CHUNK_POS_FILTER.x());
                             int z = ChunkMath.calcRelativeBlockPos(p.getY(), ChunkConstants.INNER_CHUNK_POS_FILTER.z());
                             int y = TeraMath.floorToInt(elevationFacet.get(x, z));
@@ -146,7 +145,7 @@ public class RiverRasterizer implements WorldRasterizer {
                     pos = new Vector3i(worldPos.add(dx, 0, dz));
 
                     // remove top layer (soil)
-                    if (region.containsBlock(pos.x, pos.y, pos.z)) {
+                    if (region.contains(pos.x, pos.y, pos.z)) {
                         chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos.x, pos.y, pos.z), air);
                     }
 
@@ -154,7 +153,7 @@ public class RiverRasterizer implements WorldRasterizer {
                     if (pos.y > seaLevel) {
                         pos.y -= 1;
                     }
-                    if (region.containsBlock(pos.x, pos.y, pos.z)) {
+                    if (region.contains(pos.x, pos.y, pos.z)) {
                         chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos.x, pos.y, pos.z), water);
                     }
                 }
