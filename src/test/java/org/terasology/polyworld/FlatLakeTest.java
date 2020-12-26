@@ -16,7 +16,6 @@
 
 package org.terasology.polyworld;
 
-import org.joml.Vector3i;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +31,6 @@ import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.world.block.BlockRegion;
-import org.terasology.world.block.BlockRegions;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.World;
 
@@ -91,7 +89,7 @@ public class FlatLakeTest {
 
     private Region createRegion(int minX, int minY, int maxX, int maxY) {
 
-        BlockRegion area3d = BlockRegions.createFromMinAndMax(new Vector3i(minX, 0, minY), new Vector3i(maxX, 1, maxY));
+        BlockRegion area3d = new BlockRegion(minX, 0, minY, maxX, 1, maxY);
         World world = worldGen.getWorld();
         Region region = world.getWorldData(area3d);
 
