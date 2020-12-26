@@ -16,11 +16,6 @@
 
 package org.terasology.polyworld.viewer.layers;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
@@ -30,6 +25,11 @@ import org.terasology.world.generation.Region;
 import org.terasology.world.viewer.layers.AbstractFacetLayer;
 import org.terasology.world.viewer.layers.Renders;
 import org.terasology.world.viewer.layers.ZOrder;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 
 /**
  * Draws the generated rivers on a AWT graphics instance

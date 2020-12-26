@@ -16,6 +16,23 @@
 
 package org.terasology.polyworld.viewer.layers;
 
+import org.terasology.math.geom.BaseVector2f;
+import org.terasology.math.geom.ImmutableVector2f;
+import org.terasology.math.geom.Rect2i;
+import org.terasology.math.geom.Vector2f;
+import org.terasology.nui.properties.Checkbox;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Edge;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.GraphFacet;
+import org.terasology.polyworld.graph.GraphRegion;
+import org.terasology.polyworld.graph.Triangle;
+import org.terasology.world.viewer.layers.AbstractFacetLayer;
+import org.terasology.world.viewer.layers.FacetLayerConfig;
+import org.terasology.world.viewer.layers.Renders;
+import org.terasology.world.viewer.layers.ZOrder;
+import org.terasology.world.viewer.picker.CirclePickerClosest;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -26,24 +43,6 @@ import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
-
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Vector2f;
-import org.terasology.polyworld.graph.Corner;
-import org.terasology.polyworld.graph.Edge;
-import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.GraphFacet;
-import org.terasology.polyworld.graph.GraphRegion;
-import org.terasology.polyworld.graph.Triangle;
-import org.terasology.nui.properties.Checkbox;
-import org.terasology.world.viewer.layers.AbstractFacetLayer;
-import org.terasology.world.viewer.layers.FacetLayerConfig;
-import org.terasology.world.viewer.layers.Renders;
-import org.terasology.world.viewer.layers.ZOrder;
-import org.terasology.world.viewer.picker.CirclePickerClosest;
 
 /**
  * Draws the generated graph on a AWT graphics instance
