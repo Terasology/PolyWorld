@@ -8,7 +8,7 @@
         { "id": "BiomesAPI", "minVersion": "4.0.0" },
         { "id": "CommonWorld", "minVersion": "1.0.0" },
         { "id": "CoreAssets", "minVersion": "2.0.1" },
-        { "id": "CoreWorlds", "minVersion": "1.1.0" }
+        { "id": "CoreWorlds", "minVersion": "1.1.0", "minVersion": "3.0.0" }
     ],
     "serverSideOnly": false,
     "isWorld": true
