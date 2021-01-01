@@ -16,6 +16,7 @@
 
 package org.terasology.polyworld.biome;
 
+import org.joml.Vector2ic;
 import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.graph.Graph;
@@ -52,7 +53,7 @@ public class WhittakerBiomeProvider implements FacetProvider {
         Graph graph = null;
         BiomeModel model = null;
 
-        for (BaseVector2i pos : facet.getWorldRegion().contents()) {
+        for (Vector2ic pos : facet.getWorldRegion()) {
             if (graph == null || !graph.getBounds().contains(pos.x(), pos.y())) {
                 graph = graphFacet.getWorld(pos.x(), pos.y());
                 model = biomeModelFacet.get(graph);
