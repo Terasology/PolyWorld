@@ -105,7 +105,7 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     }
 
     private void drawTriangleLookup(Graphics2D g, GraphFacet graphFacet) {
-        BlockAreac worldReg = graphFacet.getWorldRegion();
+        BlockAreac worldReg = graphFacet.getWorldArea();
         for (int z = worldReg.minY(); z < worldReg.maxY(); z++) {
             for (int x = worldReg.minX(); x < worldReg.maxX(); x++) {
                 Triangle tri = graphFacet.getWorldTriangle(x, z);

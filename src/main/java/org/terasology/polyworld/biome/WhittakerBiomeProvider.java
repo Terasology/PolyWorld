@@ -53,7 +53,7 @@ public class WhittakerBiomeProvider implements FacetProvider {
         Graph graph = null;
         BiomeModel model = null;
 
-        for (Vector2ic pos : facet.getWorldRegion()) {
+        for (Vector2ic pos : facet.getWorldArea()) {
             if (graph == null || !graph.getBounds().contains(pos.x(), pos.y())) {
                 graph = graphFacet.getWorld(pos.x(), pos.y());
                 model = biomeModelFacet.get(graph);
