@@ -27,6 +27,7 @@ import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
+import org.terasology.world.block.BlockAreac;
 import org.terasology.world.viewer.layers.AbstractFacetLayer;
 import org.terasology.world.viewer.layers.FacetLayerConfig;
 import org.terasology.world.viewer.layers.Renders;
@@ -104,7 +105,7 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     }
 
     private void drawTriangleLookup(Graphics2D g, GraphFacet graphFacet) {
-        Rect2i worldReg = graphFacet.getWorldRegion();
+        BlockAreac worldReg = graphFacet.getWorldArea();
         for (int z = worldReg.minY(); z < worldReg.maxY(); z++) {
             for (int x = worldReg.minX(); x < worldReg.maxX(); x++) {
                 Triangle tri = graphFacet.getWorldTriangle(x, z);

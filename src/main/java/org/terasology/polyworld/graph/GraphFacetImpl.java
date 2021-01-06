@@ -86,8 +86,8 @@ public class GraphFacetImpl extends BaseFacet2D implements GraphFacet {
 
     @Override
     public Graph get(int x, int z) {
-        int wx = x - getRelativeRegion().minX() + getWorldRegion().minX();
-        int wz = z - getRelativeRegion().minY() + getWorldRegion().minY();
+        int wx = x - getRelativeArea().minX() + getRelativeArea().minX();
+        int wz = z - getRelativeArea().minY() + getRelativeArea().minY();
         return getWorld(wx, wz);
     }
 

@@ -17,6 +17,7 @@
 package org.terasology.polyworld.elevation;
 
 import com.google.common.base.Stopwatch;
+import org.joml.Vector2ic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.geom.BaseVector2i;
@@ -89,7 +90,7 @@ public class ElevationProvider implements FacetProvider {
 
         ElevationModel elevation = null;
 
-        for (BaseVector2i p : facet.getWorldRegion().contents()) {
+        for (Vector2ic p : facet.getWorldArea()) {
             if (graph == null || !graph.getBounds().contains(p.x(), p.y())) {
                 graph = graphFacet.getWorld(p.x(), p.y());
                 elevation = elevationModelFacet.get(graph);
@@ -111,7 +112,7 @@ public class ElevationProvider implements FacetProvider {
         }
 
         if (traceLog) {
-            logger.trace("Created elevation facet for {} in {}ms.", facet.getWorldRegion(), sw.elapsed(TimeUnit.MILLISECONDS));
+            logger.trace("Created elevation facet for {} in {}ms.", facet.getWorldArea(), sw.elapsed(TimeUnit.MILLISECONDS));
         }
 
         region.setRegionFacet(ElevationFacet.class, facet);
