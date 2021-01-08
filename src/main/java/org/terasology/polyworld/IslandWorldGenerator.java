@@ -15,6 +15,12 @@
  */
 package org.terasology.polyworld;
 
+import org.joml.RoundingMode;
+import org.joml.Vector2f;
+import org.joml.Vector2i;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+import org.joml.Vector3i;
 import org.terasology.core.world.generator.facetProviders.SeaLevelProvider;
 import org.terasology.core.world.generator.facetProviders.SurfaceToDensityProvider;
 import org.terasology.core.world.generator.rasterizers.FloraRasterizer;
@@ -24,11 +30,6 @@ import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.spawner.FixedSpawner;
 import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Vector2f;
-import org.terasology.math.geom.Vector2i;
-import org.terasology.math.geom.Vector3f;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeModelFacet;
@@ -90,22 +91,22 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
     }
 
     @Override
-    public Vector3f getSpawnPosition(EntityRef entity) {
+    public Vector3fc getSpawnPosition(EntityRef entity) {
         LocationComponent loc = entity.getComponent(LocationComponent.class);
-        Vector3f pos = loc.getWorldPosition();
+        Vector3f pos = loc.getWorldPosition(new Vector3f());
 
         int searchRadius = 16;
         Vector3i ext = new Vector3i(searchRadius, 1, searchRadius);
-        Vector3i desiredPos = new Vector3i(pos.getX(), 1, pos.getZ());
+        Vector3i desiredPos = new Vector3i(new Vector3f(pos.x(), 1, pos.z()), RoundingMode.FLOOR);
 
         // try and find somewhere in this region a spot to land
-        BlockRegion spawnArea = new BlockRegion(JomlUtil.from(desiredPos)).expand(JomlUtil.from(ext));
+        BlockRegion spawnArea = new BlockRegion(desiredPos).expand(ext);
         Region worldRegion = getWorld().getWorldData(spawnArea);
 
         GraphFacet graphs = worldRegion.getFacet(GraphFacet.class);
         WhittakerBiomeModelFacet model = worldRegion.getFacet(WhittakerBiomeModelFacet.class);
-        Vector2f pos2d = new Vector2f(pos.getX(), pos.getZ());
-        CirclePickerClosest<org.terasology.polyworld.graph.GraphRegion> picker = new CirclePickerClosest<>(pos2d);
+        Vector2f pos2d = new Vector2f(pos.x(), pos.z());
+        CirclePickerClosest<org.terasology.polyworld.graph.GraphRegion> picker = new CirclePickerClosest<>(JomlUtil.from(pos2d));
 
         for (Graph g : graphs.getAllGraphs()) {
             BiomeModel biomeModel = model.get(g);
@@ -118,13 +119,13 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
         }
         Vector2i target;
         if (picker.getClosest() != null) {
-            ImmutableVector2f hit = picker.getClosest().getCenter();
-            target = new Vector2i(hit.getX(), hit.getY());
+            Vector2f hit = JomlUtil.from(picker.getClosest().getCenter());
+            target = new Vector2i(new Vector2f(hit.x(), hit.y()), RoundingMode.FLOOR);
         } else {
-            target = new Vector2i(desiredPos.getX(), desiredPos.getZ());
+            target = new Vector2i(desiredPos.x(), desiredPos.z());
         }
 
-        FixedSpawner spawner = new FixedSpawner(target.getX(), target.getY());
-        return JomlUtil.from(spawner.getSpawnPosition(getWorld(), entity));
+        FixedSpawner spawner = new FixedSpawner(target.x(), target.y(), RoundingMode.FLOOR);
+        return spawner.getSpawnPosition(getWorld(), entity);
     }
 }
