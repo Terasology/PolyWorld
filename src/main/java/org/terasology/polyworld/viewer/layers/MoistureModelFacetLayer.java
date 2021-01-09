@@ -19,8 +19,8 @@ package org.terasology.polyworld.viewer.layers;
 import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.math.JomlUtil;
 import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.nui.properties.Checkbox;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
@@ -120,15 +120,13 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
         if (graph != null) {
             MoistureModel model = moistureModelFacet.get(graph);
 
-            Vector2f cursor = new Vector2f(wx, wy);
-
             // Use the value as radius, but clamp it to some minimum value so it
             // remains large enough to be hovered with the mouse cursor
             Function<Corner, Float> radiusFunc = c -> Math.max(2f, model.getMoisture(c) * scale);
-            CirclePickerClosest<Corner> picker = new CirclePickerClosest<>(cursor, radiusFunc);
+            CirclePickerClosest<Corner> picker = new CirclePickerClosest<>(new org.joml.Vector2f(wx, wy), radiusFunc);
 
             for (Corner c : graph.getCorners()) {
-                picker.offer(c.getLocation(), c);
+                picker.offer(JomlUtil.from(c.getLocation()), c);
             }
 
             if (picker.getClosest() != null) {

@@ -106,14 +106,14 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
         GraphFacet graphs = worldRegion.getFacet(GraphFacet.class);
         WhittakerBiomeModelFacet model = worldRegion.getFacet(WhittakerBiomeModelFacet.class);
         Vector2f pos2d = new Vector2f(pos.x(), pos.z());
-        CirclePickerClosest<org.terasology.polyworld.graph.GraphRegion> picker = new CirclePickerClosest<>(JomlUtil.from(pos2d));
+        CirclePickerClosest<org.terasology.polyworld.graph.GraphRegion> picker = new CirclePickerClosest<>(pos2d);
 
         for (Graph g : graphs.getAllGraphs()) {
             BiomeModel biomeModel = model.get(g);
             for (org.terasology.polyworld.graph.GraphRegion r : g.getRegions()) {
                 WhittakerBiome biome = biomeModel.getBiome(r);
                 if (!biome.equals(WhittakerBiome.OCEAN) && !biome.equals(WhittakerBiome.LAKE)) {
-                    picker.offer(r.getCenter(), r);
+                    picker.offer(JomlUtil.from(r.getCenter()), r);
                 }
             }
         }

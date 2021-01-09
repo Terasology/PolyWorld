@@ -16,10 +16,10 @@
 
 package org.terasology.polyworld.viewer.layers;
 
+import org.terasology.math.JomlUtil;
 import org.terasology.math.geom.BaseVector2f;
 import org.terasology.math.geom.ImmutableVector2f;
 import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.nui.properties.Checkbox;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
@@ -121,14 +121,14 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     @Override
     public String getWorldText(org.terasology.world.generation.Region region, int wx, int wy) {
         GraphFacet graphFacet = region.getFacet(GraphFacet.class);
-        CirclePickerClosest<Corner> cornerPicker = new CirclePickerClosest<>(new Vector2f(wx, wy), c -> 3);
-        CirclePickerClosest<GraphRegion> sitePicker = new CirclePickerClosest<>(new Vector2f(wx, wy), r -> 3);
+        CirclePickerClosest<Corner> cornerPicker = new CirclePickerClosest<>(new org.joml.Vector2f(wx, wy), c -> 3);
+        CirclePickerClosest<GraphRegion> sitePicker = new CirclePickerClosest<>(new org.joml.Vector2f(wx, wy), r -> 3);
         for (Graph graph : graphFacet.getAllGraphs()) {
             if (graph.getBounds().contains(wx, wy)) {
                 Triangle tri = graphFacet.getWorldTriangle(wx, wy);
-                cornerPicker.offer(tri.getCorner1().getLocation(), tri.getCorner1());
-                cornerPicker.offer(tri.getCorner2().getLocation(), tri.getCorner2());
-                sitePicker.offer(tri.getRegion().getCenter(), tri.getRegion());
+                cornerPicker.offer(JomlUtil.from(tri.getCorner1().getLocation()), tri.getCorner1());
+                cornerPicker.offer(JomlUtil.from(tri.getCorner2().getLocation()), tri.getCorner2());
+                sitePicker.offer(JomlUtil.from(tri.getRegion().getCenter()), tri.getRegion());
                 if (cornerPicker.getClosest() != null) {
                     return cornerPicker.getClosest().toString();
                 }
