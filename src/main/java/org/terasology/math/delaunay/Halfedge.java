@@ -16,7 +16,7 @@
 
 package org.terasology.math.delaunay;
 
-import org.terasology.math.geom.Vector2f;
+import org.joml.Vector2fc;
 
 final class Halfedge {
 
@@ -26,7 +26,7 @@ final class Halfedge {
     public Edge edge;
     public LR leftRight;
     public Vertex vertex;
-    
+
     // the vertex's y-coordinate in the transformed Voronoi space V*
     public float ystar;
 
@@ -44,7 +44,7 @@ final class Halfedge {
     public static Halfedge createDummy() {
         return create(null, null);
     }
-    
+
     @Override
     public String toString() {
         return "Halfedge (leftRight: " + leftRight + "; vertex: " + vertex + ")";
@@ -73,7 +73,7 @@ final class Halfedge {
         vertex = null;
     }
 
-    public boolean isLeftOf(Vector2f p) {
+    public boolean isLeftOf(Vector2fc p) {
         Site topSite;
         boolean rightOfSite;
         boolean above;
@@ -87,7 +87,7 @@ final class Halfedge {
         float yl;
 
         topSite = edge.getRightSite();
-        rightOfSite = p.getX() > topSite.getX();
+        rightOfSite = p.x() > topSite.getX();
         if (rightOfSite && this.leftRight == LR.LEFT) {
             return true;
         }
@@ -96,14 +96,14 @@ final class Halfedge {
         }
 
         if (edge.getA() == 1.0) {
-            dyp = p.getY() - topSite.getY();
-            dxp = p.getX() - topSite.getX();
+            dyp = p.y() - topSite.getY();
+            dxp = p.x() - topSite.getX();
             fast = false;
             if ((!rightOfSite && edge.getB() < 0.0) || (rightOfSite && edge.getB() >= 0.0)) {
                 above = dyp >= edge.getB() * dxp;
                 fast = above;
             } else {
-                above = p.getX() + p.getY() * edge.getB() > edge.getC();
+                above = p.x() + p.y() * edge.getB() > edge.getC();
                 if (edge.getB() < 0.0) {
                     above = !above;
                 }
@@ -120,9 +120,9 @@ final class Halfedge {
                 }
             }
         } else /* edge.b == 1.0 */ {
-            yl = edge.getC() - edge.getA() * p.getX();
-            t1 = p.getY() - yl;
-            t2 = p.getX() - topSite.getX();
+            yl = edge.getC() - edge.getA() * p.x();
+            t1 = p.y() - yl;
+            t2 = p.x() - topSite.getX();
             t3 = yl - topSite.getY();
             above = t1 * t1 > t2 * t2 + t3 * t3;
         }

@@ -16,11 +16,12 @@
 
 package org.terasology.polyworld.graph;
 
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.Vector2f;
-import org.terasology.math.geom.Vector3f;
 
 import com.google.common.base.Preconditions;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 /**
  * Defines a triangle in the region-based {@link Graph} structure.
@@ -59,20 +60,20 @@ public class Triangle {
         return c2;
     }
 
-    public float computeInterpolated(Vector2f p, float wreg, float wc1, float wc2) {
+    public float computeInterpolated(Vector2fc p, float wreg, float wc1, float wc2) {
         Vector3f bary = computeBarycentricCoordinates(p);
-        return wreg * bary.getX() + wc1 * bary.getY() + wc2 * bary.getZ();
+        return wreg * bary.x() + wc1 * bary.y() + wc2 * bary.z();
     }
 
-    public Vector3f computeBarycentricCoordinates(Vector2f p) {
+    public Vector3f computeBarycentricCoordinates(Vector2fc p) {
         return computeBarycentricCoordinates(region.getCenter(), c1.getLocation(), c2.getLocation(), p);
     }
 
-    public static boolean barycoordInsideTriangle(Vector3f bary) {
-        return bary.getX() >= 0 && bary.getY() >= 0 && bary.getX() + bary.getY() <= 1;
+    public static boolean barycoordInsideTriangle(Vector3fc bary) {
+        return bary.x() >= 0 && bary.y() >= 0 && bary.x() + bary.y() <= 1;
     }
 
-    private static Vector3f computeBarycentricCoordinates(BaseVector2f a, BaseVector2f b, BaseVector2f c, BaseVector2f p) {
+    private static Vector3f computeBarycentricCoordinates(Vector2fc a, Vector2fc b, Vector2fc c, Vector2fc p) {
 
         Vector2f v0 = new Vector2f(b).sub(a);
         Vector2f v1 = new Vector2f(c).sub(a);

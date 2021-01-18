@@ -24,6 +24,7 @@ import java.awt.image.DataBufferInt;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.joml.Vector2fc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.geom.Rect2i;
@@ -34,6 +35,8 @@ import org.terasology.polyworld.graph.Triangle;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
 
 /**
  * Creates a image-based lookup table to map individual pixel to triangles
@@ -50,17 +53,17 @@ public class TriangleLookup {
     //       due to binary search in region-triangle start index list
     private final List<Triangle> triangles;
 
-    private final Rect2i bounds;
+    private final BlockArea bounds = new BlockArea(BlockArea.INVALID);
 
     /**
      * Creates a lookup image for the graph's region triangles
      */
     public TriangleLookup(Graph graph) {
 
-        bounds = graph.getBounds();
+        bounds.set(graph.getBounds());
 
         // TODO: maybe use USHORT_GRAY instead
-        image = new BufferedImage(bounds.width(), bounds.height(), BufferedImage.TYPE_INT_RGB);
+        image = new BufferedImage(bounds.getSizeX(), bounds.getSizeY(), BufferedImage.TYPE_INT_RGB);
         Graphics2D g = image.createGraphics();
         g.translate(-bounds.minX(), -bounds.minY());
 
@@ -108,14 +111,14 @@ public class TriangleLookup {
         int index = 1;
         for (final GraphRegion reg : regions) {
             for (Triangle tri : reg.computeTriangles()) {
-                BaseVector2f p0 = tri.getRegion().getCenter();
-                BaseVector2f p1 = tri.getCorner1().getLocation();
-                BaseVector2f p2 = tri.getCorner2().getLocation();
+                Vector2fc p0 = tri.getRegion().getCenter();
+                Vector2fc p1 = tri.getCorner1().getLocation();
+                Vector2fc p2 = tri.getCorner2().getLocation();
 
                 Path2D path = new Path2D.Double();
-                path.moveTo(p0.getX(), p0.getY());
-                path.lineTo(p1.getX(), p1.getY());
-                path.lineTo(p2.getX(), p2.getY());
+                path.moveTo(p0.x(), p0.y());
+                path.lineTo(p1.x(), p1.y());
+                path.lineTo(p2.x(), p2.y());
 
                 triangles.add(tri);
 
@@ -130,7 +133,7 @@ public class TriangleLookup {
     /**
      * @return
      */
-    public Rect2i getBounds() {
+    public BlockAreac getBounds() {
         return bounds;
     }
 }

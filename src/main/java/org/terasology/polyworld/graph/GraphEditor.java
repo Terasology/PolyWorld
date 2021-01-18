@@ -16,12 +16,13 @@
 
 package org.terasology.polyworld.graph;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.utilities.random.Random;
 
 /**
@@ -40,7 +41,7 @@ public final class GraphEditor {
      * @param corners the collection of corners
      */
     public static void improveCorners(Collection<Corner> corners) {
-        ImmutableVector2f[] newP = new ImmutableVector2f[corners.size()];
+        Vector2fc[] newP = new Vector2fc[corners.size()];
         int idx = 0;
         for (Corner c : corners) {
             if (c.isBorder()) {
@@ -49,10 +50,10 @@ public final class GraphEditor {
                 float x = 0;
                 float y = 0;
                 for (GraphRegion region : c.getTouches()) {
-                    x += region.getCenter().getX();
-                    y += region.getCenter().getY();
+                    x += region.getCenter().x();
+                    y += region.getCenter().y();
                 }
-                newP[idx] = new ImmutableVector2f(x / c.getTouches().size(), y / c.getTouches().size());
+                newP[idx] = new Vector2f(x / c.getTouches().size(), y / c.getTouches().size());
             }
             idx++;
         }
@@ -76,12 +77,12 @@ public final class GraphEditor {
                 continue;
             }
 
-            ImmutableVector2f loc = c.getLocation();
+            Vector2fc loc = c.getLocation();
             float ang = random.nextFloat(0, (float) (Math.PI * 2.0));
             float len = random.nextFloat(0, maxDist);
             float rx = (float) (Math.cos(ang) * len);
             float ry = (float) (Math.sin(ang) * len);
-            c.setLocation(loc.add(rx,  ry));
+            c.setLocation(loc.add(rx,  ry, new Vector2f()));
         }
     }
 
@@ -92,20 +93,22 @@ public final class GraphEditor {
      * @return a new Voronoi diagram
      */
     public static Voronoi lloydRelaxation(Voronoi v) {
-        List<Vector2f> points = v.siteCoords();
-        for (Vector2f p : points) {
-            List<Vector2f> region = v.region(p);
+        List<Vector2fc> result = new ArrayList<>();
+        List<Vector2fc> points = v.siteCoords();
+        for (Vector2fc p : points) {
+            List<Vector2fc> region = v.region(p);
             float x = 0;
             float y = 0;
-            for (Vector2f c : region) {
-                x += c.getX();
-                y += c.getY();
+            for (Vector2fc c : region) {
+                x += c.x();
+                y += c.y();
             }
             x /= region.size();
             y /= region.size();
-            p.setX(x);
-            p.setY(y);
+            result.add(new Vector2f(x,y));
+//            p.x(x);
+//            p.y(y);
         }
-        return new Voronoi(points, v.getPlotBounds());
+        return new Voronoi(result, v.getPlotBounds());
     }
 }

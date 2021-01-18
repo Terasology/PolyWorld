@@ -28,6 +28,8 @@ import org.terasology.math.geom.Rect2i;
 import org.terasology.nui.properties.Range;
 import org.terasology.utilities.procedural.Noise;
 import org.terasology.utilities.procedural.WhiteNoise;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
 import org.terasology.world.block.BlockRegion;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
@@ -51,14 +53,14 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
     private Noise islandRatioNoise;
 
-    private final CacheLoader<Rect2i, Collection<WorldRegion>> loader = new CacheLoader<Rect2i, Collection<WorldRegion>>() {
+    private final CacheLoader<BlockAreac, Collection<WorldRegion>> loader = new CacheLoader<BlockAreac, Collection<WorldRegion>>() {
 
         @Override
-        public Collection<WorldRegion> load(Rect2i fullArea) throws Exception {
+        public Collection<WorldRegion> load(BlockAreac fullArea) throws Exception {
             float maxArea = 0.75f * Sector.SIZE_X * Sector.SIZE_Z;
 
             List<WorldRegion> result = Lists.newArrayList();
-            for (Rect2i area : regionProvider.getSectorRegions(fullArea)) {
+            for (BlockAreac area : regionProvider.getSectorRegions(fullArea)) {
                 float rnd = islandRatioNoise.noise(area.minX(), area.minY());
                 float scale = area.area() / maxArea;
 
@@ -75,7 +77,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         }
     };
 
-    private final LoadingCache<Rect2i, Collection<WorldRegion>> cache;
+    private final LoadingCache<BlockAreac, Collection<WorldRegion>> cache;
 
     private long seed;
 
@@ -110,14 +112,14 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         Sector minSec = Sectors.getSectorForBlock(min.x, min.z);
         Sector maxSec = Sectors.getSectorForBlock(max.x, max.z);
 
-        Rect2i target = Rect2i.createFromMinAndMax(min.x, min.z, max.x, max.z);
+        BlockAreac target = new BlockArea(min.x, min.z, max.x, max.z);
 
-        for (int sx = minSec.getCoords().getX(); sx <= maxSec.getCoords().getX(); sx++) {
-            for (int sz = minSec.getCoords().getY(); sz <= maxSec.getCoords().getY(); sz++) {
+        for (int sx = minSec.getCoords().x(); sx <= maxSec.getCoords().x(); sx++) {
+            for (int sz = minSec.getCoords().y(); sz <= maxSec.getCoords().y(); sz++) {
                 Sector sector = Sectors.getSector(sx, sz);
 
-                Rect2i sb = sector.getWorldBounds();
-                Rect2i fullArea = Rect2i.createFromMinAndSize(sb.minX(), sb.minY(), sb.width(), sb.height());
+                BlockAreac sb = sector.getWorldBounds();
+                BlockAreac fullArea = new BlockArea(sb.minX(), sb.minY()).setSize(sb.getSizeX(), sb.getSizeY());
 
                 Collection<WorldRegion> collection = cache.getIfPresent(fullArea);
                 if (collection == null) {
@@ -129,7 +131,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
                     }
                 }
                 for (WorldRegion wr : collection) {
-                    if (wr.getArea().overlaps(target)) {
+                    if (wr.getArea().intersectsBlockArea(target)) {
                         facet.addRegion(wr);
                     }
                 }

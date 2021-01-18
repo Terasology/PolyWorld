@@ -16,36 +16,35 @@
 
 package org.terasology.polyworld;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import org.joml.Rectanglef;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.terasology.math.geom.Rect2i;
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.VoronoiGraph;
+import org.terasology.world.block.BlockArea;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Tests the correct representation of a {@link VoronoiGraph}
  */
 public class VoronoiGraphTest extends GraphTest {
 
-    protected List<Vector2f> points;
+    protected List<Vector2fc> points;
 
     @Before
     public void setup() {
         final int width = 512;
         final int height = 256;
 
-        intBounds = Rect2i.createFromMinAndSize(0, 0, width, height);
-        realBounds = Rect2f.createFromMinAndSize(intBounds.minX(), intBounds.minY(), intBounds.width(), intBounds.height());
+        intBounds = new BlockArea(0, 0, width, height);
+        realBounds = intBounds.getBounds(new Rectanglef());
 
         points = Arrays.asList(
                 new Vector2f(128, 64), new Vector2f(384, 96),
@@ -67,14 +66,14 @@ public class VoronoiGraphTest extends GraphTest {
 
     @Test
     public void testVoronoiLocations() {
-        List<BaseVector2f> corners = new ArrayList<>();
+        List<Vector2fc> corners = new ArrayList<>();
         graph.getCorners().forEach(c -> corners.add(c.getLocation()));
 
         // check location of all corners that are inside
-        Assert.assertTrue(corners.contains(new ImmutableVector2f(171, 128)));
-        Assert.assertTrue(corners.contains(new ImmutableVector2f(192, 256)));
-        Assert.assertTrue(corners.contains(new ImmutableVector2f(308, 256)));
-        Assert.assertTrue(corners.contains(new ImmutableVector2f(332, 160)));
+        Assert.assertTrue(corners.contains(new Vector2f(171, 128)));
+        Assert.assertTrue(corners.contains(new Vector2f(192, 256)));
+        Assert.assertTrue(corners.contains(new Vector2f(308, 256)));
+        Assert.assertTrue(corners.contains(new Vector2f(332, 160)));
     }
 }
 

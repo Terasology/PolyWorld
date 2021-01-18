@@ -22,6 +22,8 @@ import org.terasology.math.geom.Rect2i;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
 
 /**
  * Subdivides a rectangle into a regular grid.
@@ -55,17 +57,17 @@ public class GridRegionProvider implements RegionProvider {
     }
 
     @Override
-    public Collection<Rect2i> getSectorRegions(Rect2i fullArea) {
-        int width = fullArea.width() / divX;
-        int height = fullArea.height() / divY;
+    public Collection<BlockAreac> getSectorRegions(BlockAreac fullArea) {
+        int width = fullArea.getSizeX() / divX;
+        int height = fullArea.getSizeY() / divY;
 
-        Collection<Rect2i> areas = Lists.newArrayListWithCapacity(divX * divY);
+        Collection<BlockAreac> areas = Lists.newArrayListWithCapacity(divX * divY);
 
         for (int ry = 0; ry < divY; ry++) {
             for (int rx = 0; rx < divX; rx++) {
                 int x = fullArea.minX() + rx * width;
                 int y = fullArea.minY() + ry * height;
-                areas.add(Rect2i.createFromMinAndSize(x, y, width, height));
+                areas.add(new BlockArea(x, y).setSize(width, height));
             }
         }
 

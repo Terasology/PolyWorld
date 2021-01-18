@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.joml.Rectanglef;
+import org.joml.Vector2fc;
+import org.joml.Vector2ic;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +45,8 @@ import org.terasology.utilities.random.MersenneRandom;
 import org.terasology.utilities.random.Random;
 
 import com.google.common.math.DoubleMath;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
 
 @RunWith(Parameterized.class)
 public class LookupTest {
@@ -70,13 +75,13 @@ public class LookupTest {
         int width = rng.nextInt(100, 2000);
         int height = rng.nextInt(100, 2000);
 
-        Rect2i intBounds = Rect2i.createFromMinAndSize(x, y, width, height);
-        Rect2f realBounds = Rect2f.createFromMinAndSize(intBounds.minX(), intBounds.minY(), intBounds.width(), intBounds.height());
+        BlockAreac intBounds = new BlockArea(x, y).setSize(width, height);
+        Rectanglef realBounds = intBounds.getBounds(new Rectanglef());
 
         PointSampling sampling = new PoissonDiscSampling();
 
         int numSites = DoubleMath.roundToInt(intBounds.area() * rng.nextDouble(0.5, 5) / 1000, RoundingMode.HALF_UP);
-        List<Vector2f> points = sampling.create(realBounds, numSites, rng);
+        List<Vector2fc> points = sampling.create(realBounds, numSites, rng);
 
         logger.info("Sampled {} with {} points", intBounds, points.size());
 
@@ -84,8 +89,8 @@ public class LookupTest {
         VoronoiGraph graph = new VoronoiGraph(intBounds, v);
 
         TriangleLookup lookup = new TriangleLookup(graph);
-        for (BaseVector2i coord : intBounds.contents()) {
-            Triangle tri = lookup.findTriangleAt(coord.getX(), coord.getY());
+        for (Vector2ic coord : intBounds) {
+            Triangle tri = lookup.findTriangleAt(coord.x(), coord.y());
             Assert.assertNotNull(tri);
         }
     }

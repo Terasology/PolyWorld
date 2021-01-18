@@ -17,6 +17,7 @@
 package org.terasology.polyworld.viewer.layers;
 
 import com.google.common.base.Stopwatch;
+import org.joml.Vector2fc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.JomlUtil;
@@ -105,8 +106,8 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
             if (config.showOcean || (!waterModel.isOcean(c) && !waterModel.isCoast(c))) {
                 float moisture = model.getMoisture(c);
                 float r = scale * moisture;
-                BaseVector2f loc = c.getLocation();
-                g.fill(new Ellipse2D.Float(loc.getX() - r, loc.getY() - r, 2 * r, 2 * r));
+                Vector2fc loc = c.getLocation();
+                g.fill(new Ellipse2D.Float(loc.x() - r, loc.y() - r, 2 * r, 2 * r));
             }
         }
     }
@@ -126,7 +127,7 @@ public class MoistureModelFacetLayer extends AbstractFacetLayer {
             CirclePickerClosest<Corner> picker = new CirclePickerClosest<>(new org.joml.Vector2f(wx, wy), radiusFunc);
 
             for (Corner c : graph.getCorners()) {
-                picker.offer(JomlUtil.from(c.getLocation()), c);
+                picker.offer(c.getLocation(), c);
             }
 
             if (picker.getClosest() != null) {

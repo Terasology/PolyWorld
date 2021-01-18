@@ -19,6 +19,9 @@ package org.terasology.polyworld;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Rectanglef;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.junit.Assert;
 import org.junit.Test;
 import org.terasology.math.geom.Rect2i;
@@ -29,6 +32,7 @@ import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
+import org.terasology.world.block.BlockArea;
 
 /**
  * Tests the correct representation of a {@link Graph}
@@ -36,20 +40,20 @@ import org.terasology.polyworld.graph.GraphRegion;
 public abstract class GraphTest {
 
     protected Graph graph;
-    protected Rect2i intBounds;
-    protected Rect2f realBounds;
+    protected BlockArea intBounds;
+    protected Rectanglef realBounds;
 
     @Test
     public void testGraphCornerLocations() {
 
-        List<BaseVector2f> corners = new ArrayList<>();
+        List<Vector2fc> corners = new ArrayList<>();
         graph.getCorners().forEach(c -> corners.add(c.getLocation()));
 
         // check location of all border corners
-        Assert.assertTrue(corners.contains(new ImmutableVector2f(realBounds.minX(), realBounds.minY())));
-        Assert.assertTrue(corners.contains(new ImmutableVector2f(realBounds.minX(), realBounds.maxY())));
-        Assert.assertTrue(corners.contains(new ImmutableVector2f(realBounds.maxX(), realBounds.minY())));
-        Assert.assertTrue(corners.contains(new ImmutableVector2f(realBounds.maxX(), realBounds.maxY())));
+        Assert.assertTrue(corners.contains(new Vector2f(realBounds.minX, realBounds.minY)));
+        Assert.assertTrue(corners.contains(new Vector2f(realBounds.minX, realBounds.maxY)));
+        Assert.assertTrue(corners.contains(new Vector2f(realBounds.maxX, realBounds.minY)));
+        Assert.assertTrue(corners.contains(new Vector2f(realBounds.maxX, realBounds.maxY)));
     }
 
     @Test
@@ -106,10 +110,10 @@ public abstract class GraphTest {
     public void testGraphCornerBorderFlag() {
         float eps = 0.1f;
         for (Corner c : graph.getCorners()) {
-            if ((Math.abs(c.getLocation().getX() - realBounds.minX()) < eps)
-             || (Math.abs(c.getLocation().getX() - realBounds.maxX()) < eps)
-             || (Math.abs(c.getLocation().getY() - realBounds.minY()) < eps)
-             || (Math.abs(c.getLocation().getY() - realBounds.maxY()) < eps)) {
+            if ((Math.abs(c.getLocation().x() - realBounds.minX) < eps)
+             || (Math.abs(c.getLocation().x() - realBounds.maxX) < eps)
+             || (Math.abs(c.getLocation().y() - realBounds.minY) < eps)
+             || (Math.abs(c.getLocation().y() - realBounds.maxY) < eps)) {
                 Assert.assertTrue("Corner must have border flag: " + c, c.isBorder());
             } else {
                 Assert.assertFalse("Corner must not have border flag: " + c, c.isBorder());

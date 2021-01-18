@@ -17,6 +17,7 @@ package org.terasology.polyworld;
 
 import org.joml.RoundingMode;
 import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -113,13 +114,13 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
             for (org.terasology.polyworld.graph.GraphRegion r : g.getRegions()) {
                 WhittakerBiome biome = biomeModel.getBiome(r);
                 if (!biome.equals(WhittakerBiome.OCEAN) && !biome.equals(WhittakerBiome.LAKE)) {
-                    picker.offer(JomlUtil.from(r.getCenter()), r);
+                    picker.offer(r.getCenter(), r);
                 }
             }
         }
         Vector2i target;
         if (picker.getClosest() != null) {
-            Vector2f hit = JomlUtil.from(picker.getClosest().getCenter());
+            Vector2fc hit = picker.getClosest().getCenter();
             target = new Vector2i(new Vector2f(hit.x(), hit.y()), RoundingMode.FLOOR);
         } else {
             target = new Vector2i(desiredPos.x(), desiredPos.z());

@@ -17,8 +17,6 @@
 package org.terasology.polyworld.biome;
 
 import org.joml.Vector2ic;
-import org.terasology.math.geom.BaseVector2i;
-import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.GraphRegion;

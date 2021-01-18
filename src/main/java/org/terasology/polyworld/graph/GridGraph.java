@@ -16,14 +16,14 @@
 
 package org.terasology.polyworld.graph;
 
+import com.google.common.collect.Lists;
+import org.joml.Rectanglef;
+import org.joml.Vector2f;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
+
 import java.util.Collections;
 import java.util.List;
-
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Vector2f;
-
-import com.google.common.collect.Lists;
 
 /**
  * A graph that is based on a rectangular grid.
@@ -37,26 +37,26 @@ public class GridGraph implements Graph {
     private final List<GraphRegion> regions = Lists.newArrayList();
     private final List<Edge> edges = Lists.newArrayList();
 
-    private final Rect2i bounds;
+    private final BlockArea bounds = new BlockArea(BlockArea.INVALID);
 
     /**
      * @param bounds the bounding box
      * @param rows the number of rows
      * @param cols the number of columns
      */
-    public GridGraph(Rect2i bounds, int rows, int cols) {
+    public GridGraph(BlockAreac bounds, int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
-        this.bounds = bounds;
+        this.bounds.set(bounds);
 
-        float dx = (float) bounds.width() / cols;
-        float dy = (float) bounds.height() / rows;
+        float dx = (float) (bounds.maxX() - bounds.minX()) / cols;
+        float dy = (float) (bounds.maxY() - bounds.minY()) / rows;
 
         for (int r = 0; r <= rows; r++) {
             for (int c = 0; c <= cols; c++) {
                 float x = bounds.minX() + c * dx;
                 float y = bounds.minY() + r * dy;
-                Corner corner = new Corner(new ImmutableVector2f(x, y));
+                Corner corner = new Corner(new Vector2f(x, y));
                 corner.setBorder(r == 0 || c == 0 || r == rows || c == cols);
                 corners.add(corner);
             }
@@ -76,7 +76,7 @@ public class GridGraph implements Graph {
             for (int c = 0; c < cols; c++) {
                 float x = bounds.minX() + (c + 0.5f) * dx;
                 float y = bounds.minY() + (r + 0.5f) * dy;
-                ImmutableVector2f pos = new ImmutableVector2f(x, y);
+                Vector2f pos = new Vector2f(x, y);
                 GraphRegion reg = new GraphRegion(pos);
                 Corner tl = getCorner(r, c);
                 Corner tr = getCorner(r, c + 1);
@@ -184,7 +184,7 @@ public class GridGraph implements Graph {
     }
 
     @Override
-    public Rect2i getBounds() {
+    public BlockAreac getBounds() {
         return bounds;
     }
 

@@ -28,6 +28,9 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.joml.Rectanglef;
+import org.joml.Vector2fc;
+import org.joml.Vector2ic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.math.geom.Rect2f;
@@ -35,6 +38,7 @@ import org.terasology.math.geom.Vector2f;
 import org.terasology.math.geom.Vector2i;
 
 import com.google.common.math.DoubleMath;
+import org.terasology.nui.util.RectUtility;
 
 public final class PoissonDiscTestView {
     private static float graphDensity = 10f;
@@ -49,12 +53,12 @@ public final class PoissonDiscTestView {
 //      int rows = DoubleMath.roundToInt(area.height() / cellSize, RoundingMode.HALF_UP);
 //      int cols = DoubleMath.roundToInt(area.width() / cellSize, RoundingMode.HALF_UP);
 
-        Rect2f area = Rect2f.createFromMinAndSize(30, 10, 512, 256);
+        Rectanglef area = new Rectanglef(30, 10, 30 + 512, 10 + 256);
         int numSites = DoubleMath.roundToInt(area.area() * graphDensity / 1000, RoundingMode.HALF_UP);
 
         logger.info("START GRID");
         PoissonDiscSampling sampling = new PoissonDiscSampling();
-        List<Vector2f> points = sampling.create(area, numSites);
+        List<Vector2fc> points = sampling.create(area, numSites);
         logger.info("END GRID");
 
         System.out.println("SHOULD BE: " + numSites);
@@ -81,28 +85,28 @@ public final class PoissonDiscTestView {
 
                 g.setColor(Color.BLACK);
                 g.setStroke(new BasicStroke(1f));
-                for (Vector2f pt : points) {
-                    g.draw(new Line2D.Float(pt.getX(), pt.getY(), pt.getX(), pt.getY()));
+                for (Vector2fc pt : points) {
+                    g.draw(new Line2D.Float(pt.x(), pt.y(), pt.x(), pt.y()));
                 }
             }
 
-            private void drawDebug(Rect2f bounds, Graphics2D g) {
+            private void drawDebug(Rectanglef bounds, Graphics2D g) {
                 g.setColor(Color.LIGHT_GRAY);
-                Vector2i dims = sampling.getGridDimensions(bounds, numSites);
-                int cols = dims.getX();
-                int rows = dims.getY();
+                Vector2ic dims = sampling.getGridDimensions(bounds, numSites);
+                int cols = dims.x();
+                int rows = dims.y();
 
-                float cellWidth = (float) bounds.width() / cols;
-                float cellHeight = (float) bounds.height() / rows;
+                float cellWidth = (float) (bounds.maxX - bounds.minX) / cols;
+                float cellHeight = (float) (bounds.maxY - bounds.minY) / rows;
 
-                g.translate(bounds.minX(), bounds.minY());
+                g.translate(bounds.minX, bounds.minY);
                 for (int i = 0; i <= cols; i++) {
-                    g.drawLine((int) (i * cellWidth), 0, (int) (i * cellWidth), (int) bounds.height());
+                    g.drawLine((int) (i * cellWidth), 0, (int) (i * cellWidth), (int) (bounds.maxY - bounds.minY));
                 }
                 for (int i = 0; i <= rows; i++) {
-                    g.drawLine(0, (int) (i * cellHeight), (int) bounds.width(), (int) (i * cellHeight));
+                    g.drawLine(0, (int) (i * cellHeight), (int) (bounds.maxX - bounds.minX), (int) (i * cellHeight));
                 }
-                g.translate(-bounds.minX(), -bounds.minY());
+                g.translate(-bounds.minX, -bounds.minY);
             }
         });
         frame.setVisible(true);

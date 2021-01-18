@@ -16,13 +16,12 @@
 
 package org.terasology.math.delaunay;
 
+import org.joml.Rectanglef;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+
 import java.util.EnumMap;
 import java.util.Map;
-
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
 
 /**
  * The line segment connecting the two Sites is part of the Delaunay
@@ -49,7 +48,7 @@ public final class Edge {
      * Once clipVertices() is called, this HashMap will hold two Points
      * representing the clipped coordinates of the left and right ends...
      */
-    private final Map<LR, Vector2f> clippedVertices = new EnumMap<LR, Vector2f>(LR.class);
+    private final Map<LR, Vector2fc> clippedVertices = new EnumMap<LR, Vector2fc>(LR.class);
 
     /**
      * The two input Sites for which this Edge is a bisector:
@@ -107,17 +106,17 @@ public final class Edge {
         return edge;
     }
 
-    public LineSegment delaunayLine() {
+    public Line2f delaunayLine() {
         // draw a line connecting the input Sites for which the edge is a bisector:
-        return new LineSegment(getLeftSite().getCoord(), getRightSite().getCoord());
+        return new Line2f(getLeftSite().getCoord(), getRightSite().getCoord());
     }
 
-    public LineSegment voronoiEdge() {
+    public Line2f voronoiEdge() {
         if (!isVisible()) {
             return null;
         }
-        return new LineSegment(clippedVertices.get(LR.LEFT),
-                clippedVertices.get(LR.RIGHT));
+        return new Line2f(clippedVertices.get(LR.LEFT),
+            clippedVertices.get(LR.RIGHT));
     }
 
     public Vertex getLeftVertex() {
@@ -141,7 +140,7 @@ public final class Edge {
     }
 
     public float sitesDistance() {
-        return BaseVector2f.distance(getLeftSite().getCoord(), getRightSite().getCoord());
+        return getLeftSite().getCoord().distance(getRightSite().getCoord());
     }
 
     public static float compareSitesDistancesMax(Edge edge0, Edge edge1) {
@@ -160,7 +159,7 @@ public final class Edge {
         return -compareSitesDistancesMax(edge0, edge1);
     }
 
-    public Map<LR, Vector2f> getClippedEnds() {
+    public Map<LR, Vector2fc> getClippedEnds() {
         return clippedVertices;
     }
 
@@ -205,11 +204,11 @@ public final class Edge {
      * @param bounds
      *
      */
-    public void clipVertices(Rect2f bounds) {
-        float xmin = bounds.minX();
-        float ymin = bounds.minY();
-        float xmax = bounds.maxX();
-        float ymax = bounds.maxY();
+    public void clipVertices(Rectanglef bounds) {
+        float xmin = bounds.minX;
+        float ymin = bounds.minY;
+        float xmax = bounds.maxX;
+        float ymax = bounds.maxY;
 
         Vertex vertex0;
         Vertex vertex1;
@@ -228,8 +227,8 @@ public final class Edge {
 
         if (getA() == 1.0) {
             y0 = ymin;
-            if (vertex0 != null && vertex0.getY() > ymin) {
-                y0 = vertex0.getY();
+            if (vertex0 != null && vertex0.y() > ymin) {
+                y0 = vertex0.y();
             }
             if (y0 > ymax) {
                 return;
@@ -237,8 +236,8 @@ public final class Edge {
             x0 = getC() - getB() * y0;
 
             y1 = ymax;
-            if (vertex1 != null && vertex1.getY() < ymax) {
-                y1 = vertex1.getY();
+            if (vertex1 != null && vertex1.y() < ymax) {
+                y1 = vertex1.y();
             }
             if (y1 < ymin) {
                 return;
@@ -266,8 +265,8 @@ public final class Edge {
             }
         } else {
             x0 = xmin;
-            if (vertex0 != null && vertex0.getX() > xmin) {
-                x0 = vertex0.getX();
+            if (vertex0 != null && vertex0.x() > xmin) {
+                x0 = vertex0.x();
             }
             if (x0 > xmax) {
                 return;
@@ -275,8 +274,8 @@ public final class Edge {
             y0 = getC() - getA() * x0;
 
             x1 = xmax;
-            if (vertex1 != null && vertex1.getX() < xmax) {
-                x1 = vertex1.getX();
+            if (vertex1 != null && vertex1.x() < xmax) {
+                x1 = vertex1.x();
             }
             if (x1 < xmin) {
                 return;
@@ -316,11 +315,11 @@ public final class Edge {
         // overwrite previously computed coordinates with exact vertex locations
         // where possible. This avoids rounding errors and ensures that equals() works properly.
         // TODO: check before computing the clipped vertices
-        if (leftVertex != null && bounds.contains(leftVertex.getX(), leftVertex.getY())) {
-            clippedVertices.put(LR.LEFT, leftVertex.getCoord());
+        if (leftVertex != null && bounds.containsPoint(leftVertex.x(), leftVertex.y())) {
+            clippedVertices.put(LR.LEFT, new Vector2f(leftVertex.getCoord()));
         }
 
-        if (rightVertex != null && bounds.contains(rightVertex.getX(), rightVertex.getY())) {
+        if (rightVertex != null && bounds.containsPoint(rightVertex.x(), rightVertex.y())) {
             clippedVertices.put(LR.RIGHT, rightVertex.getCoord());
         }
     }

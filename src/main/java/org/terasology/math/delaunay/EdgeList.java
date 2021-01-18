@@ -19,6 +19,7 @@ package org.terasology.math.delaunay;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector2fc;
 import org.terasology.math.geom.Vector2f;
 
 final class EdgeList {
@@ -89,13 +90,13 @@ final class EdgeList {
      * @return
      *
      */
-    public Halfedge edgeListLeftNeighbor(Vector2f p) {
+    public Halfedge edgeListLeftNeighbor(Vector2fc p) {
         int i;
         int bucket;
         Halfedge halfEdge;
 
         /* Use hash table to get close to desired halfedge */
-        bucket = (int) ((p.getX() - xmin) / deltax * hashsize);
+        bucket = (int) ((p.x() - xmin) / deltax * hashsize);
         if (bucket < 0) {
             bucket = 0;
         }
@@ -134,8 +135,8 @@ final class EdgeList {
         return halfEdge;
     }
 
-    /** 
-     * Get entry from hash table, pruning any deleted nodes 
+    /**
+     * Get entry from hash table, pruning any deleted nodes
      */
     private Halfedge getHash(int b) {
         Halfedge halfEdge;
