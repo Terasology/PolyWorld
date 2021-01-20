@@ -16,10 +16,10 @@
 
 package org.terasology.polyworld.debug;
 
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.joml.Vector2ic;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.graph.Triangle;

@@ -16,12 +16,7 @@
 
 package org.terasology.polyworld.viewer.layers;
 
-import org.joml.Rectanglef;
 import org.joml.Vector2fc;
-import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Rect2i;
 import org.terasology.nui.properties.Checkbox;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;

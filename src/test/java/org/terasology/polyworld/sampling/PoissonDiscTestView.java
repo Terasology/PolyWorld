@@ -16,6 +16,15 @@
 
 package org.terasology.polyworld.sampling;
 
+import com.google.common.math.DoubleMath;
+import org.joml.Vector2fc;
+import org.joml.Vector2ic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.terasology.joml.geom.Rectanglef;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -24,21 +33,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.math.RoundingMode;
 import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import org.joml.Rectanglef;
-import org.joml.Vector2fc;
-import org.joml.Vector2ic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
-import org.terasology.math.geom.Vector2i;
-
-import com.google.common.math.DoubleMath;
-import org.terasology.nui.util.RectUtility;
 
 public final class PoissonDiscTestView {
     private static float graphDensity = 10f;

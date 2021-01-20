@@ -17,10 +17,10 @@
 package org.terasology.polyworld.sampling;
 
 import com.google.common.math.DoubleMath;
-import org.joml.Rectanglef;
 import org.joml.Vector2fc;
 import org.junit.Assert;
 import org.junit.Test;
+import org.terasology.joml.geom.Rectanglef;
 
 import java.math.RoundingMode;
 import java.util.List;

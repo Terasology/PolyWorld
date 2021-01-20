@@ -16,8 +16,6 @@
 
 package org.terasology.polyworld.rp;
 
-import org.joml.Rectanglef;
-import org.terasology.math.geom.Rect2i;
 import org.terasology.world.block.BlockArea;
 import org.terasology.world.block.BlockAreac;
 

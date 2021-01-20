@@ -16,9 +16,9 @@
 
 package org.terasology.math.delaunay;
 
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.terasology.joml.geom.Rectanglef;
 
 import java.util.EnumMap;
 import java.util.Map;

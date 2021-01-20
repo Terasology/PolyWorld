@@ -16,23 +16,19 @@
 
 package org.terasology.polyworld;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.junit.Assert;
 import org.junit.Test;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Rect2f;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.world.block.BlockArea;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Tests the correct representation of a {@link Graph}

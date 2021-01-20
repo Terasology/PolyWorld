@@ -16,12 +16,12 @@
 
 package org.terasology.math.delaunay;
 
-import org.joml.Circlef;
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.joml.geom.Circlef;
+import org.terasology.joml.geom.Rectanglef;
 
 import java.util.ArrayList;
 import java.util.Collections;

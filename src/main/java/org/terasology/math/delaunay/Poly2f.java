@@ -5,9 +5,9 @@ package org.terasology.math.delaunay;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.geom.Winding;
 
 import java.util.Collection;

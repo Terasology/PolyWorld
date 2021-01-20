@@ -18,10 +18,10 @@ package org.terasology.polyworld.sampling;
 
 import com.google.common.base.Preconditions;
 import com.google.common.math.DoubleMath;
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.joml.Vector2i;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.utilities.random.Random;
 
 import java.math.RoundingMode;

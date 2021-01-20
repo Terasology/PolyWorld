@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.geom.Winding;
 
 public final class Site implements ICoord {

@@ -17,7 +17,6 @@
 package org.terasology.polyworld.graph;
 
 import com.google.common.collect.Lists;
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.terasology.world.block.BlockArea;
 import org.terasology.world.block.BlockAreac;

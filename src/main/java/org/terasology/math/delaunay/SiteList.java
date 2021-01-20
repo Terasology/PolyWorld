@@ -16,11 +16,9 @@
 
 package org.terasology.math.delaunay;
 
-import org.joml.Circlef;
-import org.joml.Rectanglef;
 import org.joml.Vector2fc;
-import org.terasology.world.block.BlockArea;
-import org.terasology.world.block.BlockAreac;
+import org.terasology.joml.geom.Circlef;
+import org.terasology.joml.geom.Rectanglef;
 
 import java.util.ArrayList;
 import java.util.List;

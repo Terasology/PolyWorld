@@ -16,10 +16,8 @@
 
 package org.terasology.polyworld;
 
-import org.joml.Rectanglef;
 import org.junit.Before;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Rect2f;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.polyworld.graph.GridGraph;
 import org.terasology.world.block.BlockArea;
 
@@ -35,7 +33,7 @@ public class GridGraphTest extends GraphTest {
 
         intBounds = new BlockArea(0, 0, width, height);
         realBounds = intBounds.getBounds(new Rectanglef());
-        
+
         graph = new GridGraph(intBounds, 7, 11);
     }
 }

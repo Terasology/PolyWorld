@@ -16,9 +16,9 @@
 
 package org.terasology.polyworld.graph;
 
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Line2f;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.world.block.BlockArea;

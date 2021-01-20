@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.joml.Rectanglef;
 import org.joml.Vector2fc;
 import org.joml.Vector2ic;
 import org.junit.Assert;
@@ -31,6 +30,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.math.geom.BaseVector2i;
 import org.terasology.math.geom.Rect2f;

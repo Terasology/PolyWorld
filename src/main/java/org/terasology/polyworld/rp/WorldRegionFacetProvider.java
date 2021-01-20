@@ -24,13 +24,13 @@ import org.joml.Vector3i;
 import org.terasology.commonworld.Sector;
 import org.terasology.commonworld.Sectors;
 import org.terasology.entitySystem.Component;
-import org.terasology.math.geom.Rect2i;
 import org.terasology.nui.properties.Range;
 import org.terasology.utilities.procedural.Noise;
 import org.terasology.utilities.procedural.WhiteNoise;
 import org.terasology.world.block.BlockArea;
 import org.terasology.world.block.BlockAreac;
 import org.terasology.world.block.BlockRegion;
+import org.terasology.world.chunks.Chunks;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.GeneratingRegion;
@@ -47,6 +47,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock(false);
+
+    public static final int SECTOR_SIZE = 1024;
+    public static final int SECTOR_POWER = Integer.numberOfTrailingZeros(SECTOR_SIZE);
 
     private RegionProvider regionProvider;
     private Configuration configuration = new Configuration();
@@ -109,17 +112,20 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
         Vector3i min = worldRegion.getMin(new Vector3i());
         Vector3i max = worldRegion.getMax(new Vector3i());
-        Sector minSec = Sectors.getSectorForBlock(min.x, min.z);
-        Sector maxSec = Sectors.getSectorForBlock(max.x, max.z);
+
+
+
+        BlockAreac secArea = new BlockArea(
+            Chunks.toChunkPos(min.x, SECTOR_POWER), Chunks.toChunkPos(min.y, SECTOR_POWER),
+            Chunks.toChunkPos(max.x, SECTOR_POWER), Chunks.toChunkPos(max.y, SECTOR_POWER));
 
         BlockAreac target = new BlockArea(min.x, min.z, max.x, max.z);
 
-        for (int sx = minSec.getCoords().x(); sx <= maxSec.getCoords().x(); sx++) {
-            for (int sz = minSec.getCoords().y(); sz <= maxSec.getCoords().y(); sz++) {
+        for (int sx = secArea.minX(); sx <= secArea.maxX(); sx++) {
+            for (int sz = secArea.minY(); sz <= secArea.maxY(); sz++) {
                 Sector sector = Sectors.getSector(sx, sz);
 
-                BlockAreac sb = sector.getWorldBounds();
-                BlockAreac fullArea = new BlockArea(sb.minX(), sb.minY()).setSize(sb.getSizeX(), sb.getSizeY());
+                BlockAreac fullArea = new BlockArea(sx * SECTOR_SIZE, sz * SECTOR_SIZE).setSize(SECTOR_SIZE, SECTOR_SIZE);
 
                 Collection<WorldRegion> collection = cache.getIfPresent(fullArea);
                 if (collection == null) {

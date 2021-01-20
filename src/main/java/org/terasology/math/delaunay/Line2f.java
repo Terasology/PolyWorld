@@ -3,14 +3,10 @@
 
 package org.terasology.math.delaunay;
 
-import org.joml.Rectanglef;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.terasology.math.TeraMath;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.geom.BaseRect;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Rect2i;
 
 public class Line2f {
     private final Vector2f start = new Vector2f();
@@ -127,44 +123,6 @@ public class Line2f {
     }
 
 
-    /**
-     * Tests if the line segment intersects the given rectangle.
-     * @param rc the rectangle to test
-     * @return true if it intersects, false otherwise
-     */
-    public boolean intersects(Rect2i rc) {
-        float x1 = start.x();
-        float y1 = start.y();
-        float x2 = end.x();
-        float y2 = end.y();
-
-        int out1;
-        int out2 = rc.outcode(x2, y2);
-        if (out2 == 0) {
-            return true;
-        }
-        while ((out1 = rc.outcode(x1, y1)) != 0) {
-            if ((out1 & out2) != 0) {
-                return false;
-            }
-            if ((out1 & (BaseRect.OUT_LEFT | BaseRect.OUT_RIGHT)) != 0) {
-                float x = rc.minX();
-                if ((out1 & BaseRect.OUT_RIGHT) != 0) {
-                    x = Math.nextDown(x + rc.width());
-                }
-                y1 = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
-                x1 = x;
-            } else {
-                float y = rc.minY();
-                if ((out1 & BaseRect.OUT_BOTTOM) != 0) {
-                    y = Math.nextDown(y + rc.height());
-                }
-                x1 = x1 + (y - y1) * (x2 - x1) / (y2 - y1);
-                y1 = y;
-            }
-        }
-        return true;
-    }
 
     private int outcode(Rectanglef rect, float x, float y) {
         int out = 0;
