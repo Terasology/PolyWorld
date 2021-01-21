@@ -16,16 +16,14 @@
 
 package org.terasology.polyworld.graph;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import org.joml.Vector2f;
-import org.joml.Vector2fc;
-import org.terasology.math.geom.ImmutableVector2f;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * Defines a polygon region (vornoi region)

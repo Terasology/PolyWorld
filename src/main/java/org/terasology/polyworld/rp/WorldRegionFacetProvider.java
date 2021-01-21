@@ -21,8 +21,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import org.joml.Vector3i;
-import org.terasology.commonworld.Sector;
-import org.terasology.commonworld.Sectors;
 import org.terasology.entitySystem.Component;
 import org.terasology.nui.properties.Range;
 import org.terasology.utilities.procedural.Noise;
@@ -60,7 +58,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
         @Override
         public Collection<WorldRegion> load(BlockAreac fullArea) throws Exception {
-            float maxArea = 0.75f * Sector.SIZE_X * Sector.SIZE_Z;
+            float maxArea = 0.75f * SECTOR_SIZE * SECTOR_SIZE;
 
             List<WorldRegion> result = Lists.newArrayList();
             for (BlockAreac area : regionProvider.getSectorRegions(fullArea)) {
@@ -91,9 +89,9 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         cache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(loader);
     }
 
-    public WorldRegionFacetProvider(int maxCacheSize,float islandDensity) {
+    public WorldRegionFacetProvider(int maxCacheSize, float islandDensity) {
         cache = CacheBuilder.newBuilder().maximumSize(maxCacheSize).build(loader);
-        configuration.islandDensity =  islandDensity;
+        configuration.islandDensity = islandDensity;
     }
 
     @Override
@@ -113,8 +111,6 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         Vector3i min = worldRegion.getMin(new Vector3i());
         Vector3i max = worldRegion.getMax(new Vector3i());
 
-
-
         BlockAreac secArea = new BlockArea(
             Chunks.toChunkPos(min.x, SECTOR_POWER), Chunks.toChunkPos(min.y, SECTOR_POWER),
             Chunks.toChunkPos(max.x, SECTOR_POWER), Chunks.toChunkPos(max.y, SECTOR_POWER));
@@ -123,8 +119,6 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
         for (int sx = secArea.minX(); sx <= secArea.maxX(); sx++) {
             for (int sz = secArea.minY(); sz <= secArea.maxY(); sz++) {
-                Sector sector = Sectors.getSector(sx, sz);
-
                 BlockAreac fullArea = new BlockArea(sx * SECTOR_SIZE, sz * SECTOR_SIZE).setSize(SECTOR_SIZE, SECTOR_SIZE);
 
                 Collection<WorldRegion> collection = cache.getIfPresent(fullArea);

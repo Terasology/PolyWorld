@@ -40,7 +40,7 @@ public final class Voronoi {
     private final List<Edge> edges = new ArrayList<Edge>();
     // TODO generalize this so it doesn't have to be a rectangle;
     // then we can make the fractal voronois-within-voronois
-    private Rectanglef plotBounds;
+    private Rectanglef plotBounds = new Rectanglef();
 
     public Voronoi(List<Vector2fc> points, Rectanglef plotBounds) {
         init(points, plotBounds);
@@ -65,7 +65,7 @@ public final class Voronoi {
         for (int i = 0; i < numSites; i++) {
             points.add(new Vector2f(r.nextFloat() * maxWidth, r.nextFloat() * maxHeight));
         }
-        init(points, new Rectanglef(0,0,maxWidth, maxHeight));
+        init(points, new Rectanglef(0,0, maxWidth, maxHeight));
         fortunesAlgorithm();
     }
 
@@ -77,7 +77,7 @@ public final class Voronoi {
         sites = new SiteList();
         sitesIndexedByLocation = new HashMap<Vector2fc, Site>();
         addSites(points);
-        this.plotBounds = bounds;
+        this.plotBounds.set(bounds);
     }
 
     private void addSites(List<Vector2fc> points) {

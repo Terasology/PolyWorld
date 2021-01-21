@@ -53,14 +53,14 @@ public class TriangleLookup {
     //       due to binary search in region-triangle start index list
     private final List<Triangle> triangles;
 
-    private final BlockArea bounds = new BlockArea(BlockArea.INVALID);
+    private final BlockAreac bounds;
 
     /**
      * Creates a lookup image for the graph's region triangles
      */
     public TriangleLookup(Graph graph) {
 
-        bounds.set(graph.getBounds());
+        bounds = graph.getBounds();
 
         // TODO: maybe use USHORT_GRAY instead
         image = new BufferedImage(bounds.getSizeX(), bounds.getSizeY(), BufferedImage.TYPE_INT_RGB);

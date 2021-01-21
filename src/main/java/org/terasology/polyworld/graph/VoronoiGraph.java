@@ -117,7 +117,7 @@ public class VoronoiGraph implements Graph {
 
         Vector2f p = transform(srcRc, realBounds, orgPt);
 
-        Corner c = new Corner(new org.joml.Vector2f(p));
+        Corner c = new Corner(p);
         corners.add(c);
         pointCornerMap.put(orgPt, c);
         float diff = 0.01f;

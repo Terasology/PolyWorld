@@ -106,8 +106,6 @@ public final class GraphEditor {
             x /= region.size();
             y /= region.size();
             result.add(new Vector2f(x,y));
-//            p.x(x);
-//            p.y(y);
         }
         return new Voronoi(result, v.getPlotBounds());
     }

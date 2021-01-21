@@ -16,15 +16,13 @@
 
 package org.terasology.polyworld.rp;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import org.terasology.math.Region3i;
-import org.terasology.world.block.BlockRegion;
+import com.google.common.collect.Lists;
+import org.terasology.world.block.BlockRegionc;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.facets.base.SparseFacet3D;
 
-import com.google.common.collect.Lists;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * TODO Type description
@@ -33,7 +31,7 @@ public class WorldRegionFacet extends SparseFacet3D {
 
     private final Collection<WorldRegion> regions = Lists.newArrayList();
 
-    public WorldRegionFacet(BlockRegion targetRegion, Border3D border) {
+    public WorldRegionFacet(BlockRegionc targetRegion, Border3D border) {
         super(targetRegion, border);
     }
 
