@@ -16,6 +16,16 @@
 
 package org.terasology.polyworld;
 
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
+import org.joml.Vector2fc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.graph.GraphRegion;
+import org.terasology.polyworld.graph.Triangle;
+import org.terasology.world.block.BlockAreac;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
@@ -23,20 +33,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import org.joml.Vector2fc;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.graph.GraphRegion;
-import org.terasology.polyworld.graph.Triangle;
-
-import com.google.common.base.Stopwatch;
-import com.google.common.collect.Lists;
-import org.terasology.world.block.BlockArea;
-import org.terasology.world.block.BlockAreac;
 
 /**
  * Creates a image-based lookup table to map individual pixel to triangles
