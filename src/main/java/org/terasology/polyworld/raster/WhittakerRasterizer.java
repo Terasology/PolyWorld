@@ -15,8 +15,8 @@
  */
 package org.terasology.polyworld.raster;
 
+import org.joml.Vector3i;
 import org.terasology.biomesAPI.BiomeRegistry;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeFacet;
 import org.terasology.registry.CoreRegistry;
@@ -63,7 +63,7 @@ public class WhittakerRasterizer implements WorldRasterizer {
         WhittakerBiomeFacet biomeFacet = chunkRegion.getFacet(WhittakerBiomeFacet.class);
         int seaLevel = seaLevelFacet.getSeaLevel();
 
-        Vector3i chunkOffset = chunk.getChunkWorldOffset();
+        Vector3i chunkOffset = chunk.getChunkWorldOffset(new Vector3i());
         for (int x = 0; x < chunk.getChunkSizeX(); ++x) {
             for (int z = 0; z < chunk.getChunkSizeZ(); ++z) {
 

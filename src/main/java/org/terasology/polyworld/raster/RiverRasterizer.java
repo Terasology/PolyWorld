@@ -15,12 +15,11 @@
  */
 package org.terasology.polyworld.raster;
 
+import org.joml.Vector2ic;
+import org.joml.Vector3i;
 import org.terasology.commonworld.geom.BresenhamCollectorVisitor;
 import org.terasology.commonworld.geom.BresenhamLineIterator;
-import org.terasology.math.ChunkMath;
 import org.terasology.math.TeraMath;
-import org.terasology.math.geom.Vector2i;
-import org.terasology.math.geom.Vector3i;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
@@ -30,7 +29,6 @@ import org.terasology.registry.CoreRegistry;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.BlockRegion;
-import org.terasology.world.chunks.ChunkConstants;
 import org.terasology.world.chunks.Chunks;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
@@ -86,14 +84,14 @@ public class RiverRasterizer implements WorldRasterizer {
 
                     BresenhamCollectorVisitor bresenhamCollector = new BresenhamCollectorVisitor();
                     BresenhamLineIterator.iterateLine2D(x0, z0, x1, z1, bresenhamCollector, EnumSet.allOf(BresenhamLineIterator.Overlap.class));
-                    Collection<Vector2i> line = bresenhamCollector.getLinePoints();
+                    Collection<Vector2ic> line = bresenhamCollector.getLinePoints();
 
-                    for (Vector2i p : line) {
-                        if (p.getX() >= region.minX() && p.getX() <= region.maxX() && p.getY() >= region.minZ() && p.getY() <= region.maxZ()) {
-                            int x = ChunkMath.calcRelativeBlockPos(p.getX(), Chunks.INNER_CHUNK_POS_FILTER.x());
-                            int z = ChunkMath.calcRelativeBlockPos(p.getY(), Chunks.INNER_CHUNK_POS_FILTER.z());
+                    for (Vector2ic p : line) {
+                        if (p.x() >= region.minX() && p.x() <= region.maxX() && p.y() >= region.minZ() && p.y() <= region.maxZ()) {
+                            int x = Chunks.toRelative(p.x(), Chunks.INNER_CHUNK_POS_FILTER.x());
+                            int z = Chunks.toRelative(p.y(), Chunks.INNER_CHUNK_POS_FILTER.z());
                             int y = TeraMath.floorToInt(elevationFacet.get(x, z));
-                            Vector3i worldPos = new Vector3i(p.getX(), y, p.getY());
+                            Vector3i worldPos = new Vector3i(p.x(), y, p.y());
 
                             placeWaterBody(chunk, region, worldPos, structElem, seaLevel);
                         }
@@ -147,7 +145,7 @@ public class RiverRasterizer implements WorldRasterizer {
 
                     // remove top layer (soil)
                     if (region.contains(pos.x, pos.y, pos.z)) {
-                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos.x, pos.y, pos.z), air);
+                        chunk.setBlock(Chunks.toRelative(pos.x, pos.y, pos.z, new Vector3i()), air);
                     }
 
                     // don't dig below the sea level
@@ -155,7 +153,7 @@ public class RiverRasterizer implements WorldRasterizer {
                         pos.y -= 1;
                     }
                     if (region.contains(pos.x, pos.y, pos.z)) {
-                        chunk.setBlock(ChunkMath.calcRelativeBlockPos(pos.x, pos.y, pos.z), water);
+                        chunk.setBlock(Chunks.toRelative(pos.x, pos.y, pos.z, new Vector3i()), water);
                     }
                 }
             }

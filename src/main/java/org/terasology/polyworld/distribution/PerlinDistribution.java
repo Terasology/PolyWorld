@@ -16,8 +16,8 @@
 
 package org.terasology.polyworld.distribution;
 
+import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.utilities.procedural.BrownianNoise;
 import org.terasology.utilities.procedural.PerlinNoise;
 

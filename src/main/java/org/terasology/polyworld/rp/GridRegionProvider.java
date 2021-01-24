@@ -16,14 +16,12 @@
 
 package org.terasology.polyworld.rp;
 
-import java.util.Collection;
-
-import org.terasology.math.geom.Rect2i;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.terasology.world.block.BlockArea;
 import org.terasology.world.block.BlockAreac;
+
+import java.util.Collection;
 
 /**
  * Subdivides a rectangle into a regular grid.

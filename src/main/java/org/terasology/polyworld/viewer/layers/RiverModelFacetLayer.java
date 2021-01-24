@@ -17,7 +17,6 @@
 package org.terasology.polyworld.viewer.layers;
 
 import org.joml.Vector2fc;
-import org.terasology.math.geom.BaseVector2f;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.rivers.RiverModel;

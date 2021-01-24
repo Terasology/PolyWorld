@@ -16,11 +16,7 @@
 
 package org.terasology.polyworld;
 
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import com.google.common.math.DoubleMath;
 import org.joml.Vector2fc;
 import org.joml.Vector2ic;
 import org.junit.Assert;
@@ -32,10 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.BaseVector2i;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.graph.Triangle;
 import org.terasology.polyworld.graph.VoronoiGraph;
 import org.terasology.polyworld.sampling.PointSampling;
@@ -43,10 +35,13 @@ import org.terasology.polyworld.sampling.PoissonDiscSampling;
 import org.terasology.utilities.random.FastRandom;
 import org.terasology.utilities.random.MersenneRandom;
 import org.terasology.utilities.random.Random;
-
-import com.google.common.math.DoubleMath;
 import org.terasology.world.block.BlockArea;
 import org.terasology.world.block.BlockAreac;
+
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class LookupTest {

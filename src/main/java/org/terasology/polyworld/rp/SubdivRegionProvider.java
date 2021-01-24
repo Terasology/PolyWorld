@@ -16,16 +16,14 @@
 
 package org.terasology.polyworld.rp;
 
-import java.util.Collection;
-
-import org.terasology.math.geom.Rect2i;
-import org.terasology.utilities.random.MersenneRandom;
-import org.terasology.utilities.random.Random;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import org.terasology.utilities.random.MersenneRandom;
+import org.terasology.utilities.random.Random;
 import org.terasology.world.block.BlockArea;
 import org.terasology.world.block.BlockAreac;
+
+import java.util.Collection;
 
 /**
  * Subdivides a given rectangle recursively.

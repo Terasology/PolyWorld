@@ -16,10 +16,9 @@
 
 package org.terasology.polyworld.rp;
 
-import java.util.Collection;
-
-import org.terasology.math.geom.Rect2i;
 import org.terasology.world.block.BlockAreac;
+
+import java.util.Collection;
 
 /**
  * Provides a collection of subregions based on a given rectangle.

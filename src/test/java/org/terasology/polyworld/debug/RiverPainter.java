@@ -16,15 +16,14 @@
 
 package org.terasology.polyworld.debug;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-
 import org.joml.Vector2fc;
-import org.terasology.math.geom.BaseVector2f;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.rivers.RiverModel;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
 /**
  * Draws the generated rivers on a AWT graphics instance

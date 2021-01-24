@@ -16,11 +16,10 @@
 
 package org.terasology.math.delaunay;
 
+import org.joml.Vector2fc;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.joml.Vector2fc;
-import org.terasology.math.geom.Vector2f;
 
 final class EdgeList {
 

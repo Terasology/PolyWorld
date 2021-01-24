@@ -20,8 +20,6 @@ import com.google.common.base.Stopwatch;
 import org.joml.Vector2fc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.BaseVector2f;
 import org.terasology.nui.properties.Checkbox;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
