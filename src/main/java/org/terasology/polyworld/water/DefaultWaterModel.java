@@ -16,22 +16,19 @@
 
 package org.terasology.polyworld.water;
 
-import java.util.Collection;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Map;
-
+import com.google.common.collect.Maps;
+import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.distribution.Distribution;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
-
-import com.google.common.collect.Maps;
 import org.terasology.world.block.BlockAreac;
+
+import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Uses a {@link Distribution} to define how water is distributed in the graph.

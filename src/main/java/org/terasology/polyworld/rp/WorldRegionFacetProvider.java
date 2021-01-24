@@ -112,8 +112,8 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         Vector3i max = worldRegion.getMax(new Vector3i());
 
         BlockAreac secArea = new BlockArea(
-            Chunks.toChunkPos(min.x, SECTOR_POWER), Chunks.toChunkPos(min.y, SECTOR_POWER),
-            Chunks.toChunkPos(max.x, SECTOR_POWER), Chunks.toChunkPos(max.y, SECTOR_POWER));
+            Chunks.toChunkPos(min.x, SECTOR_POWER), Chunks.toChunkPos(min.z, SECTOR_POWER),
+            Chunks.toChunkPos(max.x, SECTOR_POWER), Chunks.toChunkPos(max.z, SECTOR_POWER));
 
         BlockAreac target = new BlockArea(min.x, min.z, max.x, max.z);
 

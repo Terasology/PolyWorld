@@ -16,12 +16,11 @@
 
 package org.terasology.polyworld.graph;
 
-import java.util.Collection;
-
 import org.terasology.math.geom.Vector2i;
 import org.terasology.polyworld.rp.WorldRegion;
 import org.terasology.world.generation.WorldFacet2D;
-import org.terasology.world.generation.WorldFacet3D;
+
+import java.util.Collection;
 
 /**
  * TODO Type description

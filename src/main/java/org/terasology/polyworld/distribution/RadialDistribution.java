@@ -16,9 +16,11 @@
 
 package org.terasology.polyworld.distribution;
 
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+
 import java.util.Random;
 
-import org.terasology.math.geom.Vector2f;
 
 /**
  * TODO Type description
@@ -45,11 +47,11 @@ public class RadialDistribution implements Distribution {
     }
 
     @Override
-    public boolean isInside(Vector2f p2) {
-        Vector2f p = new Vector2f(2 * (p2.getX() - 0.5f), 2 * (p2.getY() - 0.5f));
+    public boolean isInside(Vector2fc p2) {
+        Vector2f p = new Vector2f(2 * (p2.x() - 0.5f), 2 * (p2.y() - 0.5f));
 
-        float angle = (float) Math.atan2(p.getY(), p.getX());
-        float length = 0.5f * (Math.max(Math.abs(p.getX()), Math.abs(p.getY())) + p.length());
+        float angle = (float) Math.atan2(p.y(), p.x());
+        float length = 0.5f * (Math.max(Math.abs(p.x()), Math.abs(p.y())) + p.length());
 
         float r1 = 0.5f + 0.40f * (float) Math.sin(startAngle + bumps * angle + Math.cos((bumps + 3) * angle));
         float r2 = 0.7f - 0.20f * (float) Math.sin(startAngle + bumps * angle - Math.sin((bumps + 2) * angle));

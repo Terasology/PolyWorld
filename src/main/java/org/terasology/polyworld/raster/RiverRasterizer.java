@@ -31,6 +31,7 @@ import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.BlockRegion;
 import org.terasology.world.chunks.ChunkConstants;
+import org.terasology.world.chunks.Chunks;
 import org.terasology.world.chunks.CoreChunk;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.WorldRasterizer;
@@ -89,8 +90,8 @@ public class RiverRasterizer implements WorldRasterizer {
 
                     for (Vector2i p : line) {
                         if (p.getX() >= region.minX() && p.getX() <= region.maxX() && p.getY() >= region.minZ() && p.getY() <= region.maxZ()) {
-                            int x = ChunkMath.calcRelativeBlockPos(p.getX(), ChunkConstants.INNER_CHUNK_POS_FILTER.x());
-                            int z = ChunkMath.calcRelativeBlockPos(p.getY(), ChunkConstants.INNER_CHUNK_POS_FILTER.z());
+                            int x = ChunkMath.calcRelativeBlockPos(p.getX(), Chunks.INNER_CHUNK_POS_FILTER.x());
+                            int z = ChunkMath.calcRelativeBlockPos(p.getY(), Chunks.INNER_CHUNK_POS_FILTER.z());
                             int y = TeraMath.floorToInt(elevationFacet.get(x, z));
                             Vector3i worldPos = new Vector3i(p.getX(), y, p.getY());
 

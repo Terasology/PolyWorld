@@ -37,7 +37,7 @@ public class PoissonDiscSampling implements PointSampling {
 
     protected Vector2i getGridDimensions(Rectanglef bounds, int numSites) {
 
-        float ratio = (bounds.maxX - bounds.minX) / (bounds.maxY - bounds.minY);
+        float ratio = bounds.getSizeX() / bounds.getSizeY();
         double perRow = Math.sqrt(numSites / ratio);
 
         int rows = DoubleMath.roundToInt(perRow, RoundingMode.FLOOR);

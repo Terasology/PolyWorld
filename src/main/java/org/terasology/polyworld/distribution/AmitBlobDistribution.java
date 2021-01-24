@@ -16,6 +16,7 @@
 
 package org.terasology.polyworld.distribution;
 
+import org.joml.Vector2fc;
 import org.terasology.math.geom.Vector2f;
 
 /**
@@ -24,8 +25,8 @@ import org.terasology.math.geom.Vector2f;
 public class AmitBlobDistribution implements Distribution {
 
     @Override
-    public boolean isInside(Vector2f p2) {
-        Vector2f p = new Vector2f(2 * (p2.getX() - 0.5f), 2 * (p2.getY() - 0.5f));
+    public boolean isInside(Vector2fc p2) {
+        Vector2f p = new Vector2f(2 * (p2.x() - 0.5f), 2 * (p2.y() - 0.5f));
 
         boolean eye1 = new Vector2f(p.getX() - 0.2f, p.getY() / 2 + 0.2f).length() < 0.05f;
         boolean eye2 = new Vector2f(p.getX() + 0.2f, p.getY() / 2 + 0.2f).length() < 0.05f;

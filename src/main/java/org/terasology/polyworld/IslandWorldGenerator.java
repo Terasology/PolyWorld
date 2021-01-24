@@ -98,7 +98,7 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
 
         int searchRadius = 16;
         Vector3i ext = new Vector3i(searchRadius, 1, searchRadius);
-        Vector3i desiredPos = new Vector3i(new Vector3f(pos.x(), 1, pos.z()), RoundingMode.FLOOR);
+        Vector3i desiredPos = new Vector3i(new Vector3f(pos.x(), 1, pos.z()), RoundingMode.HALF_UP);
 
         // try and find somewhere in this region a spot to land
         BlockRegion spawnArea = new BlockRegion(desiredPos).expand(ext);
@@ -121,12 +121,12 @@ public class IslandWorldGenerator extends BaseFacetedWorldGenerator {
         Vector2i target;
         if (picker.getClosest() != null) {
             Vector2fc hit = picker.getClosest().getCenter();
-            target = new Vector2i(new Vector2f(hit.x(), hit.y()), RoundingMode.FLOOR);
+            target = new Vector2i(new Vector2f(hit.x(), hit.y()), RoundingMode.HALF_UP);
         } else {
             target = new Vector2i(desiredPos.x(), desiredPos.z());
         }
 
-        FixedSpawner spawner = new FixedSpawner(target.x(), target.y(), RoundingMode.FLOOR);
+        FixedSpawner spawner = new FixedSpawner(target.x(), target.y());
         return spawner.getSpawnPosition(getWorld(), entity);
     }
 }

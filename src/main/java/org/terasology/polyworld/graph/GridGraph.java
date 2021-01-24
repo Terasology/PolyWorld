@@ -48,8 +48,8 @@ public class GridGraph implements Graph {
         this.cols = cols;
         this.bounds.set(bounds);
 
-        float dx = (float) (bounds.maxX() - bounds.minX()) / cols;
-        float dy = (float) (bounds.maxY() - bounds.minY()) / rows;
+        float dx = (float) bounds.getSizeX() / cols;
+        float dy = (float) bounds.getSizeY() / rows;
 
         for (int r = 0; r <= rows; r++) {
             for (int c = 0; c <= cols; c++) {

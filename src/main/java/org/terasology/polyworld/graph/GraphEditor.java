@@ -35,9 +35,9 @@ public final class GraphEditor {
     }
 
     /**
-     * Moving corners by averaging the nearby centers produces more uniform edge lengths,
-     * although it occasionally worsens the polygon sizes. However, moving corners will
-     * lose the Voronoi diagram properties.
+     * Moving corners by averaging the nearby centers produces more uniform edge lengths, although it occasionally
+     * worsens the polygon sizes. However, moving corners will lose the Voronoi diagram properties.
+     *
      * @param corners the collection of corners
      */
     public static void improveCorners(Collection<Corner> corners) {
@@ -66,6 +66,7 @@ public final class GraphEditor {
 
     /**
      * Moves all corners to a random position within a circle with r=maxDist around it
+     *
      * @param corners the set of corners
      * @param random the random number gen
      * @param maxDist the maximum moving distance
@@ -82,13 +83,13 @@ public final class GraphEditor {
             float len = random.nextFloat(0, maxDist);
             float rx = (float) (Math.cos(ang) * len);
             float ry = (float) (Math.sin(ang) * len);
-            c.setLocation(loc.add(rx,  ry, new Vector2f()));
+            c.setLocation(loc.add(rx, ry, new Vector2f()));
         }
     }
 
     /**
-     * Perform Lloyd's algorithm to achieve well-shaped
-     * and uniformly sized convex cells.
+     * Perform Lloyd's algorithm to achieve well-shaped and uniformly sized convex cells.
+     *
      * @param v the Voronoi diagram to relax
      * @return a new Voronoi diagram
      */
@@ -105,7 +106,7 @@ public final class GraphEditor {
             }
             x /= region.size();
             y /= region.size();
-            result.add(new Vector2f(x,y));
+            result.add(new Vector2f(x, y));
         }
         return new Voronoi(result, v.getPlotBounds());
     }
