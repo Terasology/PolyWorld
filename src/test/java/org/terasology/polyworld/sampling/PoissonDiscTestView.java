@@ -90,15 +90,15 @@ public final class PoissonDiscTestView {
                 int cols = dims.x();
                 int rows = dims.y();
 
-                float cellWidth = (float) (bounds.maxX - bounds.minX) / cols;
-                float cellHeight = (float) (bounds.maxY - bounds.minY) / rows;
+                float cellWidth = (float) bounds.getSizeX() / cols;
+                float cellHeight = (float) bounds.getSizeY() / rows;
 
                 g.translate(bounds.minX, bounds.minY);
                 for (int i = 0; i <= cols; i++) {
                     g.drawLine((int) (i * cellWidth), 0, (int) (i * cellWidth), (int) (bounds.maxY - bounds.minY));
                 }
                 for (int i = 0; i <= rows; i++) {
-                    g.drawLine(0, (int) (i * cellHeight), (int) (bounds.maxX - bounds.minX), (int) (i * cellHeight));
+                    g.drawLine(0, (int) (i * cellHeight), (int) (bounds.getSizeX()), (int) (i * cellHeight));
                 }
                 g.translate(-bounds.minX, -bounds.minY);
             }

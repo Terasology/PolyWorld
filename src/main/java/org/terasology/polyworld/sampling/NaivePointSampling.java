@@ -36,8 +36,8 @@ public class NaivePointSampling implements PointSampling {
     public List<Vector2fc> create(Rectanglef bounds, int numSites, Random rng) {
         List<Vector2fc> points = Lists.newArrayListWithCapacity(numSites);
         for (int i = 0; i < numSites; i++) {
-            float px = bounds.minX + rng.nextFloat() * (bounds.maxX - bounds.minX);
-            float py = bounds.minY + rng.nextFloat() * (bounds.maxY - bounds.minY);
+            float px = bounds.minX + rng.nextFloat() * bounds.getSizeX();
+            float py = bounds.minY + rng.nextFloat() * bounds.getSizeY();
             points.add(new Vector2f(px, py));
         }
         return points;

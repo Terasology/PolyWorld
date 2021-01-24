@@ -56,8 +56,8 @@ public class PoissonDiscSampling implements PointSampling {
         int cols = dims.x();
         int rows = dims.y();
 
-        float cellWidth = (bounds.maxX - bounds.minX) / cols;
-        float cellHeight = (bounds.maxY - bounds.minY) / rows;
+        float cellWidth = bounds.getSizeX() / cols;
+        float cellHeight = bounds.getSizeY() / rows;
         float minRad = Math.min(cellHeight, cellWidth) * 0.5f; // they should be identical
         return minRad;
     }
@@ -69,8 +69,8 @@ public class PoissonDiscSampling implements PointSampling {
         int cols = dims.x();
         int rows = dims.y();
 
-        float cellWidth = (bounds.maxX - bounds.minX) / cols;
-        float cellHeight = (bounds.maxY - bounds.minY) / rows;
+        float cellWidth = bounds.getSizeX() / cols;
+        float cellHeight = bounds.getSizeY() / rows;
         float minRad = getMinRadius(bounds, numSites);
 
 

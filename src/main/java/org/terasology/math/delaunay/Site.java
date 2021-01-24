@@ -226,7 +226,7 @@ public final class Site implements ICoord {
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.LEFT) != 0) {
 
-                        if (rightPoint.y() - bounds.minY + newPoint.y() - bounds.minY < (bounds.maxY  - bounds.minY)) {
+                        if (rightPoint.y() - bounds.minY + newPoint.y() - bounds.minY < bounds.getSizeY()) {
                             py = bounds.minY;
                         } else {
                             py = bounds.maxY;
@@ -243,7 +243,7 @@ public final class Site implements ICoord {
                         py = bounds.minY;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.RIGHT) != 0) {
-                        if (rightPoint.y() - bounds.minY + newPoint.y() - bounds.minY < (bounds.maxY  - bounds.minY)) {
+                        if (rightPoint.y() - bounds.minY + newPoint.y() - bounds.minY < bounds.getSizeY()) {
                             py = bounds.minY;
                         } else {
                             py = bounds.maxY;
@@ -260,7 +260,7 @@ public final class Site implements ICoord {
                         px = bounds.minX;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.BOTTOM) != 0) {
-                        if (rightPoint.x() - bounds.minX + newPoint.x() - bounds.minX < (bounds.maxX - bounds.minX)) {
+                        if (rightPoint.x() - bounds.minX + newPoint.x() - bounds.minX < bounds.getSizeX()) {
                             px = bounds.minX;
                         } else {
                             px = bounds.maxX;
@@ -277,7 +277,7 @@ public final class Site implements ICoord {
                         px = bounds.minX;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.TOP) != 0) {
-                        if (rightPoint.x() - bounds.minX + newPoint.x() - bounds.minX < (bounds.maxX - bounds.minX)) {
+                        if (rightPoint.x() - bounds.minX + newPoint.x() - bounds.minX < bounds.getSizeX()) {
                             px = bounds.minX;
                         } else {
                             px = bounds.maxX;
