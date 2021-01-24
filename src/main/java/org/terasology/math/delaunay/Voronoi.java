@@ -245,8 +245,8 @@ public final class Voronoi {
         Rectanglef dataBounds = sites.getSitesBounds();
 
         int sqrtNumSites = (int) Math.sqrt(sites.getLength() + 4);
-        HalfedgePriorityQueue heap = new HalfedgePriorityQueue(dataBounds.minY,(dataBounds.maxY - dataBounds.minY), sqrtNumSites);
-        EdgeList edgeList = new EdgeList(dataBounds.minX, (dataBounds.maxX - dataBounds.minX), sqrtNumSites);
+        HalfedgePriorityQueue heap = new HalfedgePriorityQueue(dataBounds.minY,dataBounds.getSizeY(), sqrtNumSites);
+        EdgeList edgeList = new EdgeList(dataBounds.minX, dataBounds.getSizeX(), sqrtNumSites);
         List<Halfedge> halfEdges = new ArrayList<Halfedge>();
         List<Vertex> vertices = new ArrayList<Vertex>();
 

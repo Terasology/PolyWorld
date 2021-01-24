@@ -55,7 +55,7 @@ public class GridGraph implements Graph {
             for (int c = 0; c <= cols; c++) {
                 float x = bounds.minX() + c * dx;
                 float y = bounds.minY() + r * dy;
-                Corner corner = new Corner(new Vector2f(x, y));
+                Corner corner = new Corner(new Vector2f(x - .5f, y - .5f));
                 corner.setBorder(r == 0 || c == 0 || r == rows || c == cols);
                 corners.add(corner);
             }

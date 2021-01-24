@@ -19,6 +19,7 @@ package org.terasology.polyworld;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.polyworld.graph.Corner;
@@ -46,10 +47,11 @@ public abstract class GraphTest {
         graph.getCorners().forEach(c -> corners.add(c.getLocation()));
 
         // check location of all border corners
-        Assert.assertTrue(corners.contains(new Vector2f(realBounds.minX, realBounds.minY)));
-        Assert.assertTrue(corners.contains(new Vector2f(realBounds.minX, realBounds.maxY)));
-        Assert.assertTrue(corners.contains(new Vector2f(realBounds.maxX, realBounds.minY)));
-        Assert.assertTrue(corners.contains(new Vector2f(realBounds.maxX, realBounds.maxY)));
+
+        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.minX, realBounds.minY), .001f)).count());
+        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.minX, realBounds.maxY), .001f)).count());
+        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.maxX, realBounds.minY), .001f)).count());
+        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.maxX, realBounds.maxY), .001f)).count());
     }
 
     @Test
