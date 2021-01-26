@@ -95,7 +95,7 @@ public final class PoissonDiscTestView {
 
                 g.translate(bounds.minX, bounds.minY);
                 for (int i = 0; i <= cols; i++) {
-                    g.drawLine((int) (i * cellWidth), 0, (int) (i * cellWidth), (int) (bounds.maxY - bounds.minY));
+                    g.drawLine((int) (i * cellWidth), 0, (int) (i * cellWidth), (int) bounds.getSizeY());
                 }
                 for (int i = 0; i <= rows; i++) {
                     g.drawLine(0, (int) (i * cellHeight), (int) (bounds.getSizeX()), (int) (i * cellHeight));
