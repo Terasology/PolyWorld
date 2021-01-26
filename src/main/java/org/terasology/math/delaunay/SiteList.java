@@ -16,12 +16,12 @@
 
 package org.terasology.math.delaunay;
 
+import org.joml.Vector2fc;
+import org.terasology.joml.geom.Circlef;
+import org.terasology.joml.geom.Rectanglef;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.terasology.math.geom.Circle;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
 
 final class SiteList {
 
@@ -54,7 +54,7 @@ final class SiteList {
         }
     }
 
-    public Rect2f getSitesBounds() {
+    public Rectanglef getSitesBounds() {
         if (!sorted) {
             Site.sortSites(sites);
             currentIndex = 0;
@@ -65,7 +65,7 @@ final class SiteList {
         float ymin;
         float ymax;
         if (sites.isEmpty()) {
-            return Rect2f.createFromMinAndSize(0, 0, 0, 0);
+            return new Rectanglef(0, 0, 0, 0);
         }
         xmin = Float.MAX_VALUE;
         xmax = Float.MIN_VALUE;
@@ -81,11 +81,11 @@ final class SiteList {
         ymin = sites.get(0).getY();
         ymax = sites.get(sites.size() - 1).getY();
 
-        return Rect2f.createFromMinAndMax(xmin, ymin, xmax, ymax);
+        return new Rectanglef(xmin, ymin, xmax, ymax);
     }
 
-    public List<Vector2f> siteCoords() {
-        List<Vector2f> coords = new ArrayList<Vector2f>();
+    public List<Vector2fc> siteCoords() {
+        List<Vector2fc> coords = new ArrayList<Vector2fc>();
         for (Site site : sites) {
             coords.add(site.getCoord());
         }
@@ -96,8 +96,8 @@ final class SiteList {
      * @return the largest circle centered at each site that fits in its region;
      * if the region is infinite, return a circle of radius 0.
      */
-    public List<Circle> circles() {
-        List<Circle> circles = new ArrayList<Circle>();
+    public List<Circlef> circles() {
+        List<Circlef> circles = new ArrayList<Circlef>();
         for (Site site : sites) {
             float radius = 0;
             Edge nearestEdge = site.nearestEdge();
@@ -106,13 +106,13 @@ final class SiteList {
             if (!nearestEdge.isPartOfConvexHull()) {
                 radius = nearestEdge.sitesDistance() * 0.5f;
             }
-            circles.add(new Circle(site.getX(), site.getY(), radius));
+            circles.add(new Circlef(site.getX(), site.getY(), radius));
         }
         return circles;
     }
 
-    public List<List<Vector2f>> regions(Rect2f plotBounds) {
-        List<List<Vector2f>> regions = new ArrayList<List<Vector2f>>();
+    public List<List<Vector2fc>> regions(Rectanglef plotBounds) {
+        List<List<Vector2fc>> regions = new ArrayList<List<Vector2fc>>();
         for (Site site : sites) {
             regions.add(site.region(plotBounds));
         }

@@ -16,7 +16,7 @@
 
 package org.terasology.polyworld.distribution;
 
-import org.terasology.math.geom.Vector2f;
+import org.joml.Vector2fc;
 
 /**
  * TODO Type description
@@ -27,6 +27,6 @@ public interface Distribution {
      * @param point in normalized coordinates [0..1][0..1]
      * @return true if inside
      */
-    boolean isInside(Vector2f point);
+    boolean isInside(Vector2fc point);
 
 }

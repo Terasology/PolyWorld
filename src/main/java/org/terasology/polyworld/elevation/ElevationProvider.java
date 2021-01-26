@@ -17,11 +17,10 @@
 package org.terasology.polyworld.elevation;
 
 import com.google.common.base.Stopwatch;
+import org.joml.Vector2f;
 import org.joml.Vector2ic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.math.geom.BaseVector2i;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.Triangle;

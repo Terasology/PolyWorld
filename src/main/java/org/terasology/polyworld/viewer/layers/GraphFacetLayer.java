@@ -16,10 +16,7 @@
 
 package org.terasology.polyworld.viewer.layers;
 
-import org.terasology.math.JomlUtil;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Rect2i;
+import org.joml.Vector2fc;
 import org.terasology.nui.properties.Checkbox;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
@@ -126,9 +123,9 @@ public class GraphFacetLayer extends AbstractFacetLayer {
         for (Graph graph : graphFacet.getAllGraphs()) {
             if (graph.getBounds().contains(wx, wy)) {
                 Triangle tri = graphFacet.getWorldTriangle(wx, wy);
-                cornerPicker.offer(JomlUtil.from(tri.getCorner1().getLocation()), tri.getCorner1());
-                cornerPicker.offer(JomlUtil.from(tri.getCorner2().getLocation()), tri.getCorner2());
-                sitePicker.offer(JomlUtil.from(tri.getRegion().getCenter()), tri.getRegion());
+                cornerPicker.offer(tri.getCorner1().getLocation(), tri.getCorner1());
+                cornerPicker.offer(tri.getCorner2().getLocation(), tri.getCorner2());
+                sitePicker.offer(tri.getRegion().getCenter(), tri.getRegion());
                 if (cornerPicker.getClosest() != null) {
                     return cornerPicker.getClosest().toString();
                 }
@@ -210,9 +207,9 @@ public class GraphFacetLayer extends AbstractFacetLayer {
         g.setStroke(new BasicStroke(1));
         g.setColor(new Color(192, 192, 192, 160));
         for (Edge e : graph.getEdges()) {
-            BaseVector2f r0c = e.getCorner0().getLocation();
-            BaseVector2f r1c = e.getCorner1().getLocation();
-            g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
+            Vector2fc r0c = e.getCorner0().getLocation();
+            Vector2fc r1c = e.getCorner1().getLocation();
+            g.drawLine((int) r0c.x(), (int) r0c.y(), (int) r1c.x(), (int) r1c.y());
         }
     }
 
@@ -229,8 +226,8 @@ public class GraphFacetLayer extends AbstractFacetLayer {
 
             int i = 0;
             for (Corner corner : pts) {
-                xPoints[i] = (int) corner.getLocation().getX();
-                yPoints[i] = (int) corner.getLocation().getY();
+                xPoints[i] = (int) corner.getLocation().x();
+                yPoints[i] = (int) corner.getLocation().y();
                 i++;
             }
 
@@ -245,11 +242,11 @@ public class GraphFacetLayer extends AbstractFacetLayer {
         g.setColor(new Color(64, 64, 255, 224));
 
         for (final GraphRegion reg : regions) {
-            BaseVector2f p0 = reg.getCenter();
+            Vector2fc p0 = reg.getCenter();
             for (Corner c : reg.getCorners()) {
-                BaseVector2f p1 = c.getLocation();
+                Vector2fc p1 = c.getLocation();
 
-                g.draw(new Line2D.Double(p0.getX(), p0.getY(), p1.getX(), p1.getY()));
+                g.draw(new Line2D.Double(p0.x(), p0.y(), p1.x(), p1.y()));
             }
         }
     }
@@ -259,29 +256,29 @@ public class GraphFacetLayer extends AbstractFacetLayer {
 
         g.setColor(Color.ORANGE);
         for (GraphRegion regs : centers) {
-            BaseVector2f c = regs.getCenter();
-            g.fill(new Rectangle2D.Double(c.getX() - 1, c.getY() - 1, 2, 2));
+            Vector2fc c = regs.getCenter();
+            g.fill(new Rectangle2D.Double(c.x() - 1, c.y() - 1, 2, 2));
         }
     }
 
     public static void drawCorners(Graphics2D g, Graph graph) {
         g.setColor(Color.WHITE);
         for (Corner c : graph.getCorners()) {
-            ImmutableVector2f loc = c.getLocation();
-            g.fill(new Rectangle2D.Double(loc.getX() - 1, loc.getY() - 1, 2, 2));
+            Vector2fc loc = c.getLocation();
+            g.fill(new Rectangle2D.Double(loc.x() - 1, loc.y() - 1, 2, 2));
         }
     }
 
     public static void drawBounds(Graphics2D g, Graph graph) {
-        Rect2i bounds = graph.getBounds();
+        BlockAreac bounds = graph.getBounds();
         g.setColor(Color.PINK);
-        g.drawRect(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+        g.drawRect(bounds.minX(), bounds.minY(), bounds.getSizeX(), bounds.getSizeY());
     }
 
     public static void fillBounds(Graphics2D g, Graph graph) {
-        Rect2i bounds = graph.getBounds();
+        BlockAreac bounds = graph.getBounds();
         g.setColor(Color.MAGENTA);
-        g.fillRect(bounds.minX() + 1, bounds.minY() + 1, bounds.width() - 1, bounds.height() - 1);
+        g.fillRect(bounds.minX() + 1, bounds.minY() + 1, bounds.getSizeX() - 1, bounds.getSizeY() - 1);
     }
 
     @Override

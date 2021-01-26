@@ -16,22 +16,20 @@
 
 package org.terasology.polyworld.graph;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import org.terasology.math.Region3i;
-import org.terasology.math.geom.Vector2i;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.joml.Vector2ic;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.rp.WorldRegion;
 import org.terasology.world.block.BlockRegion;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.facets.base.BaseFacet2D;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Provides a collection of {@link Graph}s that
@@ -69,8 +67,8 @@ public class GraphFacetImpl extends BaseFacet2D implements GraphFacet {
     }
 
     @Override
-    public Graph getWorld(Vector2i pos) {
-        return getWorld(pos.x, pos.y);
+    public Graph getWorld(Vector2ic pos) {
+        return getWorld(pos.x(), pos.y());
     }
 
     @Override
@@ -92,8 +90,8 @@ public class GraphFacetImpl extends BaseFacet2D implements GraphFacet {
     }
 
     @Override
-    public Graph get(Vector2i pos) {
-        return get(pos.x, pos.y);
+    public Graph get(Vector2ic pos) {
+        return get(pos.x(), pos.y());
     }
 
     @Override

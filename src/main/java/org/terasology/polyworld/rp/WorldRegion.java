@@ -16,22 +16,23 @@
 
 package org.terasology.polyworld.rp;
 
-import org.terasology.math.geom.Rect2i;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
 
 /**
  * TODO Type description
  */
 public class WorldRegion {
 
-    private final Rect2i area;
+    private final BlockArea area = new BlockArea(BlockArea.INVALID);
     private RegionType type = RegionType.OCEAN;
     private float heightScaleFactor = 1.0f;
 
     /**
      * @param area the area this region covers
      */
-    public WorldRegion(Rect2i area) {
-        this.area = area;
+    public WorldRegion(BlockAreac area) {
+        this.area.set(area);
     }
 
     public RegionType getType() {
@@ -50,7 +51,7 @@ public class WorldRegion {
         this.heightScaleFactor = heightScaleFactor;
     }
 
-    public Rect2i getArea() {
+    public BlockAreac getArea() {
         return area;
     }
 }

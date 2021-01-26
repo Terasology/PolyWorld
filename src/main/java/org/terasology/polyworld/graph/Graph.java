@@ -16,9 +16,9 @@
 
 package org.terasology.polyworld.graph;
 
-import java.util.List;
+import org.terasology.world.block.BlockAreac;
 
-import org.terasology.math.geom.Rect2i;
+import java.util.List;
 
 /**
  * TODO Type description
@@ -43,5 +43,5 @@ public interface Graph {
     /**
      * @return the bounds
      */
-    Rect2i getBounds();
+    BlockAreac getBounds();
 }

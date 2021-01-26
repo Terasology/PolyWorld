@@ -16,6 +16,13 @@
 
 package org.terasology.math.delaunay;
 
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.terasology.joml.geom.Circlef;
+import org.terasology.joml.geom.Rectanglef;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,72 +30,64 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.Circle;
-import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
-
 public final class Voronoi {
 
     private static final Logger logger = LoggerFactory.getLogger(Voronoi.class);
 
     private SiteList sites;
-    private Map<Vector2f, Site> sitesIndexedByLocation;
+    private Map<Vector2fc, Site> sitesIndexedByLocation;
 
     private final List<Edge> edges = new ArrayList<Edge>();
     // TODO generalize this so it doesn't have to be a rectangle;
     // then we can make the fractal voronois-within-voronois
-    private Rect2f plotBounds;
+    private Rectanglef plotBounds = new Rectanglef();
 
-    public Voronoi(List<Vector2f> points, Rect2f plotBounds) {
+    public Voronoi(List<Vector2fc> points, Rectanglef plotBounds) {
         init(points, plotBounds);
         fortunesAlgorithm();
     }
 
-    public Voronoi(List<Vector2f> points) {
+    public Voronoi(List<Vector2fc> points) {
         float maxWidth = 0;
         float maxHeight = 0;
-        for (Vector2f p : points) {
-            maxWidth = Math.max(maxWidth, p.getX());
-            maxHeight = Math.max(maxHeight, p.getY());
+        for (Vector2fc p : points) {
+            maxWidth = Math.max(maxWidth, p.x());
+            maxHeight = Math.max(maxHeight, p.y());
         }
         logger.debug(maxWidth + "," + maxHeight);
 
-        init(points, Rect2f.createFromMinAndSize(0, 0, maxWidth, maxHeight));
+        init(points, new Rectanglef(0, 0, maxWidth, maxHeight));
         fortunesAlgorithm();
     }
 
     public Voronoi(int numSites, float maxWidth, float maxHeight, Random r) {
-        List<Vector2f> points = new ArrayList<Vector2f>();
+        List<Vector2fc> points = new ArrayList<Vector2fc>();
         for (int i = 0; i < numSites; i++) {
             points.add(new Vector2f(r.nextFloat() * maxWidth, r.nextFloat() * maxHeight));
         }
-        init(points, Rect2f.createFromMinAndSize(0, 0, maxWidth, maxHeight));
+        init(points, new Rectanglef(0,0, maxWidth, maxHeight));
         fortunesAlgorithm();
     }
 
-    public Rect2f getPlotBounds() {
+    public Rectanglef getPlotBounds() {
         return plotBounds;
     }
 
-    private void init(List<Vector2f> points, Rect2f bounds) {
+    private void init(List<Vector2fc> points, Rectanglef bounds) {
         sites = new SiteList();
-        sitesIndexedByLocation = new HashMap<Vector2f, Site>();
+        sitesIndexedByLocation = new HashMap<Vector2fc, Site>();
         addSites(points);
-        this.plotBounds = bounds;
+        this.plotBounds.set(bounds);
     }
 
-    private void addSites(List<Vector2f> points) {
+    private void addSites(List<Vector2fc> points) {
         int length = points.size();
         for (int i = 0; i < length; ++i) {
             addSite(points.get(i), i);
         }
     }
 
-    private void addSite(Vector2f p, int index) {
+    private void addSite(Vector2fc p, int index) {
         Site site = new Site(p, index);
         sites.push(site);
         sitesIndexedByLocation.put(p, site);
@@ -98,7 +97,7 @@ public final class Voronoi {
         return edges;
     }
 
-    public List<Vector2f> region(Vector2f p) {
+    public List<Vector2fc> region(Vector2fc p) {
         Site site = sitesIndexedByLocation.get(p);
         if (site == null) {
             return Collections.emptyList();
@@ -107,8 +106,8 @@ public final class Voronoi {
     }
 
     // TODO: bug: if you call this before you call region(), something goes wrong :(
-    public List<Vector2f> neighborSitesForSite(Vector2f coord) {
-        List<Vector2f> points = new ArrayList<Vector2f>();
+    public List<Vector2fc> neighborSitesForSite(Vector2fc coord) {
+        List<Vector2fc> points = new ArrayList<Vector2fc>();
         Site site = sitesIndexedByLocation.get(coord);
         if (site == null) {
             return points;
@@ -120,7 +119,7 @@ public final class Voronoi {
         return points;
     }
 
-    public List<Circle> circles() {
+    public List<Circlef> circles() {
         return sites.circles();
     }
 
@@ -136,22 +135,22 @@ public final class Voronoi {
         return filtered;
     }
 
-    private List<LineSegment> visibleLineSegments(List<Edge> edgs) {
-        List<LineSegment> segments = new ArrayList<LineSegment>();
+    private List<Line2f> visibleLineSegments(List<Edge> edgs) {
+        List<Line2f> segments = new ArrayList<Line2f>();
 
         for (Edge edge : edgs) {
             if (edge.isVisible()) {
-                Vector2f p1 = edge.getClippedEnds().get(LR.LEFT);
-                Vector2f p2 = edge.getClippedEnds().get(LR.RIGHT);
-                segments.add(new LineSegment(p1, p2));
+                Vector2fc p1 = edge.getClippedEnds().get(LR.LEFT);
+                Vector2fc p2 = edge.getClippedEnds().get(LR.RIGHT);
+                segments.add(new Line2f(p1, p2));
             }
         }
 
         return segments;
     }
 
-    private List<LineSegment> delaunayLinesForEdges(List<Edge> edgs) {
-        List<LineSegment> segments = new ArrayList<LineSegment>();
+    private List<Line2f> delaunayLinesForEdges(List<Edge> edgs) {
+        List<Line2f> segments = new ArrayList<Line2f>();
 
         for (Edge edge : edgs) {
             segments.add(edge.delaunayLine());
@@ -160,19 +159,19 @@ public final class Voronoi {
         return segments;
     }
 
-    public List<LineSegment> voronoiBoundaryForSite(Vector2f coord) {
+    public List<Line2f> voronoiBoundaryForSite(Vector2f coord) {
         return visibleLineSegments(selectEdgesForSitePoint(coord, edges));
     }
 
-    public List<LineSegment> delaunayLinesForSite(Vector2f coord) {
+    public List<Line2f> delaunayLinesForSite(Vector2f coord) {
         return delaunayLinesForEdges(selectEdgesForSitePoint(coord, edges));
     }
 
-    public List<LineSegment> voronoiDiagram() {
+    public List<Line2f> voronoiDiagram() {
         return visibleLineSegments(edges);
     }
 
-    public List<LineSegment> hull() {
+    public List<Line2f> hull() {
         return delaunayLinesForEdges(hullEdges());
     }
 
@@ -195,10 +194,10 @@ public final class Voronoi {
          }*/
     }
 
-    public List<Vector2f> hullPointsInOrder() {
+    public List<Vector2fc> hullPointsInOrder() {
         List<Edge> hullEdges = hullEdges();
 
-        List<Vector2f> points = new ArrayList<Vector2f>();
+        List<Vector2fc> points = new ArrayList<Vector2fc>();
         if (hullEdges.isEmpty()) {
             return points;
         }
@@ -219,11 +218,11 @@ public final class Voronoi {
         return points;
     }
 
-    public List<List<Vector2f>> regions() {
+    public List<List<Vector2fc>> regions() {
         return sites.regions(plotBounds);
     }
 
-    public List<Vector2f> siteCoords() {
+    public List<Vector2fc> siteCoords() {
         return sites.siteCoords();
     }
 
@@ -243,11 +242,11 @@ public final class Voronoi {
         Halfedge bisector;
         Edge edge;
 
-        Rect2f dataBounds = sites.getSitesBounds();
+        Rectanglef dataBounds = sites.getSitesBounds();
 
         int sqrtNumSites = (int) Math.sqrt(sites.getLength() + 4);
-        HalfedgePriorityQueue heap = new HalfedgePriorityQueue(dataBounds.minY(), dataBounds.height(), sqrtNumSites);
-        EdgeList edgeList = new EdgeList(dataBounds.minX(), dataBounds.width(), sqrtNumSites);
+        HalfedgePriorityQueue heap = new HalfedgePriorityQueue(dataBounds.minY,dataBounds.getSizeY(), sqrtNumSites);
+        EdgeList edgeList = new EdgeList(dataBounds.minX, dataBounds.getSizeX(), sqrtNumSites);
         List<Halfedge> halfEdges = new ArrayList<Halfedge>();
         List<Vertex> vertices = new ArrayList<Vertex>();
 
@@ -290,7 +289,7 @@ public final class Voronoi {
                     vertices.add(vertex);
                     heap.remove(lbnd);
                     lbnd.vertex = vertex;
-                    lbnd.ystar = vertex.getY() + BaseVector2f.distance(newSite.getCoord(), vertex.getCoord());
+                    lbnd.ystar = vertex.y() + newSite.getCoord().distance(vertex.getCoord());
                     heap.insert(lbnd);
                 }
 
@@ -306,7 +305,7 @@ public final class Voronoi {
                 if (vertex != null) {
                     vertices.add(vertex);
                     bisector.vertex = vertex;
-                    bisector.ystar = vertex.getY() + BaseVector2f.distance(newSite.getCoord(), vertex.getCoord());
+                    bisector.ystar = vertex.y() + newSite.getCoord().distance(vertex.getCoord());
                     heap.insert(bisector);
                 }
 
@@ -347,14 +346,14 @@ public final class Voronoi {
                     vertices.add(vertex);
                     heap.remove(llbnd);
                     llbnd.vertex = vertex;
-                    llbnd.ystar = vertex.getY() + BaseVector2f.distance(bottomSite.getCoord(), vertex.getCoord());
+                    llbnd.ystar = vertex.y() + bottomSite.getCoord().distance(vertex.getCoord());
                     heap.insert(llbnd);
                 }
                 vertex = Vertex.intersect(bisector, rrbnd);
                 if (vertex != null) {
                     vertices.add(vertex);
                     bisector.vertex = vertex;
-                    bisector.ystar = vertex.getY() + BaseVector2f.distance(bottomSite.getCoord(), vertex.getCoord());
+                    bisector.ystar = vertex.y() + bottomSite.getCoord().distance(vertex.getCoord());
                     heap.insert(bisector);
                 }
             } else {
@@ -411,16 +410,16 @@ public final class Voronoi {
     }
 
     public static int compareByYThenX(Site s1, Vector2f s2) {
-        if (s1.getY() < s2.getY()) {
+        if (s1.getY() < s2.y()) {
             return -1;
         }
-        if (s1.getY() > s2.getY()) {
+        if (s1.getY() > s2.y()) {
             return 1;
         }
-        if (s1.getX() < s2.getX()) {
+        if (s1.getX() < s2.x()) {
             return -1;
         }
-        if (s1.getX() > s2.getX()) {
+        if (s1.getX() > s2.x()) {
             return 1;
         }
         return 0;

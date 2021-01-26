@@ -21,16 +21,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.terasology.math.geom.Polygon;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.geom.Winding;
 
 public final class Site implements ICoord {
 
     private static final float EPSILON = .005f;
 
-    private Vector2f coord;
+    private Vector2f coord = new Vector2f();
 
     private int siteIndex;
 
@@ -47,21 +47,15 @@ public final class Site implements ICoord {
     /**
      * ordered list of points that define the region clipped to bounds:
      */
-    private List<Vector2f> region;
+    private List<Vector2fc> region;
 
-    public Site(Vector2f p, int index) {
-        coord = p;
+    public Site(Vector2fc p, int index) {
+        coord.set(p);
         siteIndex = index;
     }
 
     public static void sortSites(List<Site> sites) {
-        //sites.sort(Site.compare);
-        Collections.sort(sites, new Comparator<Site>() {
-            @Override
-            public int compare(Site o1, Site o2) {
-                return (int) Site.compare(o1, o2);
-            }
-        });
+        Collections.sort(sites, (o1, o2) -> (int) compare(o1, o2));
     }
 
     /**
@@ -95,12 +89,12 @@ public final class Site implements ICoord {
         return returnValue;
     }
 
-    private static boolean closeEnough(Vector2f p0, Vector2f p1) {
+    private static boolean closeEnough(Vector2fc p0, Vector2fc p1) {
         return p0.distanceSquared(p1) < EPSILON * EPSILON;
     }
 
     @Override
-    public Vector2f getCoord() {
+    public Vector2fc getCoord() {
         return coord;
     }
 
@@ -148,14 +142,14 @@ public final class Site implements ICoord {
         return null;
     }
 
-    List<Vector2f> region(Rect2f clippingBounds) {
+    List<Vector2fc> region(Rectanglef clippingBounds) {
         if (getEdges() == null || getEdges().isEmpty()) {
             return Collections.emptyList();
         }
         if (edgeOrientations == null) {
             reorderEdges();
             region = clipToBounds(clippingBounds);
-            if ((Polygon.createCopy(region)).winding() == Winding.CLOCKWISE) {
+            if ((Poly2f.createCopy(region)).winding() == Winding.CLOCKWISE) {
                 Collections.reverse(region);
             }
         }
@@ -171,8 +165,8 @@ public final class Site implements ICoord {
         reorderer.dispose();
     }
 
-    private List<Vector2f> clipToBounds(Rect2f bounds) {
-        List<Vector2f> points = new ArrayList<Vector2f>();
+    private List<Vector2fc> clipToBounds(Rectanglef bounds) {
+        List<Vector2fc> points = new ArrayList<Vector2fc>();
         int n = getEdges().size();
         int i = 0;
         Edge edge;
@@ -202,17 +196,17 @@ public final class Site implements ICoord {
         return points;
     }
 
-    private void connect(List<Vector2f> points, int j, Rect2f bounds, boolean closingUp) {
-        Vector2f rightPoint = points.get(points.size() - 1);
+    private void connect(List<Vector2fc> points, int j, Rectanglef bounds, boolean closingUp) {
+        Vector2fc rightPoint = points.get(points.size() - 1);
         Edge newEdge = getEdges().get(j);
         LR newOrientation = edgeOrientations.get(j);
         // the point that  must be connected to rightPoint:
-        Vector2f newPoint = newEdge.getClippedEnds().get(newOrientation);
+        Vector2fc newPoint = newEdge.getClippedEnds().get(newOrientation);
         if (!closeEnough(rightPoint, newPoint)) {
             // The points do not coincide, so they must have been clipped at the bounds;
             // see if they are on the same border of the bounds:
-            if (rightPoint.getX() != newPoint.getX()
-                    && rightPoint.getY() != newPoint.getY()) {
+            if (rightPoint.x() != newPoint.x()
+                    && rightPoint.y() != newPoint.y()) {
                 // They are on different borders of the bounds;
                 // insert one or two corners of bounds as needed to hook them up:
                 // (NOTE this will not be correct if the region should take up more than
@@ -223,72 +217,73 @@ public final class Site implements ICoord {
                 float px;
                 float py;
                 if ((rightCheck & BoundsCheck.RIGHT) != 0) {
-                    px = bounds.maxX();
+                    px = bounds.maxX;
                     if ((newCheck & BoundsCheck.BOTTOM) != 0) {
-                        py = bounds.maxY();
+                        py = bounds.maxY;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.TOP) != 0) {
-                        py = bounds.minY();
+                        py = bounds.minY;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.LEFT) != 0) {
-                        if (rightPoint.getY() - bounds.minY() + newPoint.getY() - bounds.minY() < bounds.height()) {
-                            py = bounds.minY();
+
+                        if (rightPoint.y() - bounds.minY + newPoint.y() - bounds.minY < bounds.getSizeY()) {
+                            py = bounds.minY;
                         } else {
-                            py = bounds.maxY();
+                            py = bounds.maxY;
                         }
                         points.add(new Vector2f(px, py));
-                        points.add(new Vector2f(bounds.minX(), py));
+                        points.add(new Vector2f(bounds.minX, py));
                     }
                 } else if ((rightCheck & BoundsCheck.LEFT) != 0) {
-                    px = bounds.minX();
+                    px = bounds.minX;
                     if ((newCheck & BoundsCheck.BOTTOM) != 0) {
-                        py = bounds.maxY();
+                        py = bounds.maxY;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.TOP) != 0) {
-                        py = bounds.minY();
+                        py = bounds.minY;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.RIGHT) != 0) {
-                        if (rightPoint.getY() - bounds.minY() + newPoint.getY() - bounds.minY() < bounds.height()) {
-                            py = bounds.minY();
+                        if (rightPoint.y() - bounds.minY + newPoint.y() - bounds.minY < bounds.getSizeY()) {
+                            py = bounds.minY;
                         } else {
-                            py = bounds.maxY();
+                            py = bounds.maxY;
                         }
                         points.add(new Vector2f(px, py));
-                        points.add(new Vector2f(bounds.maxX(), py));
+                        points.add(new Vector2f(bounds.maxX, py));
                     }
                 } else if ((rightCheck & BoundsCheck.TOP) != 0) {
-                    py = bounds.minY();
+                    py = bounds.minY;
                     if ((newCheck & BoundsCheck.RIGHT) != 0) {
-                        px = bounds.maxX();
+                        px = bounds.maxX;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.LEFT) != 0) {
-                        px = bounds.minX();
+                        px = bounds.minX;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.BOTTOM) != 0) {
-                        if (rightPoint.getX() - bounds.minX() + newPoint.getX() - bounds.minX() < bounds.width()) {
-                            px = bounds.minX();
+                        if (rightPoint.x() - bounds.minX + newPoint.x() - bounds.minX < bounds.getSizeX()) {
+                            px = bounds.minX;
                         } else {
-                            px = bounds.maxX();
+                            px = bounds.maxX;
                         }
                         points.add(new Vector2f(px, py));
-                        points.add(new Vector2f(px, bounds.maxY()));
+                        points.add(new Vector2f(px, bounds.maxY));
                     }
                 } else if ((rightCheck & BoundsCheck.BOTTOM) != 0) {
-                    py = bounds.maxY();
+                    py = bounds.maxY;
                     if ((newCheck & BoundsCheck.RIGHT) != 0) {
-                        px = bounds.maxX();
+                        px = bounds.maxX;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.LEFT) != 0) {
-                        px = bounds.minX();
+                        px = bounds.minX;
                         points.add(new Vector2f(px, py));
                     } else if ((newCheck & BoundsCheck.TOP) != 0) {
-                        if (rightPoint.getX() - bounds.minX() + newPoint.getX() - bounds.minX() < bounds.width()) {
-                            px = bounds.minX();
+                        if (rightPoint.x() - bounds.minX + newPoint.x() - bounds.minX < bounds.getSizeX()) {
+                            px = bounds.minX;
                         } else {
-                            px = bounds.maxX();
+                            px = bounds.maxX;
                         }
                         points.add(new Vector2f(px, py));
-                        points.add(new Vector2f(px, bounds.minY()));
+                        points.add(new Vector2f(px, bounds.minY));
                     }
                 }
             }
@@ -298,7 +293,7 @@ public final class Site implements ICoord {
             }
             points.add(newPoint);
         }
-        Vector2f newRightPoint = newEdge.getClippedEnds().get(newOrientation.other());
+        Vector2fc newRightPoint = newEdge.getClippedEnds().get(newOrientation.other());
         if (!closeEnough(points.get(0), newRightPoint)) {
             points.add(newRightPoint);
         }
@@ -338,18 +333,18 @@ public final class Site implements ICoord {
          * corresponding bounds lines
          *
          */
-        static int check(Vector2f point, Rect2f bounds) {
+        static int check(Vector2fc point, Rectanglef bounds) {
             int value = 0;
-            if (point.getX() == bounds.minX()) {
+            if (point.x() == bounds.minX) {
                 value |= LEFT;
             }
-            if (point.getX() == bounds.maxX()) {
+            if (point.x() == bounds.maxX) {
                 value |= RIGHT;
             }
-            if (point.getY() == bounds.minY()) {
+            if (point.y() == bounds.minY) {
                 value |= TOP;
             }
-            if (point.getY() == bounds.maxY()) {
+            if (point.y() == bounds.maxY) {
                 value |= BOTTOM;
             }
             return value;

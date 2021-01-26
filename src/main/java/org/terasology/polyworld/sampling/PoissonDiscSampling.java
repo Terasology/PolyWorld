@@ -16,17 +16,17 @@
 
 package org.terasology.polyworld.sampling;
 
+import com.google.common.base.Preconditions;
+import com.google.common.math.DoubleMath;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+import org.joml.Vector2i;
+import org.terasology.joml.geom.Rectanglef;
+import org.terasology.utilities.random.Random;
+
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
-import org.terasology.math.geom.Vector2i;
-import org.terasology.utilities.random.Random;
-
-import com.google.common.base.Preconditions;
-import com.google.common.math.DoubleMath;
 
 /**
  * Creates a more or less isotropic sampling based on a 2D rectangular grid
@@ -35,9 +35,9 @@ import com.google.common.math.DoubleMath;
  */
 public class PoissonDiscSampling implements PointSampling {
 
-    protected Vector2i getGridDimensions(Rect2f bounds, int numSites) {
+    protected Vector2i getGridDimensions(Rectanglef bounds, int numSites) {
 
-        float ratio = bounds.width() / bounds.height();
+        float ratio = bounds.getSizeX() / bounds.getSizeY();
         double perRow = Math.sqrt(numSites / ratio);
 
         int rows = DoubleMath.roundToInt(perRow, RoundingMode.FLOOR);
@@ -51,42 +51,42 @@ public class PoissonDiscSampling implements PointSampling {
         return new Vector2i(cols, rows);
     }
 
-    protected float getMinRadius(Rect2f bounds, int numSites) {
+    protected float getMinRadius(Rectanglef bounds, int numSites) {
         Vector2i dims = getGridDimensions(bounds, numSites);
-        int cols = dims.getX();
-        int rows = dims.getY();
+        int cols = dims.x();
+        int rows = dims.y();
 
-        float cellWidth = bounds.width() / cols;
-        float cellHeight = bounds.height() / rows;
+        float cellWidth = bounds.getSizeX() / cols;
+        float cellHeight = bounds.getSizeY() / rows;
         float minRad = Math.min(cellHeight, cellWidth) * 0.5f; // they should be identical
         return minRad;
     }
 
     @Override
-    public List<Vector2f> create(Rect2f bounds, int numSites, Random rng) {
+    public List<Vector2fc> create(Rectanglef bounds, int numSites, Random rng) {
 
         Vector2i dims = getGridDimensions(bounds, numSites);
-        int cols = dims.getX();
-        int rows = dims.getY();
+        int cols = dims.x();
+        int rows = dims.y();
 
-        float cellWidth = bounds.width() / cols;
-        float cellHeight = bounds.height() / rows;
+        float cellWidth = bounds.getSizeX() / cols;
+        float cellHeight = bounds.getSizeY() / rows;
         float minRad = getMinRadius(bounds, numSites);
 
 
         Preconditions.checkState(minRad < cellWidth);
         Preconditions.checkState(minRad < cellHeight);
 
-        List<Vector2f> points = new ArrayList<>(numSites);
-        List<Vector2f> cells = new ArrayList<>(numSites);
+        List<Vector2fc> points = new ArrayList<>(numSites);
+        List<Vector2fc> cells = new ArrayList<>(numSites);
 
         // TODO: it should be possible to shorten the list of cells to (cols + 2)
         //       this would also allow for using constant indices
         for (int r = 0; r < rows; r++) {
-            float minY = bounds.minY() + r * cellHeight;
+            float minY = bounds.minY + r * cellHeight;
             for (int c = 0; c < cols; c++) {
                 cells.add(null);
-                float minX = bounds.minX() + c * cellWidth;
+                float minX = bounds.minX + c * cellWidth;
 
                 // try three times to place a new point
                 for (int t = 0; t < 3; t++) {
@@ -113,13 +113,13 @@ public class PoissonDiscSampling implements PointSampling {
         return points;
     }
 
-    private static boolean checkDistance(float px, float py, Vector2f pt, float rad) {
+    private static boolean checkDistance(float px, float py, Vector2fc pt, float rad) {
         if (pt == null) {
             return true;
         }
 
-        float dx = px - pt.getX();
-        float dy = py - pt.getY();
+        float dx = px - pt.x();
+        float dy = py - pt.y();
         return (dx * dx + dy * dy >= rad * rad);
     }
 }

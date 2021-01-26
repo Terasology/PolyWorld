@@ -16,28 +16,28 @@
 
 package org.terasology.polyworld.graph;
 
-import java.math.RoundingMode;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
+import com.google.common.base.Stopwatch;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.math.DoubleMath;
+import org.joml.Vector2fc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.Component;
-import org.terasology.math.geom.Rect2i;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Vector2f;
+import org.terasology.nui.properties.Range;
 import org.terasology.polyworld.TriangleLookup;
 import org.terasology.polyworld.rp.RegionType;
 import org.terasology.polyworld.rp.WorldRegion;
 import org.terasology.polyworld.rp.WorldRegionFacet;
 import org.terasology.polyworld.sampling.PointSampling;
 import org.terasology.polyworld.sampling.PoissonDiscSampling;
-import org.terasology.nui.properties.Range;
 import org.terasology.utilities.random.FastRandom;
 import org.terasology.utilities.random.Random;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
 import org.terasology.world.generation.Facet;
@@ -45,11 +45,11 @@ import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 import org.terasology.world.generation.Requires;
 
-import com.google.common.base.Stopwatch;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.math.DoubleMath;
+import java.math.RoundingMode;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * TODO Type description
@@ -140,7 +140,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
     }
 
     private Graph createGraph(WorldRegion wr) {
-        Rect2i area = wr.getArea();
+        BlockAreac area = wr.getArea();
         if (wr.getType() == RegionType.OCEAN) {
 //            int rows = DoubleMath.roundToInt(area.height() / cellSize, RoundingMode.HALF_UP);
 //            int cols = DoubleMath.roundToInt(area.width() / cellSize, RoundingMode.HALF_UP);
@@ -151,16 +151,16 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         }
     }
 
-    private static Graph createGridGraph(Rect2i bounds, int rows, int cols) {
+    private static Graph createGridGraph(BlockAreac bounds, int rows, int cols) {
 
-        Rect2i doubleBounds = Rect2i.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(),
-                bounds.height());
+        BlockAreac doubleBounds = new BlockArea(bounds.minX(), bounds.minY()).setSize(bounds.getSizeX(),
+            bounds.getSizeY());
         final Graph graph = new GridGraph(doubleBounds, rows, cols);
 
         return graph;
     }
 
-    private Graph createVoronoiGraph(Rect2i bounds, int numSites) {
+    private Graph createVoronoiGraph(BlockAreac bounds, int numSites) {
 
         // use different seeds for different areas.
         // also use the number of target sites since similar numbers could lead to identical
@@ -170,11 +170,12 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
         PointSampling sampling = new PoissonDiscSampling();
 
-        Rect2f doubleBounds = Rect2f.createFromMinAndSize(0, 0, bounds.width(), bounds.height());
+        BlockArea area = new BlockArea(0, 0).setSize(bounds.getSizeX(), bounds.getSizeY());
+        Rectanglef doubleBounds = area.getBounds(new Rectanglef());
 
         // avoid very small triangles at the border by adding a 5 block border
-        Rect2f islandBounds = Rect2f.createFromMinAndSize(5, 5, bounds.width() - 10, bounds.height() - 10);
-        List<Vector2f> points = sampling.create(islandBounds, numSites, rng);
+        Rectanglef islandBounds = area.expand(-5, -5).getBounds(new Rectanglef());
+        List<Vector2fc> points = sampling.create(islandBounds, numSites, rng);
 
         Voronoi v = new Voronoi(points, doubleBounds);
 

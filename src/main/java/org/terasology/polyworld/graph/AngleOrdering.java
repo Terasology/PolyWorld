@@ -16,30 +16,29 @@
 
 package org.terasology.polyworld.graph;
 
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Vector2f;
 
 import com.google.common.collect.Ordering;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 
 /**
  * Defines an order of points around a central point, based on their angle
  */
 final class AngleOrdering extends Ordering<Corner> {
 
-    private final ImmutableVector2f center;
+    private final Vector2f center = new Vector2f();
 
     /**
      * @param center the center point
      */
-    AngleOrdering(ImmutableVector2f center) {
-        this.center = center;
+    AngleOrdering(Vector2fc center) {
+        this.center.set(center);
     }
 
     @Override
     public int compare(Corner o0, Corner o1) {
-        BaseVector2f p0 = o0.getLocation();
-        BaseVector2f p1 = o1.getLocation();
+        Vector2fc p0 = o0.getLocation();
+        Vector2fc p1 = o1.getLocation();
 
         if (p0.equals(p1)) {
             return 0;

@@ -16,15 +16,14 @@
 
 package org.terasology.polyworld.graph;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.Vector2f;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * Defines a polygon region (vornoi region)
@@ -35,13 +34,13 @@ public class GraphRegion {
     private final Collection<Edge> borders;
     private final Collection<GraphRegion> neighbors;
 
-    private final ImmutableVector2f center;
+    private final Vector2f center = new Vector2f();
 
     /**
      * @param centerPos the center of the region
      */
-    public GraphRegion(ImmutableVector2f centerPos) {
-        this.center = centerPos;
+    public GraphRegion(Vector2fc centerPos) {
+        this.center.set(centerPos);
         this.corners = Sets.newTreeSet(new AngleOrdering(centerPos));
         this.borders = Sets.newLinkedHashSet();
         this.neighbors = Sets.newLinkedHashSet();
@@ -50,7 +49,7 @@ public class GraphRegion {
     /**
      * @return the pos
      */
-    public ImmutableVector2f getCenter() {
+    public Vector2fc getCenter() {
         return center;
     }
 

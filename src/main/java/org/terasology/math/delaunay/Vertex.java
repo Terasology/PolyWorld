@@ -16,16 +16,17 @@
 
 package org.terasology.math.delaunay;
 
-import org.terasology.math.geom.Vector2f;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 
 final class Vertex implements ICoord {
 
     public static final Vertex VERTEX_AT_INFINITY = new Vertex(Float.NaN, Float.NaN);
 
-    private Vector2f coord;
+    private final Vector2f coord = new Vector2f();
 
     private Vertex(float x, float y) {
-        coord = new Vector2f(x, y);
+        coord.set(x,y);
     }
 
     private static Vertex create(float x, float y) {
@@ -37,7 +38,7 @@ final class Vertex implements ICoord {
     }
 
     @Override
-    public Vector2f getCoord() {
+    public Vector2fc getCoord() {
         return coord;
     }
 
@@ -96,11 +97,11 @@ final class Vertex implements ICoord {
         return Vertex.create(intersectionX, intersectionY);
     }
 
-    public float getX() {
+    public float x() {
         return coord.x();
     }
 
-    public float getY() {
+    public float y() {
         return coord.y();
     }
 }

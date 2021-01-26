@@ -17,9 +17,9 @@
 package org.terasology.polyworld;
 
 import org.junit.Before;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Rect2f;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.polyworld.graph.GridGraph;
+import org.terasology.world.block.BlockArea;
 
 /**
  * TODO Type description
@@ -31,8 +31,8 @@ public class GridGraphTest extends GraphTest {
         final int width = 512;
         final int height = 256;
 
-        intBounds = Rect2i.createFromMinAndSize(0, 0, width, height);
-        realBounds = Rect2f.createFromMinAndSize(intBounds.minX(), intBounds.minY(), intBounds.width(), intBounds.height());
+        intBounds = new BlockArea(0, 0, width, height);
+        realBounds = intBounds.getBounds(new Rectanglef());
 
         graph = new GridGraph(intBounds, 7, 11);
     }

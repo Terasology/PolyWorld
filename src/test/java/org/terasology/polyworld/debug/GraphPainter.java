@@ -16,26 +16,22 @@
 
 package org.terasology.polyworld.debug;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.Path2D;
-import java.math.RoundingMode;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.Vector2f;
+import com.google.common.base.Function;
+import org.joml.Vector2fc;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
+import org.terasology.world.block.BlockAreac;
 
-import com.google.common.base.Function;
-import com.google.common.math.DoubleMath;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Path2D;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Draws the generated graph on a AWT graphics instance
@@ -52,9 +48,9 @@ public class GraphPainter {
         g.setStroke(new BasicStroke(1));
         g.setColor(Color.ORANGE);
         for (Edge e : graph.getEdges()) {
-            BaseVector2f r0c = e.getRegion0().getCenter();
-            BaseVector2f r1c = e.getRegion1().getCenter();
-            g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
+            Vector2fc r0c = e.getRegion0().getCenter();
+            Vector2fc r1c = e.getRegion1().getCenter();
+            g.drawLine((int) r0c.x(), (int) r0c.y(), (int) r1c.x(), (int) r1c.y());
         }
     }
 
@@ -62,9 +58,9 @@ public class GraphPainter {
         g.setStroke(new BasicStroke(0));
         g.setColor(Color.CYAN);
         for (Edge e : graph.getEdges()) {
-            BaseVector2f r0c = e.getCorner0().getLocation();
-            BaseVector2f r1c = e.getCorner1().getLocation();
-            g.drawLine((int) r0c.getX(), (int) r0c.getY(), (int) r1c.getX(), (int) r1c.getY());
+            Vector2fc r0c = e.getCorner0().getLocation();
+            Vector2fc r1c = e.getCorner1().getLocation();
+            g.drawLine((int) r0c.x(), (int) r0c.y(), (int) r1c.x(), (int) r1c.y());
         }
     }
 
@@ -81,8 +77,8 @@ public class GraphPainter {
 
             int i = 0;
             for (Corner corner : pts) {
-                xPoints[i] = (int) corner.getLocation().getX();
-                yPoints[i] = (int) corner.getLocation().getY();
+                xPoints[i] = (int) corner.getLocation().x();
+                yPoints[i] = (int) corner.getLocation().y();
                 i++;
             }
 
@@ -99,14 +95,14 @@ public class GraphPainter {
         for (final GraphRegion reg : regions) {
             for (Triangle tri : reg.computeTriangles()) {
                 g.setColor(new Color(r.nextInt(0xFFFFFF)));
-                BaseVector2f p0 = tri.getRegion().getCenter();
-                BaseVector2f p1 = tri.getCorner1().getLocation();
-                BaseVector2f p2 = tri.getCorner2().getLocation();
+                Vector2fc p0 = tri.getRegion().getCenter();
+                Vector2fc p1 = tri.getCorner1().getLocation();
+                Vector2fc p2 = tri.getCorner2().getLocation();
 
                 Path2D path = new Path2D.Double();
-                path.moveTo(p0.getX(), p0.getY());
-                path.lineTo(p1.getX(), p1.getY());
-                path.lineTo(p2.getX(), p2.getY());
+                path.moveTo(p0.x(), p0.y());
+                path.lineTo(p1.x(), p1.y());
+                path.lineTo(p2.x(), p2.y());
 
                 g.fill(path);
             }
@@ -118,27 +114,27 @@ public class GraphPainter {
 
         g.setColor(Color.BLACK);
         for (GraphRegion s : centers) {
-            g.fillOval((int) (s.getCenter().getX() - 2), (int) (s.getCenter().getY() - 2), 4, 4);
+            g.fillOval((int) (s.getCenter().x() - 2), (int) (s.getCenter().y() - 2), 4, 4);
         }
     }
 
     public void drawCorners(Graphics2D g, Graph graph) {
         g.setColor(Color.WHITE);
         for (Corner c : graph.getCorners()) {
-            g.fillOval((int) (c.getLocation().getX() - 2), (int) (c.getLocation().getY() - 2), 4, 4);
+            g.fillOval((int) (c.getLocation().x() - 2), (int) (c.getLocation().y() - 2), 4, 4);
         }
     }
 
     public void drawBounds(Graphics2D g, Graph graph) {
-        Rect2i bounds = graph.getBounds();
+        BlockAreac bounds = graph.getBounds();
         g.setColor(Color.BLACK);
-        g.drawRect(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+        g.drawRect(bounds.minX(), bounds.minY(), bounds.getSizeX(), bounds.getSizeY());
     }
 
     public void fillBounds(Graphics2D g, Graph graph) {
-        Rect2i bounds = graph.getBounds();
+        BlockAreac bounds = graph.getBounds();
         g.setColor(Color.MAGENTA);
-        g.fillRect(bounds.minX() + 1, bounds.minY() + 1, bounds.width() - 1, bounds.height() - 1);
+        g.fillRect(bounds.minX() + 1, bounds.minY() + 1, bounds.getSizeX() - 1, bounds.getSizeY() - 1);
     }
 
 }

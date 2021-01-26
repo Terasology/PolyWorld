@@ -16,11 +16,9 @@
 
 package org.terasology.polyworld;
 
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import com.google.common.math.DoubleMath;
+import org.joml.Vector2fc;
+import org.joml.Vector2ic;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +26,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.BaseVector2i;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Vector2f;
 import org.terasology.polyworld.graph.Triangle;
 import org.terasology.polyworld.graph.VoronoiGraph;
 import org.terasology.polyworld.sampling.PointSampling;
@@ -40,8 +35,13 @@ import org.terasology.polyworld.sampling.PoissonDiscSampling;
 import org.terasology.utilities.random.FastRandom;
 import org.terasology.utilities.random.MersenneRandom;
 import org.terasology.utilities.random.Random;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
 
-import com.google.common.math.DoubleMath;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @RunWith(Parameterized.class)
 public class LookupTest {
@@ -70,13 +70,13 @@ public class LookupTest {
         int width = rng.nextInt(100, 2000);
         int height = rng.nextInt(100, 2000);
 
-        Rect2i intBounds = Rect2i.createFromMinAndSize(x, y, width, height);
-        Rect2f realBounds = Rect2f.createFromMinAndSize(intBounds.minX(), intBounds.minY(), intBounds.width(), intBounds.height());
+        BlockAreac intBounds = new BlockArea(x, y).setSize(width, height);
+        Rectanglef realBounds = intBounds.getBounds(new Rectanglef());
 
         PointSampling sampling = new PoissonDiscSampling();
 
         int numSites = DoubleMath.roundToInt(intBounds.area() * rng.nextDouble(0.5, 5) / 1000, RoundingMode.HALF_UP);
-        List<Vector2f> points = sampling.create(realBounds, numSites, rng);
+        List<Vector2fc> points = sampling.create(realBounds, numSites, rng);
 
         logger.info("Sampled {} with {} points", intBounds, points.size());
 
@@ -84,8 +84,8 @@ public class LookupTest {
         VoronoiGraph graph = new VoronoiGraph(intBounds, v);
 
         TriangleLookup lookup = new TriangleLookup(graph);
-        for (BaseVector2i coord : intBounds.contents()) {
-            Triangle tri = lookup.findTriangleAt(coord.getX(), coord.getY());
+        for (Vector2ic coord : intBounds) {
+            Triangle tri = lookup.findTriangleAt(coord.x(), coord.y());
             Assert.assertNotNull(tri);
         }
     }

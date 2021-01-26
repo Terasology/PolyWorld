@@ -16,10 +16,10 @@
 
 package org.terasology.math.delaunay;
 
+import org.joml.Vector2f;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.terasology.math.geom.Vector2f;
 
 final class HalfedgePriorityQueue {
     private List<Halfedge> hash;
@@ -37,7 +37,7 @@ final class HalfedgePriorityQueue {
         count = 0;
         minBucket = 0;
         hash = new ArrayList<Halfedge>(hashsize);
-        
+
         // dummy Halfedge at the top of each hash
         for (int i = 0; i < hashsize; ++i) {
             hash.add(Halfedge.createDummy());
@@ -64,7 +64,7 @@ final class HalfedgePriorityQueue {
         }
         previous = hash.get(insertionBucket);
         next = previous.nextInPriorityQueue;
-        while (next != null && (halfEdge.ystar > next.ystar || (halfEdge.ystar == next.ystar && halfEdge.vertex.getX() > next.vertex.getX()))) {
+        while (next != null && (halfEdge.ystar > next.ystar || (halfEdge.ystar == next.ystar && halfEdge.vertex.x() > next.vertex.x()))) {
             previous = next;
             next = previous.nextInPriorityQueue;
         }
@@ -128,7 +128,7 @@ final class HalfedgePriorityQueue {
     public Vector2f min() {
         adjustMinBucket();
         Halfedge answer = hash.get(minBucket).nextInPriorityQueue;
-        return new Vector2f(answer.vertex.getX(), answer.ystar);
+        return new Vector2f(answer.vertex.x(), answer.ystar);
     }
 
     /**

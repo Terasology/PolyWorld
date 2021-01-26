@@ -16,7 +16,7 @@
 
 package org.terasology.polyworld.viewer.layers;
 
-import org.terasology.math.geom.BaseVector2f;
+import org.joml.Vector2fc;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.rivers.RiverModel;
@@ -80,9 +80,9 @@ public class RiverModelFacetLayer extends AbstractFacetLayer {
             if (riverValue > 0) {
                 g.setStroke(new BasicStroke(1 + (int) Math.sqrt(riverValue * 2)));
                 g.setColor(riverColor);
-                BaseVector2f c0p = e.getCorner0().getLocation();
-                BaseVector2f c1p = e.getCorner1().getLocation();
-                g.drawLine((int) c0p.getX(), (int) c0p.getY(), (int) c1p.getX(), (int) c1p.getY());
+                Vector2fc c0p = e.getCorner0().getLocation();
+                Vector2fc c1p = e.getCorner1().getLocation();
+                g.drawLine((int) c0p.x(), (int) c0p.y(), (int) c1p.x(), (int) c1p.y());
             }
         }
         g.setStroke(new BasicStroke());

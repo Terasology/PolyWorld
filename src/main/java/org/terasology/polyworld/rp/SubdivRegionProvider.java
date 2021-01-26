@@ -16,14 +16,14 @@
 
 package org.terasology.polyworld.rp;
 
-import java.util.Collection;
-
-import org.terasology.math.geom.Rect2i;
-import org.terasology.utilities.random.MersenneRandom;
-import org.terasology.utilities.random.Random;
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import org.terasology.utilities.random.MersenneRandom;
+import org.terasology.utilities.random.Random;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
+
+import java.util.Collection;
 
 /**
  * Subdivides a given rectangle recursively.
@@ -66,20 +66,20 @@ public class SubdivRegionProvider implements RegionProvider {
     }
 
     @Override
-    public Collection<Rect2i> getSectorRegions(Rect2i fullArea) {
+    public Collection<BlockAreac> getSectorRegions(BlockAreac fullArea) {
 
         MersenneRandom random = new MersenneRandom(seed ^ fullArea.hashCode());
 
-        Collection<Rect2i> areas = Lists.newArrayList();
+        Collection<BlockAreac> areas = Lists.newArrayList();
 
         split(areas, random, baseSplitProb, fullArea);
 
         return areas;
     }
 
-    private void split(Collection<Rect2i> areas, Random random, float splitProb, Rect2i fullArea) {
-        int maxWidth = fullArea.width();
-        int maxHeight = fullArea.height();
+    private void split(Collection<BlockAreac> areas, Random random, float splitProb, BlockAreac fullArea) {
+        int maxWidth = fullArea.getSizeX();
+        int maxHeight = fullArea.getSizeY();
 
         boolean splitX = maxWidth >= maxHeight;
         int range = (splitX ? maxWidth : maxHeight) - 2 * minEdgeLen;
@@ -112,8 +112,8 @@ public class SubdivRegionProvider implements RegionProvider {
                 y = fullArea.minY() + height;
             }
 
-            Rect2i first = Rect2i.createFromMinAndSize(fullArea.minX(), fullArea.minY(), width, height);
-            Rect2i second = Rect2i.createFromMinAndMax(x, y, fullArea.maxX(), fullArea.maxY());
+            BlockArea first = new BlockArea(fullArea.minX(), fullArea.minY()).setSize(width, height);
+            BlockArea second = new BlockArea(x, y, fullArea.maxX(), fullArea.maxY());
 
             float childSplitProb = splitProb / 2f;
             split(areas, random, childSplitProb, first);

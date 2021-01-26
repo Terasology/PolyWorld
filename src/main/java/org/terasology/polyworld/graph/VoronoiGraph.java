@@ -16,19 +16,19 @@
 
 package org.terasology.polyworld.graph;
 
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+import org.terasology.joml.geom.Rectanglef;
+import org.terasology.math.delaunay.Line2f;
+import org.terasology.math.delaunay.Voronoi;
+import org.terasology.world.block.BlockArea;
+import org.terasology.world.block.BlockAreac;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.terasology.math.delaunay.Voronoi;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.ImmutableVector2f;
-import org.terasology.math.geom.LineSegment;
-import org.terasology.math.geom.Rect2f;
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.Vector2f;
 
 /**
  * VoronoiGraph.java
@@ -39,28 +39,28 @@ public class VoronoiGraph implements Graph {
     private final List<Edge> edges = new ArrayList<>();
     private final List<Corner> corners = new ArrayList<>();
     private final List<GraphRegion> regions = new ArrayList<>();
-    private final Rect2f realBounds;
-    private final Rect2i intBounds;
+    private final Rectanglef realBounds = new Rectanglef();
+    private final BlockArea intBounds = new BlockArea(BlockArea.INVALID);
 
     /**
      * @param bounds bounds of the target area (points from Voronoi will be scaled and translated accordingly)
      * @param v the Voronoi diagram to use
      */
-    public VoronoiGraph(Rect2i bounds, Voronoi v) {
+    public VoronoiGraph(BlockAreac bounds, Voronoi v) {
 
-        intBounds = bounds;
-        realBounds = Rect2f.createFromMinAndSize(bounds.minX(), bounds.minY(), bounds.width(), bounds.height());
+        intBounds.set(bounds);
+        bounds.getBounds(realBounds);
 
-        final Map<Vector2f, GraphRegion> regionMap = new HashMap<>();
-        final Map<BaseVector2f, Corner> pointCornerMap = new HashMap<>();
+        final Map<Vector2fc, GraphRegion> regionMap = new HashMap<>();
+        final Map<Vector2fc, Corner> pointCornerMap = new HashMap<>();
 
-        for (Vector2f vorSite : v.siteCoords()) {
+        for (Vector2fc vorSite : v.siteCoords()) {
             Vector2f site = transform(v.getPlotBounds(), realBounds, vorSite);
-            GraphRegion region = new GraphRegion(new ImmutableVector2f(site));
+            GraphRegion region = new GraphRegion(new Vector2f(site));
             regions.add(region);
-            regionMap.put(vorSite, region);
+            regionMap.put(new Vector2f(vorSite), region);
 
-            for (Vector2f pt : v.region(vorSite)) {
+            for (Vector2fc pt : v.region(vorSite)) {
                 Corner c0 = makeCorner(pointCornerMap, v.getPlotBounds(), pt);
 
                 region.addCorner(c0);
@@ -74,8 +74,8 @@ public class VoronoiGraph implements Graph {
                 continue;
             }
 
-            final LineSegment dEdge = libedge.delaunayLine();
-            final LineSegment vEdge = libedge.voronoiEdge();
+            final Line2f dEdge = libedge.delaunayLine();
+            final Line2f vEdge = libedge.voronoiEdge();
 
             Corner c0 = makeCorner(pointCornerMap, v.getPlotBounds(), vEdge.getStart());
             Corner c1 = makeCorner(pointCornerMap, v.getPlotBounds(), vEdge.getEnd());
@@ -108,7 +108,7 @@ public class VoronoiGraph implements Graph {
     /**
      * ensures that each corner is represented by only one corner object
      */
-    private Corner makeCorner(Map<BaseVector2f, Corner> pointCornerMap, Rect2f srcRc, BaseVector2f orgPt) {
+    private Corner makeCorner(Map<Vector2fc, Corner> pointCornerMap, Rectanglef srcRc, Vector2fc orgPt) {
 
         Corner exist = pointCornerMap.get(orgPt);
         if (exist != null) {
@@ -117,14 +117,14 @@ public class VoronoiGraph implements Graph {
 
         Vector2f p = transform(srcRc, realBounds, orgPt);
 
-        Corner c = new Corner(new ImmutableVector2f(p));
+        Corner c = new Corner(p);
         corners.add(c);
         pointCornerMap.put(orgPt, c);
         float diff = 0.01f;
-        boolean onLeft = closeEnough(p.getX(), realBounds.minX(), diff);
-        boolean onTop = closeEnough(p.getY(), realBounds.minY(), diff);
-        boolean onRight = closeEnough(p.getX(), realBounds.maxX(), diff);
-        boolean onBottom = closeEnough(p.getY(), realBounds.maxY(), diff);
+        boolean onLeft = closeEnough(p.x(), realBounds.minX, diff);
+        boolean onTop = closeEnough(p.y(), realBounds.minY, diff);
+        boolean onRight = closeEnough(p.x(), realBounds.maxX, diff);
+        boolean onBottom = closeEnough(p.y(), realBounds.maxY, diff);
         if (onLeft || onTop || onRight || onBottom) {
             c.setBorder(true);
         }
@@ -160,7 +160,7 @@ public class VoronoiGraph implements Graph {
      * @return the bounds
      */
     @Override
-    public Rect2i getBounds() {
+    public BlockAreac getBounds() {
         return intBounds;
     }
 
@@ -171,15 +171,15 @@ public class VoronoiGraph implements Graph {
      * @param pt The point to transform
      * @return The new, transformed point
      */
-    private static Vector2f transform(Rect2f srcRc, Rect2f dstRc, BaseVector2f pt) {
+    private static Vector2f transform(Rectanglef srcRc, Rectanglef dstRc, Vector2fc pt) {
 
         // TODO: move this to a better place
 
-        float x = (pt.getX() - srcRc.minX()) / srcRc.width();
-        float y = (pt.getY() - srcRc.minY()) / srcRc.height();
+        float x = (pt.x() - srcRc.minX) / srcRc.getSizeX();
+        float y = (pt.y() - srcRc.minY) / srcRc.getSizeY();
 
-        x = dstRc.minX() + x * dstRc.width();
-        y = dstRc.minY() + y * dstRc.height();
+        x = dstRc.minX + x * dstRc.getSizeX();
+        y = dstRc.minY + y * dstRc.getSizeY();
 
         return new Vector2f(x, y);
     }

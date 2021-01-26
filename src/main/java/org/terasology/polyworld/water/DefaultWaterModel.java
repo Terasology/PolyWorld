@@ -16,20 +16,19 @@
 
 package org.terasology.polyworld.water;
 
-import java.util.Collection;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Map;
-
-import org.terasology.math.geom.Rect2i;
-import org.terasology.math.geom.BaseVector2f;
-import org.terasology.math.geom.Vector2f;
+import com.google.common.collect.Maps;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
 import org.terasology.polyworld.distribution.Distribution;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
+import org.terasology.world.block.BlockAreac;
 
-import com.google.common.collect.Maps;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * Uses a {@link Distribution} to define how water is distributed in the graph.
@@ -54,10 +53,10 @@ public class DefaultWaterModel implements WaterModel {
         final float waterThreshold = .3f;
 
         for (Corner c : graph.getCorners()) {
-            Rect2i bounds = graph.getBounds();
-            BaseVector2f p2 = c.getLocation();
-            float nx = (p2.getX() - bounds.minX()) / bounds.width();
-            float ny = (p2.getY() - bounds.minY()) / bounds.height();
+            BlockAreac bounds = graph.getBounds();
+            Vector2fc p2 = c.getLocation();
+            float nx = (p2.x() - bounds.minX()) / bounds.getSizeX();
+            float ny = (p2.y() - bounds.minY()) / bounds.getSizeY();
 
             setWater(c, dist.isInside(new Vector2f(nx, ny)));
         }
