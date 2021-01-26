@@ -47,7 +47,7 @@ public final class PoissonDiscTestView {
 //      int rows = DoubleMath.roundToInt(area.height() / cellSize, RoundingMode.HALF_UP);
 //      int cols = DoubleMath.roundToInt(area.width() / cellSize, RoundingMode.HALF_UP);
 
-        Rectanglef area = new Rectanglef(30, 10, 30 + 512, 10 + 256);
+        Rectanglef area = new Rectanglef(30, 10).setSize(512, 256);
         int numSites = DoubleMath.roundToInt(area.area() * graphDensity / 1000, RoundingMode.HALF_UP);
 
         logger.info("START GRID");
