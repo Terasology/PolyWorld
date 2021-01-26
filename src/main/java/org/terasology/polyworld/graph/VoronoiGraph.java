@@ -175,8 +175,8 @@ public class VoronoiGraph implements Graph {
 
         // TODO: move this to a better place
 
-        float x = (pt.x() - srcRc.minX) / (srcRc.maxX - srcRc.minX);
-        float y = (pt.y() - srcRc.minY) / (srcRc.maxY - srcRc.minY);
+        float x = (pt.x() - srcRc.minX) / srcRc.getSizeX();
+        float y = (pt.y() - srcRc.minY) / srcRc.getSizeY();
 
         x = dstRc.minX + x * (dstRc.maxX - dstRc.minX);
         y = dstRc.minY + y * dstRc.getSizeY();
