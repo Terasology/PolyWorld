@@ -137,7 +137,7 @@ public class Line2f {
             out |= BaseRect.OUT_TOP | BaseRect.OUT_BOTTOM;
         } else if (y < rect.minY) {
             out |= BaseRect.OUT_TOP;
-        } else if (y >= rect.minY + (rect.maxY - rect.minY)) {
+        } else if (y >= rect.minY + rect.getSizeY()) {
             out |= BaseRect.OUT_BOTTOM;
         }
         return out;
