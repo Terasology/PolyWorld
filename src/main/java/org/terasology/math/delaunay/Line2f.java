@@ -130,7 +130,7 @@ public class Line2f {
             out |= BaseRect.OUT_LEFT | BaseRect.OUT_RIGHT;
         } else if (x < rect.minX) {
             out |= BaseRect.OUT_LEFT;
-        } else if (x >= rect.minX + (rect.maxX - rect.minX)) {
+        } else if (x >= rect.minX + (rect.getSizeX())) {
             out |= BaseRect.OUT_RIGHT;
         }
         if (rect.getSizeY() <= 0) {
@@ -158,9 +158,9 @@ public class Line2f {
         float y2 = end.y();
 
         float minX = rect.minX;
-        float maxX = Math.nextDown(rect.minX + (rect.maxX - rect.minX));
+        float maxX = Math.nextDown(rect.minX + rect.getSizeX());
         float minY = rect.minY;
-        float maxY = Math.nextDown(rect.minY + (rect.maxY - rect.minY));
+        float maxY = Math.nextDown(rect.minY + rect.getSizeY());
 
         int f1 = this.outcode(rect, x1, y1);
         int f2 = this.outcode(rect, x2, y2);
