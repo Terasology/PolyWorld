@@ -126,7 +126,7 @@ public class Line2f {
 
     private int outcode(Rectanglef rect, float x, float y) {
         int out = 0;
-        if ((rect.maxX - rect.minX) <= 0) {
+        if (rect.getSizeX() <= 0) {
             out |= BaseRect.OUT_LEFT | BaseRect.OUT_RIGHT;
         } else if (x < rect.minX) {
             out |= BaseRect.OUT_LEFT;
