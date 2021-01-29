@@ -30,7 +30,6 @@ import org.terasology.engine.SimpleUri;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.logic.location.LocationComponent;
 import org.terasology.logic.spawner.FixedSpawner;
-import org.terasology.math.JomlUtil;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeModelFacet;

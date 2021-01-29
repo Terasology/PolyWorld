@@ -16,14 +16,13 @@
 
 package org.terasology.polyworld.graph;
 
+import com.google.common.collect.Sets;
+import org.joml.Vector2f;
+import org.joml.Vector2fc;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-
-import org.joml.Vector2f;
-
-import com.google.common.collect.Sets;
-import org.joml.Vector2fc;
 
 /**
  * Corner.java

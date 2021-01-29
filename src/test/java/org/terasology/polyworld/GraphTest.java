@@ -19,7 +19,6 @@ package org.terasology.polyworld;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.polyworld.graph.Corner;

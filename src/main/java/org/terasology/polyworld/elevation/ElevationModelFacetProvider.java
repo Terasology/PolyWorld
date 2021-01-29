@@ -16,15 +16,14 @@
 
 package org.terasology.polyworld.elevation;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
-import org.terasology.polyworld.rp.WorldRegionFacet;
 import org.terasology.polyworld.rp.WorldRegion;
+import org.terasology.polyworld.rp.WorldRegionFacet;
 import org.terasology.polyworld.water.WaterModel;
 import org.terasology.polyworld.water.WaterModelFacet;
 import org.terasology.world.generation.Facet;
@@ -33,8 +32,8 @@ import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 import org.terasology.world.generation.Requires;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 /**
  * TODO Type description

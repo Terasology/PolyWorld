@@ -16,18 +16,18 @@
 
 package org.terasology.polyworld.elevation;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.terasology.polyworld.graph.Corner;
+import org.terasology.polyworld.graph.Graph;
+import org.terasology.polyworld.water.WaterModel;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import org.terasology.polyworld.graph.Corner;
-import org.terasology.polyworld.graph.Graph;
-import org.terasology.polyworld.water.WaterModel;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * TODO Type description

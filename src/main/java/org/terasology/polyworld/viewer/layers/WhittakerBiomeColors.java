@@ -16,6 +16,12 @@
 
 package org.terasology.polyworld.viewer.layers;
 
+import com.google.common.collect.ImmutableMap;
+import org.terasology.nui.Color;
+import org.terasology.polyworld.biome.WhittakerBiome;
+
+import java.util.function.Function;
+
 import static org.terasology.polyworld.biome.WhittakerBiome.BARE;
 import static org.terasology.polyworld.biome.WhittakerBiome.BEACH;
 import static org.terasology.polyworld.biome.WhittakerBiome.COAST;
@@ -36,13 +42,6 @@ import static org.terasology.polyworld.biome.WhittakerBiome.TEMPERATE_RAIN_FORES
 import static org.terasology.polyworld.biome.WhittakerBiome.TROPICAL_RAIN_FOREST;
 import static org.terasology.polyworld.biome.WhittakerBiome.TROPICAL_SEASONAL_FOREST;
 import static org.terasology.polyworld.biome.WhittakerBiome.TUNDRA;
-
-import java.util.function.Function;
-
-import org.terasology.polyworld.biome.WhittakerBiome;
-import org.terasology.nui.Color;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * Maps biome types to color.

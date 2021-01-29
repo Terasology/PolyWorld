@@ -16,12 +16,11 @@
 
 package org.terasology.polyworld.debug;
 
-import java.awt.Color;
-import java.util.Random;
-
+import com.google.common.base.Function;
 import org.terasology.polyworld.graph.GraphRegion;
 
-import com.google.common.base.Function;
+import java.awt.Color;
+import java.util.Random;
 
 /**
  * TODO Type description
