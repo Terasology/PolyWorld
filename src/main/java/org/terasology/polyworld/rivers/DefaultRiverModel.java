@@ -16,17 +16,16 @@
 
 package org.terasology.polyworld.rivers;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
+import com.google.common.collect.Maps;
 import org.terasology.polyworld.elevation.ElevationModel;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.water.WaterModel;
 
-import com.google.common.collect.Maps;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * TODO Type description

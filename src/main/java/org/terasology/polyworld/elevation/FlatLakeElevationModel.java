@@ -16,10 +16,10 @@
 
 package org.terasology.polyworld.elevation;
 
-import java.util.Map;
-
-import org.terasology.polyworld.graph.Corner;
 import com.google.common.collect.Maps;
+import org.terasology.polyworld.graph.Corner;
+
+import java.util.Map;
 
 /**
  *

@@ -16,9 +16,8 @@
 
 package org.terasology.polyworld.biome;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.polyworld.elevation.ElevationModel;
@@ -35,8 +34,8 @@ import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Produces;
 import org.terasology.world.generation.Requires;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 /**
  * TODO Type description

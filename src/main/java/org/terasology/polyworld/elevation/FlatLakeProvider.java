@@ -15,13 +15,7 @@
  */
 package org.terasology.polyworld.elevation;
 
-import java.util.Collection;
-import java.util.Deque;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.function.Predicate;
-
+import com.google.common.collect.Sets;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
@@ -34,7 +28,12 @@ import org.terasology.world.generation.GeneratingRegion;
 import org.terasology.world.generation.Requires;
 import org.terasology.world.generation.Updates;
 
-import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Makes sure that all corners of lake polygons have that same height.

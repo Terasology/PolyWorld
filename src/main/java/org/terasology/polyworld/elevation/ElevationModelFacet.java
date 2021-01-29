@@ -16,12 +16,11 @@
 
 package org.terasology.polyworld.elevation;
 
-import java.util.Map;
-
+import com.google.common.collect.Maps;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.world.generation.WorldFacet;
 
-import com.google.common.collect.Maps;
+import java.util.Map;
 
 /**
  * Manages {@link ElevationModel} instances per graph.

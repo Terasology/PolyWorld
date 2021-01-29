@@ -16,14 +16,13 @@
 
 package org.terasology.polyworld.rivers;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.Maps;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.world.generation.WorldFacet;
 
-import com.google.common.collect.Maps;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * TODO Type description

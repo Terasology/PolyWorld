@@ -16,14 +16,14 @@
 
 package org.terasology.polyworld.graph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.utilities.random.Random;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * TODO Type description
