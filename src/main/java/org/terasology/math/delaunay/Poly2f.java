@@ -8,7 +8,6 @@ import com.google.common.collect.ImmutableList;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.terasology.joml.geom.Rectanglef;
-import org.terasology.math.geom.Winding;
 
 import java.util.Collection;
 import java.util.List;
