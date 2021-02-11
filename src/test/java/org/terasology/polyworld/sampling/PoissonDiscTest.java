@@ -18,12 +18,13 @@ package org.terasology.polyworld.sampling;
 
 import com.google.common.math.DoubleMath;
 import org.joml.Vector2fc;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.terasology.joml.geom.Rectanglef;
 
 import java.math.RoundingMode;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class PoissonDiscTest {
 
@@ -46,7 +47,7 @@ public class PoissonDiscTest {
                 if (p0.distanceSquared(p1) < rad * rad) {
                     System.err.println("FAIL FOR " + p1);
                     System.err.println("EXISTING " + p0);
-                    Assert.fail(String.format("Distance for %d/%d == %.2f", i, j, p0.distance(p1)));
+                    fail(String.format("Distance for %d/%d == %.2f", i, j, p0.distance(p1)));
                 }
             }
         }

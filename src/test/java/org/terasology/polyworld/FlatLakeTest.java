@@ -16,9 +16,8 @@
 
 package org.terasology.polyworld;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.engine.SimpleUri;
@@ -34,6 +33,8 @@ import org.terasology.world.block.BlockRegion;
 import org.terasology.world.generation.Region;
 import org.terasology.world.generation.World;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * Tests the flatness of lakes
  */
@@ -43,7 +44,7 @@ public class FlatLakeTest {
 
     private IslandWorldGenerator worldGen;
 
-    @Before
+    @BeforeEach
     public void setup() {
         TinyEnvironment.setup();
 
@@ -83,16 +84,13 @@ public class FlatLakeTest {
         float centerElevation = elevationModel.getElevation(reg);
         float eps = 0.001f;
         for (Corner corner : reg.getCorners()) {
-            Assert.assertEquals(centerElevation, elevationModel.getElevation(corner), eps);
+            assertEquals(centerElevation, elevationModel.getElevation(corner), eps);
         }
     }
 
     private Region createRegion(int minX, int minY, int maxX, int maxY) {
-
         BlockRegion area3d = new BlockRegion(minX, 0, minY, maxX, 1, maxY);
         World world = worldGen.getWorld();
-        Region region = world.getWorldData(area3d);
-
-        return region;
+        return world.getWorldData(area3d);
     }
 }

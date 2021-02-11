@@ -16,7 +16,7 @@
 
 package org.terasology.polyworld;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.polyworld.graph.GridGraph;
 import org.terasology.world.block.BlockArea;
@@ -26,7 +26,7 @@ import org.terasology.world.block.BlockArea;
  */
 public class GridGraphTest extends GraphTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
         final int width = 512;
         final int height = 256;

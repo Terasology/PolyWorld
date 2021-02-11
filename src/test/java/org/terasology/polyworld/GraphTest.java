@@ -18,8 +18,7 @@ package org.terasology.polyworld;
 
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
@@ -30,6 +29,9 @@ import org.terasology.world.block.BlockArea;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * Tests the correct representation of a {@link Graph}
  */
@@ -47,21 +49,21 @@ public abstract class GraphTest {
 
         // check location of all border corners
 
-        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.minX, realBounds.minY), .001f)).count());
-        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.minX, realBounds.maxY), .001f)).count());
-        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.maxX, realBounds.minY), .001f)).count());
-        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.maxX, realBounds.maxY), .001f)).count());
+        assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.minX, realBounds.minY), .001f)).count());
+        assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.minX, realBounds.maxY), .001f)).count());
+        assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.maxX, realBounds.minY), .001f)).count());
+        assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(realBounds.maxX, realBounds.maxY), .001f)).count());
     }
 
     @Test
     public void testGraphEdgesExist() {
 
         for (Edge e : graph.getEdges()) {
-            Assert.assertTrue(graph.getRegions().contains(e.getRegion0()));
-            Assert.assertTrue(graph.getRegions().contains(e.getRegion1()));
+            assertTrue(graph.getRegions().contains(e.getRegion0()));
+            assertTrue(graph.getRegions().contains(e.getRegion1()));
 
-            Assert.assertTrue(graph.getCorners().contains(e.getCorner0()));
-            Assert.assertTrue(graph.getCorners().contains(e.getCorner1()));
+            assertTrue(graph.getCorners().contains(e.getCorner0()));
+            assertTrue(graph.getCorners().contains(e.getCorner1()));
         }
     }
 
@@ -75,23 +77,23 @@ public abstract class GraphTest {
             Corner c0 = e.getCorner0();
             Corner c1 = e.getCorner1();
 
-            Assert.assertTrue(r0.getCorners().contains(c0));
-            Assert.assertTrue(r0.getCorners().contains(c1));
+            assertTrue(r0.getCorners().contains(c0));
+            assertTrue(r0.getCorners().contains(c1));
 
-            Assert.assertTrue(r1.getCorners().contains(c0));
-            Assert.assertTrue(r1.getCorners().contains(c1));
+            assertTrue(r1.getCorners().contains(c0));
+            assertTrue(r1.getCorners().contains(c1));
 
-            Assert.assertTrue(c0.getTouches().contains(r0));
-            Assert.assertTrue(c0.getTouches().contains(r1));
+            assertTrue(c0.getTouches().contains(r0));
+            assertTrue(c0.getTouches().contains(r1));
 
-            Assert.assertTrue(c1.getTouches().contains(r0));
-            Assert.assertTrue(c1.getTouches().contains(r1));
+            assertTrue(c1.getTouches().contains(r0));
+            assertTrue(c1.getTouches().contains(r1));
 
-            Assert.assertTrue(c1.getAdjacent().contains(c0));
-            Assert.assertTrue(c0.getAdjacent().contains(c1));
+            assertTrue(c1.getAdjacent().contains(c0));
+            assertTrue(c0.getAdjacent().contains(c1));
 
-            Assert.assertTrue(r0.getNeighbors().contains(r1));
-            Assert.assertTrue(r1.getNeighbors().contains(r0));
+            assertTrue(r0.getNeighbors().contains(r1));
+            assertTrue(r1.getNeighbors().contains(r0));
         }
     }
 
@@ -99,7 +101,7 @@ public abstract class GraphTest {
     public void testGraphCornerRegions() {
 
         for (GraphRegion r : graph.getRegions()) {
-            Assert.assertTrue(graph.getCorners().containsAll(r.getCorners()));
+            assertTrue(graph.getCorners().containsAll(r.getCorners()));
         }
     }
 
@@ -108,12 +110,12 @@ public abstract class GraphTest {
         float eps = 0.1f;
         for (Corner c : graph.getCorners()) {
             if ((Math.abs(c.getLocation().x() - realBounds.minX) < eps)
-             || (Math.abs(c.getLocation().x() - realBounds.maxX) < eps)
-             || (Math.abs(c.getLocation().y() - realBounds.minY) < eps)
-             || (Math.abs(c.getLocation().y() - realBounds.maxY) < eps)) {
-                Assert.assertTrue("Corner must have border flag: " + c, c.isBorder());
+                    || (Math.abs(c.getLocation().x() - realBounds.maxX) < eps)
+                    || (Math.abs(c.getLocation().y() - realBounds.minY) < eps)
+                    || (Math.abs(c.getLocation().y() - realBounds.maxY) < eps)) {
+                assertTrue(c.isBorder(), "Corner must have border flag: " + c);
             } else {
-                Assert.assertFalse("Corner must not have border flag: " + c, c.isBorder());
+                assertFalse(c.isBorder(), "Corner must not have border flag: " + c);
             }
         }
     }
@@ -121,14 +123,14 @@ public abstract class GraphTest {
     @Test
     public void testGraphRegionNeighborsSet() {
         for (GraphRegion r : graph.getRegions()) {
-            Assert.assertFalse(r.getNeighbors().isEmpty());
+            assertFalse(r.getNeighbors().isEmpty());
         }
     }
 
     @Test
     public void testGraphCornerTouchesSet() {
         for (Corner c : graph.getCorners()) {
-            Assert.assertFalse(c.getTouches().isEmpty());
+            assertFalse(c.getTouches().isEmpty());
         }
     }
 
