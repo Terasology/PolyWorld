@@ -19,11 +19,9 @@ package org.terasology.polyworld;
 import com.google.common.math.DoubleMath;
 import org.joml.Vector2fc;
 import org.joml.Vector2ic;
-import org.junit.Assert;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.joml.geom.Rectanglef;
@@ -42,6 +40,8 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class LookupTest {
     private static final Logger logger = LoggerFactory.getLogger(LookupTest.class);
@@ -81,7 +81,7 @@ public class LookupTest {
         TriangleLookup lookup = new TriangleLookup(graph);
         for (Vector2ic coord : intBounds) {
             Triangle tri = lookup.findTriangleAt(coord.x(), coord.y());
-            Assert.assertNotNull(tri);
+            assertNotNull(tri);
         }
     }
 
