@@ -70,7 +70,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
 
             Graph graph = createGraph(wr);
 
-            logger.info("Created graph for {} in {}ms.", wr.getArea(), sw.elapsed(TimeUnit.MILLISECONDS));
+            logger.debug("Created graph for {} in {}ms.", wr.getArea(), sw.elapsed(TimeUnit.MILLISECONDS));
 
             return graph;
         }
