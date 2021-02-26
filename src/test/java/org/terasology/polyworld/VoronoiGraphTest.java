@@ -18,8 +18,8 @@ package org.terasology.polyworld;
 
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Voronoi;
@@ -68,7 +68,7 @@ public class VoronoiGraphTest extends GraphTest {
     }
 
     @Test
-    @Ignore // umm the locations changed
+    @Disabled // umm the locations changed
     public void testVoronoiLocations() {
         List<Vector2fc> corners = new ArrayList<>();
         graph.getCorners().forEach(c -> corners.add(c.getLocation()));
