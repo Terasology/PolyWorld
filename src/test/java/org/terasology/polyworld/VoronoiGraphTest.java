@@ -18,10 +18,9 @@ package org.terasology.polyworld;
 
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.polyworld.graph.GraphRegion;
@@ -32,6 +31,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Tests the correct representation of a {@link VoronoiGraph}
  */
@@ -39,7 +41,7 @@ public class VoronoiGraphTest extends GraphTest {
 
     protected List<Vector2fc> points;
 
-    @Before
+    @BeforeEach
     public void setup() {
         final int width = 512;
         final int height = 256;
@@ -59,23 +61,22 @@ public class VoronoiGraphTest extends GraphTest {
     @Test
     public void testRegionAndSiteMatch() {
         List<GraphRegion> regions = graph.getRegions();
-        Assert.assertEquals("Number of regions differs from number of input sites", points.size(), regions.size());
+        assertEquals(points.size(), regions.size(), "Number of regions differs from number of input sites");
         for (GraphRegion reg : regions) {
-            Assert.assertTrue(points.contains(reg.getCenter()));
+            assertTrue(points.contains(reg.getCenter()));
         }
     }
 
     @Test
-    @Ignore // umm the locations changed
+    @Disabled // umm the locations changed
     public void testVoronoiLocations() {
         List<Vector2fc> corners = new ArrayList<>();
         graph.getCorners().forEach(c -> corners.add(c.getLocation()));
 
-        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(171, 128), .001f)).count());
-        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(192, 256), .001f)).count());
-        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(308, 256), .001f)).count());
-        Assert.assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(332, 160), .001f)).count());
-
+        assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(171, 128), .001f)).count());
+        assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(192, 256), .001f)).count());
+        assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(308, 256), .001f)).count());
+        assertEquals(1, corners.stream().filter(c -> c.equals(new Vector2f(332, 160), .001f)).count());
     }
 }
 

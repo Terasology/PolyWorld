@@ -19,11 +19,9 @@ package org.terasology.polyworld;
 import com.google.common.math.DoubleMath;
 import org.joml.Vector2fc;
 import org.joml.Vector2ic;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.joml.geom.Rectanglef;
@@ -39,31 +37,28 @@ import org.terasology.world.block.BlockArea;
 import org.terasology.world.block.BlockAreac;
 
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
-@RunWith(Parameterized.class)
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class LookupTest {
     private static final Logger logger = LoggerFactory.getLogger(LookupTest.class);
-    private MersenneRandom rng;
 
-    public LookupTest(long seed) {
-        rng = new MersenneRandom(seed);
-    }
-
-    @Parameters(name = "{index}: seed={0}")
-    public static Collection<Object[]> data() {
-        List<Object[]> params = new ArrayList<>();
+    public static Stream<Arguments> generateSeed() {
         Random seedGen = new FastRandom(12345);
+        Arguments[] args = new Arguments[50];
         for (int i = 0; i < 50; i++) {
-            params.add(new Object[] {seedGen.nextInt()});
+            args[i] = Arguments.of(seedGen.nextInt());
         }
-        return params;
+        return Arrays.stream(args);
     }
 
-    @Test
-    public void testCoverage() {
+    @ParameterizedTest
+    @MethodSource("generateSeed")
+    public void testCoverage(int seed) {
+        MersenneRandom rng = new MersenneRandom(seed);
 
         int x = rng.nextInt(-10000, 10000);
         int y = rng.nextInt(-10000, 10000);
@@ -86,7 +81,7 @@ public class LookupTest {
         TriangleLookup lookup = new TriangleLookup(graph);
         for (Vector2ic coord : intBounds) {
             Triangle tri = lookup.findTriangleAt(coord.x(), coord.y());
-            Assert.assertNotNull(tri);
+            assertNotNull(tri);
         }
     }
 
