@@ -19,8 +19,8 @@ package org.terasology.polyworld.sampling;
 import com.google.common.collect.Lists;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.terasology.engine.utilities.random.Random;
 import org.terasology.joml.geom.Rectanglef;
-import org.terasology.utilities.random.Random;
 
 import java.util.List;
 

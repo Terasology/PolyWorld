@@ -18,13 +18,13 @@ package org.terasology.polyworld.moisture;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.terasology.engine.utilities.random.FastRandom;
+import org.terasology.engine.utilities.random.Random;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.water.WaterModel;
-import org.terasology.utilities.random.FastRandom;
-import org.terasology.utilities.random.Random;
 
 import java.util.Collections;
 import java.util.Comparator;

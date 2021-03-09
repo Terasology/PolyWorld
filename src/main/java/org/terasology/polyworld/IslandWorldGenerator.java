@@ -26,10 +26,18 @@ import org.terasology.core.world.generator.facetProviders.SeaLevelProvider;
 import org.terasology.core.world.generator.facetProviders.SurfaceToDensityProvider;
 import org.terasology.core.world.generator.rasterizers.FloraRasterizer;
 import org.terasology.core.world.generator.rasterizers.TreeRasterizer;
-import org.terasology.engine.SimpleUri;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.logic.location.LocationComponent;
-import org.terasology.logic.spawner.FixedSpawner;
+import org.terasology.engine.core.SimpleUri;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.logic.location.LocationComponent;
+import org.terasology.engine.logic.spawner.FixedSpawner;
+import org.terasology.engine.registry.CoreRegistry;
+import org.terasology.engine.world.block.BlockRegion;
+import org.terasology.engine.world.generation.BaseFacetedWorldGenerator;
+import org.terasology.engine.world.generation.Region;
+import org.terasology.engine.world.generation.WorldBuilder;
+import org.terasology.engine.world.generator.RegisterWorldGenerator;
+import org.terasology.engine.world.generator.plugin.WorldGeneratorPluginLibrary;
+import org.terasology.engine.world.viewer.picker.CirclePickerClosest;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeModelFacet;
@@ -49,14 +57,6 @@ import org.terasology.polyworld.raster.WhittakerRasterizer;
 import org.terasology.polyworld.rivers.RiverModelFacetProvider;
 import org.terasology.polyworld.rp.WorldRegionFacetProvider;
 import org.terasology.polyworld.water.WaterModelFacetProvider;
-import org.terasology.registry.CoreRegistry;
-import org.terasology.world.block.BlockRegion;
-import org.terasology.world.generation.BaseFacetedWorldGenerator;
-import org.terasology.world.generation.Region;
-import org.terasology.world.generation.WorldBuilder;
-import org.terasology.world.generator.RegisterWorldGenerator;
-import org.terasology.world.generator.plugin.WorldGeneratorPluginLibrary;
-import org.terasology.world.viewer.picker.CirclePickerClosest;
 
 @RegisterWorldGenerator(id = "island", displayName = "Island World")
 public class IslandWorldGenerator extends BaseFacetedWorldGenerator {

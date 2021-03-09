@@ -15,12 +15,12 @@
  */
 package org.terasology.polyworld.biome;
 
-import org.terasology.world.block.BlockRegion;
-import org.terasology.world.generation.Border3D;
-import org.terasology.world.generation.facets.base.BaseObjectFacet2D;
+import org.terasology.engine.world.block.BlockRegion;
+import org.terasology.engine.world.generation.Border3D;
+import org.terasology.engine.world.generation.facets.base.BaseObjectFacet2D;
 
 /**
- * A {@link org.terasology.world.generation.WorldFacet2D} that provides {@link WhittakerBiome}
+ * A {@link org.terasology.engine.world.generation.WorldFacet2D} that provides {@link WhittakerBiome}
  */
 public class WhittakerBiomeFacet extends BaseObjectFacet2D<WhittakerBiome> {
 

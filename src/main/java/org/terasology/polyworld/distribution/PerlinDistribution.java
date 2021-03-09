@@ -18,8 +18,8 @@ package org.terasology.polyworld.distribution;
 
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
-import org.terasology.utilities.procedural.BrownianNoise;
-import org.terasology.utilities.procedural.PerlinNoise;
+import org.terasology.engine.utilities.procedural.BrownianNoise;
+import org.terasology.engine.utilities.procedural.PerlinNoise;
 
 /**
  * TODO Type description

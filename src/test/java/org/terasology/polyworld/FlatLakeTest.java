@@ -20,7 +20,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.engine.SimpleUri;
+import org.terasology.engine.core.SimpleUri;
+import org.terasology.engine.world.block.BlockRegion;
+import org.terasology.engine.world.generation.Region;
+import org.terasology.engine.world.generation.World;
 import org.terasology.polyworld.biome.BiomeModel;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeModelFacet;
@@ -29,9 +32,6 @@ import org.terasology.polyworld.elevation.ElevationModelFacet;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
-import org.terasology.world.block.BlockRegion;
-import org.terasology.world.generation.Region;
-import org.terasology.world.generation.World;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

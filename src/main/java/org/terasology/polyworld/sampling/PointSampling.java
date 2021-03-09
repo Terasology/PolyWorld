@@ -17,9 +17,9 @@
 package org.terasology.polyworld.sampling;
 
 import org.joml.Vector2fc;
+import org.terasology.engine.utilities.random.FastRandom;
+import org.terasology.engine.utilities.random.Random;
 import org.terasology.joml.geom.Rectanglef;
-import org.terasology.utilities.random.FastRandom;
-import org.terasology.utilities.random.Random;
 
 import java.util.List;
 

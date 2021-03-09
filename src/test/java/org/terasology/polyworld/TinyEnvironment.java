@@ -17,15 +17,15 @@ package org.terasology.polyworld;
 
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.terasology.config.Config;
-import org.terasology.context.Context;
-import org.terasology.context.internal.ContextImpl;
-import org.terasology.registry.CoreRegistry;
-import org.terasology.world.block.Block;
-import org.terasology.world.block.BlockManager;
-import org.terasology.world.block.BlockUri;
-import org.terasology.world.generator.plugin.WorldGeneratorPlugin;
-import org.terasology.world.generator.plugin.WorldGeneratorPluginLibrary;
+import org.terasology.engine.config.Config;
+import org.terasology.engine.context.Context;
+import org.terasology.engine.context.internal.ContextImpl;
+import org.terasology.engine.registry.CoreRegistry;
+import org.terasology.engine.world.block.Block;
+import org.terasology.engine.world.block.BlockManager;
+import org.terasology.engine.world.block.BlockUri;
+import org.terasology.engine.world.generator.plugin.WorldGeneratorPlugin;
+import org.terasology.engine.world.generator.plugin.WorldGeneratorPluginLibrary;
 
 import java.util.Collections;
 import java.util.List;

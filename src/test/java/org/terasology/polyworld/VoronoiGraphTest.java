@@ -21,11 +21,11 @@ import org.joml.Vector2fc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.terasology.engine.world.block.BlockArea;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Voronoi;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.VoronoiGraph;
-import org.terasology.world.block.BlockArea;
 
 import java.util.ArrayList;
 import java.util.Arrays;

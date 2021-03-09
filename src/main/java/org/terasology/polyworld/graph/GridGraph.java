@@ -18,8 +18,8 @@ package org.terasology.polyworld.graph;
 
 import com.google.common.collect.Lists;
 import org.joml.Vector2f;
-import org.terasology.world.block.BlockArea;
-import org.terasology.world.block.BlockAreac;
+import org.terasology.engine.world.block.BlockArea;
+import org.terasology.engine.world.block.BlockAreac;
 
 import java.util.Collections;
 import java.util.List;

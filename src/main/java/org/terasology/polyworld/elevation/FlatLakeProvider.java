@@ -16,17 +16,17 @@
 package org.terasology.polyworld.elevation;
 
 import com.google.common.collect.Sets;
+import org.terasology.engine.world.generation.Facet;
+import org.terasology.engine.world.generation.FacetProvider;
+import org.terasology.engine.world.generation.GeneratingRegion;
+import org.terasology.engine.world.generation.Requires;
+import org.terasology.engine.world.generation.Updates;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.water.WaterModel;
 import org.terasology.polyworld.water.WaterModelFacet;
-import org.terasology.world.generation.Facet;
-import org.terasology.world.generation.FacetProvider;
-import org.terasology.world.generation.GeneratingRegion;
-import org.terasology.world.generation.Requires;
-import org.terasology.world.generation.Updates;
 
 import java.util.Collection;
 import java.util.Deque;

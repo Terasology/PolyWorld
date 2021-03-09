@@ -16,7 +16,7 @@
 
 package org.terasology.polyworld.graph;
 
-import org.terasology.world.block.BlockAreac;
+import org.terasology.engine.world.block.BlockAreac;
 
 import java.util.List;
 

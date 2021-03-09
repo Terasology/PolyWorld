@@ -19,6 +19,11 @@ package org.terasology.polyworld.water;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import org.terasology.engine.world.generation.Facet;
+import org.terasology.engine.world.generation.FacetProvider;
+import org.terasology.engine.world.generation.GeneratingRegion;
+import org.terasology.engine.world.generation.Produces;
+import org.terasology.engine.world.generation.Requires;
 import org.terasology.polyworld.distribution.Distribution;
 import org.terasology.polyworld.distribution.PerlinDistribution;
 import org.terasology.polyworld.distribution.RadialDistribution;
@@ -27,11 +32,6 @@ import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.rp.RegionType;
 import org.terasology.polyworld.rp.WorldRegion;
 import org.terasology.polyworld.rp.WorldRegionFacet;
-import org.terasology.world.generation.Facet;
-import org.terasology.world.generation.FacetProvider;
-import org.terasology.world.generation.GeneratingRegion;
-import org.terasology.world.generation.Produces;
-import org.terasology.world.generation.Requires;
 
 /**
  * TODO Type description

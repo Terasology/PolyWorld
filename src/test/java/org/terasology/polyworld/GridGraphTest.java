@@ -17,9 +17,9 @@
 package org.terasology.polyworld;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.terasology.engine.world.block.BlockArea;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.polyworld.graph.GridGraph;
-import org.terasology.world.block.BlockArea;
 
 /**
  * TODO Type description

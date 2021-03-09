@@ -19,11 +19,11 @@ package org.terasology.polyworld.water;
 import com.google.common.collect.Maps;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.terasology.engine.world.block.BlockAreac;
 import org.terasology.polyworld.distribution.Distribution;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
-import org.terasology.world.block.BlockAreac;
 
 import java.util.Collection;
 import java.util.Deque;

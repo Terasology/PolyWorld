@@ -17,8 +17,8 @@
 package org.terasology.polyworld.graph;
 
 import org.joml.Vector2ic;
+import org.terasology.engine.world.generation.WorldFacet2D;
 import org.terasology.polyworld.rp.WorldRegion;
-import org.terasology.world.generation.WorldFacet2D;
 
 import java.util.Collection;
 

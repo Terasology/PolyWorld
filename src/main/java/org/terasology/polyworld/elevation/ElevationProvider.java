@@ -21,17 +21,17 @@ import org.joml.Vector2f;
 import org.joml.Vector2ic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.engine.world.generation.Border3D;
+import org.terasology.engine.world.generation.Facet;
+import org.terasology.engine.world.generation.FacetProvider;
+import org.terasology.engine.world.generation.GeneratingRegion;
+import org.terasology.engine.world.generation.Produces;
+import org.terasology.engine.world.generation.Requires;
+import org.terasology.engine.world.generation.facets.ElevationFacet;
+import org.terasology.engine.world.generation.facets.SeaLevelFacet;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.Triangle;
-import org.terasology.world.generation.Border3D;
-import org.terasology.world.generation.Facet;
-import org.terasology.world.generation.FacetProvider;
-import org.terasology.world.generation.GeneratingRegion;
-import org.terasology.world.generation.Produces;
-import org.terasology.world.generation.Requires;
-import org.terasology.world.generation.facets.ElevationFacet;
-import org.terasology.world.generation.facets.SeaLevelFacet;
 
 import java.util.concurrent.TimeUnit;
 

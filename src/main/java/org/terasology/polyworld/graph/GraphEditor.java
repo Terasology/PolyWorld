@@ -18,8 +18,8 @@ package org.terasology.polyworld.graph;
 
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
+import org.terasology.engine.utilities.random.Random;
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.utilities.random.Random;
 
 import java.util.ArrayList;
 import java.util.Collection;

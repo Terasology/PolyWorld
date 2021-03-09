@@ -17,9 +17,9 @@
 package org.terasology.polyworld.rp;
 
 import com.google.common.collect.Lists;
-import org.terasology.world.block.BlockRegionc;
-import org.terasology.world.generation.Border3D;
-import org.terasology.world.generation.facets.base.SparseFacet3D;
+import org.terasology.engine.world.block.BlockRegionc;
+import org.terasology.engine.world.generation.Border3D;
+import org.terasology.engine.world.generation.facets.base.SparseFacet3D;
 
 import java.util.Collection;
 import java.util.Collections;

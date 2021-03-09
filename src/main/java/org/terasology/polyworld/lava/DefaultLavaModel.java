@@ -16,14 +16,14 @@
 
 package org.terasology.polyworld.lava;
 
+import org.terasology.engine.utilities.random.FastRandom;
+import org.terasology.engine.utilities.random.Random;
 import org.terasology.polyworld.elevation.ElevationModel;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.moisture.MoistureModel;
 import org.terasology.polyworld.rivers.RiverModel;
 import org.terasology.polyworld.water.WaterModel;
-import org.terasology.utilities.random.FastRandom;
-import org.terasology.utilities.random.Random;
 
 /**
  * TODO Type description

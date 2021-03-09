@@ -17,8 +17,8 @@
 package org.terasology.polyworld.elevation;
 
 import com.google.common.collect.Maps;
+import org.terasology.engine.world.generation.WorldFacet;
 import org.terasology.polyworld.graph.Graph;
-import org.terasology.world.generation.WorldFacet;
 
 import java.util.Map;
 

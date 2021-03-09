@@ -18,10 +18,10 @@ package org.terasology.polyworld.rp;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import org.terasology.utilities.random.MersenneRandom;
-import org.terasology.utilities.random.Random;
-import org.terasology.world.block.BlockArea;
-import org.terasology.world.block.BlockAreac;
+import org.terasology.engine.utilities.random.MersenneRandom;
+import org.terasology.engine.utilities.random.Random;
+import org.terasology.engine.world.block.BlockArea;
+import org.terasology.engine.world.block.BlockAreac;
 
 import java.util.Collection;
 

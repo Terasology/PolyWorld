@@ -19,19 +19,19 @@ package org.terasology.polyworld;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.junit.jupiter.api.Test;
+import org.terasology.engine.world.block.BlockArea;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
-import org.terasology.world.block.BlockArea;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Tests the correct representation of a {@link Graph}
  */

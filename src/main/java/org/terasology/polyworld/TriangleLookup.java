@@ -21,10 +21,10 @@ import com.google.common.collect.Lists;
 import org.joml.Vector2fc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.engine.world.block.BlockAreac;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
-import org.terasology.world.block.BlockAreac;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

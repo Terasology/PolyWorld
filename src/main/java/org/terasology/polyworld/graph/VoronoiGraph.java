@@ -6,10 +6,10 @@ package org.terasology.polyworld.graph;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.terasology.commonworld.geom.Line2f;
+import org.terasology.engine.world.block.BlockArea;
+import org.terasology.engine.world.block.BlockAreac;
 import org.terasology.joml.geom.Rectanglef;
 import org.terasology.math.delaunay.Voronoi;
-import org.terasology.world.block.BlockArea;
-import org.terasology.world.block.BlockAreac;
 
 import java.util.ArrayList;
 import java.util.Collections;

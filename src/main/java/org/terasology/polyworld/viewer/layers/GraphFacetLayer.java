@@ -17,6 +17,12 @@
 package org.terasology.polyworld.viewer.layers;
 
 import org.joml.Vector2fc;
+import org.terasology.engine.world.block.BlockAreac;
+import org.terasology.engine.world.viewer.layers.AbstractFacetLayer;
+import org.terasology.engine.world.viewer.layers.FacetLayerConfig;
+import org.terasology.engine.world.viewer.layers.Renders;
+import org.terasology.engine.world.viewer.layers.ZOrder;
+import org.terasology.engine.world.viewer.picker.CirclePickerClosest;
 import org.terasology.nui.properties.Checkbox;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
@@ -24,12 +30,6 @@ import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphFacet;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
-import org.terasology.world.block.BlockAreac;
-import org.terasology.world.viewer.layers.AbstractFacetLayer;
-import org.terasology.world.viewer.layers.FacetLayerConfig;
-import org.terasology.world.viewer.layers.Renders;
-import org.terasology.world.viewer.layers.ZOrder;
-import org.terasology.world.viewer.picker.CirclePickerClosest;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -64,7 +64,7 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     }
 
     @Override
-    public void render(BufferedImage img, org.terasology.world.generation.Region region) {
+    public void render(BufferedImage img, org.terasology.engine.world.generation.Region region) {
         GraphFacet graphFacet = region.getFacet(GraphFacet.class);
 
         Graphics2D g = img.createGraphics();
@@ -116,7 +116,7 @@ public class GraphFacetLayer extends AbstractFacetLayer {
     }
 
     @Override
-    public String getWorldText(org.terasology.world.generation.Region region, int wx, int wy) {
+    public String getWorldText(org.terasology.engine.world.generation.Region region, int wx, int wy) {
         GraphFacet graphFacet = region.getFacet(GraphFacet.class);
         CirclePickerClosest<Corner> cornerPicker = new CirclePickerClosest<>(new org.joml.Vector2f(wx, wy), c -> 3);
         CirclePickerClosest<GraphRegion> sitePicker = new CirclePickerClosest<>(new org.joml.Vector2f(wx, wy), r -> 3);

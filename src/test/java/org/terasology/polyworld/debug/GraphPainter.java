@@ -18,12 +18,12 @@ package org.terasology.polyworld.debug;
 
 import com.google.common.base.Function;
 import org.joml.Vector2fc;
+import org.terasology.engine.world.block.BlockAreac;
 import org.terasology.polyworld.graph.Corner;
 import org.terasology.polyworld.graph.Edge;
 import org.terasology.polyworld.graph.Graph;
 import org.terasology.polyworld.graph.GraphRegion;
 import org.terasology.polyworld.graph.Triangle;
-import org.terasology.world.block.BlockAreac;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
