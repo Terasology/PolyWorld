@@ -23,8 +23,8 @@ import org.terasology.engine.registry.CoreRegistry;
 import org.terasology.engine.world.block.Block;
 import org.terasology.engine.world.block.BlockManager;
 import org.terasology.engine.world.block.BlockRegion;
+import org.terasology.engine.world.chunks.Chunk;
 import org.terasology.engine.world.chunks.Chunks;
-import org.terasology.engine.world.chunks.CoreChunk;
 import org.terasology.engine.world.generation.Region;
 import org.terasology.engine.world.generation.WorldRasterizer;
 import org.terasology.engine.world.generation.facets.ElevationFacet;
@@ -58,7 +58,7 @@ public class RiverRasterizer implements WorldRasterizer {
     }
 
     @Override
-    public void generateChunk(CoreChunk chunk, Region chunkRegion) {
+    public void generateChunk(Chunk chunk, Region chunkRegion) {
         GraphFacet graphFacet = chunkRegion.getFacet(GraphFacet.class);
         SeaLevelFacet seaLevelFacet = chunkRegion.getFacet(SeaLevelFacet.class);
         RiverModelFacet riverModelFacet = chunkRegion.getFacet(RiverModelFacet.class);
@@ -134,7 +134,7 @@ public class RiverRasterizer implements WorldRasterizer {
      * @param structElem the structuring element for block placement
      * @param seaLevel
      */
-    private void placeWaterBody(CoreChunk chunk, BlockRegion region, Vector3i worldPos, int[][] structElem, int seaLevel) {
+    private void placeWaterBody(Chunk chunk, BlockRegion region, Vector3i worldPos, int[][] structElem, int seaLevel) {
         int radius = (structElem.length - 1) / 2;
         Vector3i pos;
 
