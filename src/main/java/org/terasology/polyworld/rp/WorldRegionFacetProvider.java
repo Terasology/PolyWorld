@@ -157,5 +157,11 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
 
         @Range(min = 0.1f, max = 1.0f, increment = 0.1f, precision = 1, description = "Define the ratio islands/water")
         private float islandDensity = 0.7f;
+
+        @Override
+        public void copy(Configuration other) {
+            this.minSize = other.minSize;
+            this.islandDensity = other.islandDensity;
+        }
     }
 }

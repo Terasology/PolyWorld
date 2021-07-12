@@ -202,5 +202,10 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         @Range(min = 0.1f, max = 10f, increment = 0.1f, precision = 1, description = "Define the density for graph " +
                 "cells")
         private float graphDensity = 2f;
+
+        @Override
+        public void copy(GraphProviderConfiguration other) {
+            this.graphDensity = other.graphDensity;
+        }
     }
 }

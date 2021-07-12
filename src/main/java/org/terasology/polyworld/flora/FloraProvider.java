@@ -118,5 +118,9 @@ public class FloraProvider extends SurfaceObjectProvider<Biome, FloraType> imple
         @Range(min = 0, max = 1.0f, increment = 0.05f, precision = 2, description = "Define the overall flora density")
         private float density = 0.4f;
 
+        @Override
+        public void copy(DensityConfiguration other) {
+            this.density = other.density;
+        }
     }
 }
