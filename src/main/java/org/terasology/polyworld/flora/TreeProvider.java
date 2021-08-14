@@ -122,7 +122,7 @@ public class TreeProvider extends SurfaceObjectProvider<WhittakerBiome, TreeGene
         private float density = 0.4f;
 
         @Override
-        public void copy(TreeProviderConfiguration other) {
+        public void copyFrom(TreeProviderConfiguration other) {
             this.density = other.density;
         }
     }

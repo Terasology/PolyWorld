@@ -159,7 +159,7 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         private float islandDensity = 0.7f;
 
         @Override
-        public void copy(Configuration other) {
+        public void copyFrom(Configuration other) {
             this.minSize = other.minSize;
             this.islandDensity = other.islandDensity;
         }

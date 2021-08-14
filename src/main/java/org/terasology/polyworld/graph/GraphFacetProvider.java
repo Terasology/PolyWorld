@@ -204,7 +204,7 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         private float graphDensity = 2f;
 
         @Override
-        public void copy(GraphProviderConfiguration other) {
+        public void copyFrom(GraphProviderConfiguration other) {
             this.graphDensity = other.graphDensity;
         }
     }
