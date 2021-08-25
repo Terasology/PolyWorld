@@ -1,18 +1,5 @@
-/*
- * Copyright 2015 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.polyworld.flora;
 
 import com.google.common.base.Predicate;
@@ -24,7 +11,6 @@ import org.terasology.core.world.generator.facetProviders.PositionFilters;
 import org.terasology.core.world.generator.facetProviders.SurfaceObjectProvider;
 import org.terasology.core.world.generator.facets.FloraFacet;
 import org.terasology.core.world.generator.rasterizers.FloraType;
-import org.terasology.engine.entitySystem.Component;
 import org.terasology.engine.utilities.procedural.Noise;
 import org.terasology.engine.utilities.procedural.WhiteNoise;
 import org.terasology.engine.world.generation.ConfigurableFacetProvider;
@@ -35,6 +21,7 @@ import org.terasology.engine.world.generation.Produces;
 import org.terasology.engine.world.generation.Requires;
 import org.terasology.engine.world.generation.facets.SeaLevelFacet;
 import org.terasology.engine.world.generation.facets.SurfacesFacet;
+import org.terasology.gestalt.entitysystem.component.Component;
 import org.terasology.nui.properties.Range;
 import org.terasology.polyworld.biome.WhittakerBiome;
 import org.terasology.polyworld.biome.WhittakerBiomeFacet;
@@ -127,9 +114,13 @@ public class FloraProvider extends SurfaceObjectProvider<Biome, FloraType> imple
         this.configuration = (DensityConfiguration) configuration;
     }
 
-    private static class DensityConfiguration implements Component {
+    private static class DensityConfiguration implements Component<DensityConfiguration> {
         @Range(min = 0, max = 1.0f, increment = 0.05f, precision = 2, description = "Define the overall flora density")
         private float density = 0.4f;
 
+        @Override
+        public void copyFrom(DensityConfiguration other) {
+            this.density = other.density;
+        }
     }
 }

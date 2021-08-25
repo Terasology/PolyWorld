@@ -1,18 +1,5 @@
-/*
- * Copyright 2015 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 
 package org.terasology.polyworld.rp;
 
@@ -21,7 +8,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import org.joml.Vector3i;
-import org.terasology.engine.entitySystem.Component;
 import org.terasology.engine.utilities.procedural.Noise;
 import org.terasology.engine.utilities.procedural.WhiteNoise;
 import org.terasology.engine.world.block.BlockArea;
@@ -32,6 +18,7 @@ import org.terasology.engine.world.generation.Border3D;
 import org.terasology.engine.world.generation.ConfigurableFacetProvider;
 import org.terasology.engine.world.generation.GeneratingRegion;
 import org.terasology.engine.world.generation.Produces;
+import org.terasology.gestalt.entitysystem.component.Component;
 import org.terasology.nui.properties.Range;
 
 import java.util.Collection;
@@ -163,12 +150,18 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         }
     }
 
-    private static class Configuration implements Component {
+    private static class Configuration implements Component<Configuration> {
 
         @Range(min = 50, max = 500f, increment = 10f, precision = 0, description = "Minimum size of a region")
         private int minSize = 100;
 
         @Range(min = 0.1f, max = 1.0f, increment = 0.1f, precision = 1, description = "Define the ratio islands/water")
         private float islandDensity = 0.7f;
+
+        @Override
+        public void copyFrom(Configuration other) {
+            this.minSize = other.minSize;
+            this.islandDensity = other.islandDensity;
+        }
     }
 }
