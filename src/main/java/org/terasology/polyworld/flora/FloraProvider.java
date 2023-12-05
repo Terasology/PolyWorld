@@ -114,9 +114,9 @@ public class FloraProvider extends SurfaceObjectProvider<Biome, FloraType> imple
         this.configuration = (DensityConfiguration) configuration;
     }
 
-    private static class DensityConfiguration implements Component<DensityConfiguration> {
+    public static class DensityConfiguration implements Component<DensityConfiguration> {
         @Range(min = 0, max = 1.0f, increment = 0.05f, precision = 2, description = "Define the overall flora density")
-        private float density = 0.4f;
+        public float density = 0.4f;
 
         @Override
         public void copyFrom(DensityConfiguration other) {
