@@ -15,7 +15,7 @@
  */
 package org.terasology.polyworld;
 
-import org.mockito.Matchers;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.terasology.engine.config.Config;
 import org.terasology.engine.context.Context;
@@ -75,8 +75,8 @@ public final class TinyEnvironment {
         air.setId((short) 0);
         air.setDisplayName("Air");
         air.setUri(BlockManager.AIR_ID);
-        Mockito.when(blockManager.getBlock(Matchers.<BlockUri>any())).thenReturn(air);
-        Mockito.when(blockManager.getBlock(Matchers.<String>any())).thenReturn(air);
+        Mockito.when(blockManager.getBlock(ArgumentMatchers.<BlockUri>any())).thenReturn(air);
+        Mockito.when(blockManager.getBlock(ArgumentMatchers.<String>any())).thenReturn(air);
 
         context.put(BlockManager.class, blockManager);
     }
