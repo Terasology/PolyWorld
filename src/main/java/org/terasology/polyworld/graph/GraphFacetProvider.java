@@ -198,10 +198,10 @@ public class GraphFacetProvider implements ConfigurableFacetProvider {
         }
     }
 
-    private static class GraphProviderConfiguration implements Component<GraphProviderConfiguration> {
+    public static class GraphProviderConfiguration implements Component<GraphProviderConfiguration> {
         @Range(min = 0.1f, max = 10f, increment = 0.1f, precision = 1, description = "Define the density for graph " +
                 "cells")
-        private float graphDensity = 2f;
+        public float graphDensity = 2f;
 
         @Override
         public void copyFrom(GraphProviderConfiguration other) {

@@ -150,13 +150,13 @@ public class WorldRegionFacetProvider implements ConfigurableFacetProvider {
         }
     }
 
-    private static class Configuration implements Component<Configuration> {
+    public static class Configuration implements Component<Configuration> {
 
         @Range(min = 50, max = 500f, increment = 10f, precision = 0, description = "Minimum size of a region")
-        private int minSize = 100;
+        public int minSize = 100;
 
         @Range(min = 0.1f, max = 1.0f, increment = 0.1f, precision = 1, description = "Define the ratio islands/water")
-        private float islandDensity = 0.7f;
+        public float islandDensity = 0.7f;
 
         @Override
         public void copyFrom(Configuration other) {
